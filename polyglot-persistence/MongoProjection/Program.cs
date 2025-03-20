@@ -8,7 +8,7 @@ using StreamPosition = EventStore.Client.StreamPosition;
 Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
 
 // Connect to MongoDB
-var mongoCollection = new MongoClient("mongodb://localhost:27017").GetDatabase("polyglot-persistence").GetCollection<BsonDocument>("payment");
+var mongoCollection = new MongoClient("mongodb://localhost:27017").GetDatabase("polyglot-persistence").GetCollection<BsonDocument>("total-payment");
 
 // Connect to EventStoreDB
 var esdb = new EventStoreClient(EventStoreClientSettings.Create("esdb://admin:changeit@localhost:2113?tls=false"));

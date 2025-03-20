@@ -15,7 +15,7 @@ var esdb = new EventStoreClient(EventStoreClientSettings.Create("esdb://admin:ch
 
 // Create read model table if it doesn't exist already
 new NpgsqlCommand(@"
-    CREATE TABLE IF NOT EXISTS payment_totals (
+    CREATE TABLE IF NOT EXISTS total_payments (
         id TEXT PRIMARY KEY,
         total DECIMAL NOT NULL DEFAULT 0,
         checkpoint BIGINT NULL
@@ -23,7 +23,7 @@ new NpgsqlCommand(@"
 
 // Get the checkpoint value from PostgreSQL
 long? checkpointValue = null;
-var result = new NpgsqlCommand("SELECT checkpoint FROM payment_totals WHERE id = 'payment'", conn).ExecuteScalar();
+var result = new NpgsqlCommand("SELECT checkpoint FROM total_payments WHERE id = 'payment'", conn).ExecuteScalar();
 if (result != null && result != DBNull.Value) 
     checkpointValue = Convert.ToInt64(result);
 
@@ -49,17 +49,17 @@ await foreach (var message in subscription.Messages)          // Iterate through
 
     // Update payment total and checkpoint within a single transaction
     var cmd = new NpgsqlCommand(@"
-        INSERT INTO payment_totals (id, total, checkpoint)
+        INSERT INTO total_payments (id, total, checkpoint)
         VALUES ('payment', @amount, @checkpoint)
         ON CONFLICT (id) DO UPDATE 
-        SET total = payment_totals.total + @amount,
+        SET total = total_payments.total + @amount,
             checkpoint = @checkpoint", conn);
     
     cmd.Parameters.AddWithValue("amount", (decimal)(@event.amount ?? 0));
     cmd.Parameters.AddWithValue("checkpoint", e.OriginalEventNumber.ToInt64());
     cmd.ExecuteNonQuery();
     
-    Console.WriteLine($"Updated PostgreSQL table 'payment_totals'. " +
+    Console.WriteLine($"Updated PostgreSQL table 'total_payments'. " +
                       $"Incremented total by {@event.amount}, " +
                       $"checkpoint set to {e.OriginalEventNumber.ToInt64()}");
 }

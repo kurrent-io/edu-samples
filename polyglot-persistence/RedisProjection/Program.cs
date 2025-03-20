@@ -33,7 +33,7 @@ await foreach (var message in subscription.Messages)                    // Itera
     if (@event == null) continue;                                       // Skip if deserialization failed
                                                                                   
     var txn = redis.CreateTransaction();                                // Create a transaction for Redis       
-    txn.StringIncrementAsync("payment", (double)@event.amount);         // Update the Redis read model
+    txn.StringIncrementAsync("total-payments", (double)@event.amount);  // Update the Redis read model
     txn.StringSetAsync("checkpoint", e.OriginalEventNumber.ToInt64());  // Set the checkpoint to the current event number
     txn.Execute();                                                      // Execute the transaction
                                                                         
