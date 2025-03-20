@@ -24,21 +24,22 @@ await using var subscription =
 Console.WriteLine($"Subscribing events from stream after {streamPosition}");
 
 await foreach (var message in subscription.Messages)                    // Iterate through the messages in the subscription
-{
+{                                                                       //
     if (message is not StreamMessage.Event(var e)) continue;            // Skip if message is not an event
-    
+                                                                        //
     var @event = JsonSerializer.Deserialize<PaymentEvent>(              // Deserialize the event
-        Encoding.UTF8.GetString(e.Event.Data.Span));                    
-    
+        Encoding.UTF8.GetString(e.Event.Data.Span));                    //
+                                                                        // 
     if (@event == null) continue;                                       // Skip if deserialization failed
-
+                                                                        //          
     var txn = redis.CreateTransaction();                                // Create a transaction for Redis       
     txn.StringIncrementAsync("payment", (double)@event.amount);         // Update the Redis read model
     txn.StringSetAsync("checkpoint", e.OriginalEventNumber.ToInt64());  // Set the checkpoint to the current event number
     txn.Execute();                                                      // Execute the transaction
-
-    Console.WriteLine($"Incremented redis read model for 'payment' by {@event.amount}");
-}
+                                                                        //
+    Console.WriteLine($"Incremented redis read model for 'payment'" +   //
+                                                " by {@event.amount}"); //
+}                                                                       //
 
 public record PaymentEvent
 {
