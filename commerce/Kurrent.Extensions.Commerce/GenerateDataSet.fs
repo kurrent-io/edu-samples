@@ -1,0 +1,190 @@
+namespace Kurrent.Extensions.Commerce
+
+open System
+open System.ComponentModel
+open System.IO
+open System.IO.Compression
+open System.Text.Json
+open System.Text.Json.Serialization
+open FSharp.Control
+open Microsoft.Extensions.Logging
+open NodaTime
+open Spectre.Console.Cli
+open Spectre.Console.Cli.AsyncCommandExtensions
+
+module GenerateDataSet =
+    type private EventDataRecord =
+        { Id: Guid
+          Type: string
+          ContentType: string
+          Data: JsonElement }
+
+    type private StreamEventRecord =
+        { Stream: StreamName
+          Event: EventDataRecord
+          DataLength: int64 }
+
+    type private StreamBatchRecord =
+        { Stream: StreamName
+          Events: EventDataRecord[]
+          DataLength: int64 }
+        
+    [<Literal>]
+    let private max_append_size = 1_000_000
+
+    let private batch (stream: TaskSeq<StreamEventRecord>) =
+        taskSeq {
+            use enumerator = stream.GetAsyncEnumerator()
+            let! moved = enumerator.MoveNextAsync()
+
+            if moved then
+                let mutable current_stream = enumerator.Current.Stream
+                let mutable batch_size = enumerator.Current.DataLength
+                let batch = ResizeArray<EventDataRecord>()
+                batch.Add enumerator.Current.Event
+
+                while! enumerator.MoveNextAsync() do
+                    // Still the same stream
+                    if enumerator.Current.Stream = current_stream then
+                        // Keep growing the batch until we're over the max append size
+                        if batch_size + enumerator.Current.DataLength < max_append_size then
+                            batch.Add enumerator.Current.Event
+                            batch_size <- batch_size + enumerator.Current.DataLength
+                        else
+                            yield
+                                { Stream = current_stream
+                                  Events = batch.ToArray()
+                                  DataLength = batch_size }
+
+                            batch.Clear()
+                            batch.Add enumerator.Current.Event
+                            batch_size <- enumerator.Current.DataLength
+                    else
+                        yield
+                            { Stream = current_stream
+                              Events = batch.ToArray()
+                              DataLength = batch_size }
+
+                        batch.Clear()
+                        batch.Add enumerator.Current.Event
+                        batch_size <- enumerator.Current.DataLength
+                        current_stream <- enumerator.Current.Stream
+
+                // Make sure we yield any residue
+                if batch.Count > 0 then
+                    yield
+                        { Stream = current_stream
+                          Events = batch.ToArray()
+                          DataLength = batch_size }
+        }
+
+    type Settings() =
+        inherit CommandSettings()
+
+        [<Description("Configuration file")>]
+        [<CommandOption("-c|--configuration")>]
+        [<DefaultValue("")>]
+        member val ConfigurationFile = "" with get, set
+
+        [<Description("Output file with .zip or .json extension")>]
+        [<CommandOption("-o|--output")>]
+        [<DefaultValue("commerce-data-set.zip")>]
+        member val OutputFile = "commerce-data-set.zip" with get, set
+
+        member this.DetectOutputFormat() =
+            match Path.GetExtension(this.OutputFile).ToLowerInvariant() with
+            | ".json" -> Json
+            | ".zip" -> Zip
+            | _ -> failwith $"The output file '{this.OutputFile}' is neither a JSON or ZIP file."
+
+    [<Description("Generate a dataset according to the configuration")>]
+    type Command(logger: ILogger) =
+        inherit AsyncCommand<Settings>()
+
+        let write_output (writer: Utf8JsonWriter) (output: TaskSeq<StreamBatchRecord>) =
+            task {
+                writer.WriteStartArray()
+
+                do!
+                    output
+                    |> TaskSeq.iter (fun record ->
+                        writer.WriteStartObject()
+                        writer.WriteString("stream", StreamName.toString record.Stream)
+                        writer.WritePropertyName("events")
+                        writer.WriteStartArray()
+
+                        record.Events
+                        |> Array.iter (fun event ->
+                            writer.WriteStartObject()
+                            writer.WriteString("id", event.Id.ToString())
+                            writer.WriteString("type", event.Type)
+                            writer.WriteString("content-type", event.ContentType)
+                            writer.WritePropertyName("data")
+                            event.Data.WriteTo writer
+                            //skipping metadata for now
+                            writer.WriteEndObject())
+
+                        writer.WriteEndArray()
+                        writer.WriteEndObject())
+
+                writer.WriteEndArray()
+                writer.Flush()
+            }
+
+        override this.ExecuteAsync(context, settings) =
+            task {
+                this.Describe(settings, logger)
+
+                let options =
+                    JsonFSharpOptions
+                        .Default()
+                        .WithUnionUntagged()
+                        .WithUnionUnwrapRecordCases()
+                        .ToJsonSerializerOptions()
+
+                options.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
+
+                let configuration: ShoppingSimulator.Configuration =
+                    { ShoppingPeriod =
+                        { From = Instant.FromUtc(2020, 1, 1, 0, 0, 0)
+                          To = Instant.FromDateTimeOffset(DateTimeOffset.UtcNow) }
+                      CartCount = 1000
+                      CartActionCount = { Minimum = 1; Maximum = 10 }
+                      TimeBetweenCartActions =
+                        { Minimum = Duration.FromSeconds 5.0
+                          Maximum = Duration.FromMinutes 15.0 }
+                      AbandonCartAfterTime = Duration.FromHours 1.0 }
+
+                let output =
+                    ShoppingSimulator.simulate configuration
+                    |> TaskSeq.map (fun (stream, event) ->
+                        let encoded = JsonSerializer.SerializeToUtf8Bytes(event, options)
+                        let json = JsonDocument.Parse(encoded)
+
+                        { Stream = stream
+                          Event =
+                            { Id = Guid.NewGuid()
+                              Type = event.ToEventName()
+                              ContentType = "application/json"
+                              Data = json.RootElement }
+                          DataLength = encoded.Length })
+                    |> batch
+
+                match settings.DetectOutputFormat() with
+                | Zip ->
+                    logger.LogInformation("Writing output to {ZipFile}", settings.OutputFile)
+
+                    use zip_file =
+                        new ZipArchive(File.Create(settings.OutputFile), ZipArchiveMode.Create, false)
+
+                    use entry_stream = zip_file.CreateEntry("data.json").Open()
+                    use writer = new Utf8JsonWriter(entry_stream, JsonWriterOptions(Indented = true))
+                    do! write_output writer output
+                | Json ->
+                    logger.LogInformation("Writing output to {JsonFile}", settings.OutputFile)
+                    use output_file = File.Create(settings.OutputFile)
+                    use writer = new Utf8JsonWriter(output_file, JsonWriterOptions(Indented = true))
+                    do! write_output writer output
+
+                return 0
+            }

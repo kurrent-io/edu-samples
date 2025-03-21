@@ -1,0 +1,13 @@
+namespace Kurrent.Extensions.Commerce.Framework
+
+open NodaTime
+open NodaTime.Testing
+open Bogus
+
+module FakeClockExtensions =
+    type FakeClock with
+        member this.TimeBetweenActions (faker: Faker) (minimum: Duration) (maximum: Duration) =
+            let time =
+                Duration.FromSeconds(faker.Random.Double(minimum.TotalSeconds, maximum.TotalSeconds))
+
+            this.Advance time
