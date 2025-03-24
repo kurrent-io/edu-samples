@@ -1,0 +1,71 @@
+namespace Kurrent.Extensions.Commerce
+
+open System
+open System.ComponentModel
+open Minerals.StringCases
+
+[<RequireQualifiedAccess>]
+module Shopping =
+    [<Description("Whenever an anonymous visitor starts shopping")>]
+    type VisitorStartedShopping =
+        { CartId: string; When: DateTimeOffset }
+
+    [<Description("Whenever a customer signs in or signs up, the cart's shopper becomes known")>]
+    type CartShopperGotIdentified =
+        { CartId: string
+          CustomerId: string
+          When: DateTimeOffset }
+
+    [<Description("Whenever a signed-in customer starts shopping")>]
+    type CustomerStartedShopping =
+        { CartId: string
+          CustomerId: string
+          When: DateTimeOffset }
+
+    [<Description("Whenever the shopper adds items to the cart")>]
+    type ItemGotAddedToCart =
+        { CartId: string
+          ProductId: string
+          ProductName: string
+          Quantity: int
+          PricePerUnit: string
+          TaxRate: decimal
+          When: DateTimeOffset }
+
+    [<Description("Whenever the shopper removes items from the cart")>]
+    type ItemGotRemovedFromCart =
+        { CartId: string
+          ProductId: string
+          Quantity: int
+          When: DateTimeOffset }
+
+    [<Description("Whenever the shopper completes a checkout by placing an order for its contents")>]
+    type CartGotCheckedOut =
+        { CartId: string
+          OrderId: string
+          When: DateTimeOffset }
+
+    [<Description("Whenever the shopper becomes idle in their interaction with the cart")>]
+    type CartGotAbandoned =
+        { CartId: string
+          AfterBeingIdleFor: TimeSpan
+          When: DateTimeOffset }
+
+    type Event =
+        | VisitorStartedShopping of VisitorStartedShopping
+        | CartShopperGotIdentified of CartShopperGotIdentified
+        | CustomerStartedShopping of CustomerStartedShopping
+        | ItemGotAddedToCart of ItemGotAddedToCart
+        | ItemGotRemovedFromCart of ItemGotRemovedFromCart
+        | CartGotCheckedOut of CartGotCheckedOut
+        | CartGotAbandoned of CartGotAbandoned
+
+        member this.ToEventName() =
+            match this with
+            | VisitorStartedShopping _ -> nameof(VisitorStartedShopping).ToKebabCase()
+            | CartShopperGotIdentified _ -> nameof(CartShopperGotIdentified).ToKebabCase()
+            | CustomerStartedShopping _ -> nameof(CustomerStartedShopping).ToKebabCase()
+            | ItemGotAddedToCart _ -> nameof(ItemGotAddedToCart).ToKebabCase()
+            | ItemGotRemovedFromCart _ -> nameof(ItemGotRemovedFromCart).ToKebabCase()
+            | CartGotCheckedOut _ -> nameof(CartGotCheckedOut).ToKebabCase()
+            | CartGotAbandoned _ -> nameof(CartGotAbandoned).ToKebabCase()
