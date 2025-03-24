@@ -2,58 +2,27 @@ namespace Kurrent.Extensions.Commerce
 
 open System
 open Bogus
+open Bogus.FakerExtensions
 open FSharp.Control
 open Kurrent.Extensions.Commerce.Framework.FakeClockExtensions
+open Microsoft.Extensions.Logging
 open NodaTime
 open NodaTime.Testing
 
 [<RequireQualifiedAccess>]
 module ShoppingSimulator =
-    type CartActionCountConfiguration = { Minimum: int; Maximum: int }
-
-    type TimeBetweenCartActionsConfiguration =
-        { Minimum: Duration; Maximum: Duration }
-
-    type ShoppingPeriodConfiguration = { From: Instant; To: Instant }
-
-    type ShoppingConfiguration =
-        { ShoppingPeriod: ShoppingPeriodConfiguration
-          CartCount: int
-          CartActionCount: CartActionCountConfiguration
-          TimeBetweenCartActions: TimeBetweenCartActionsConfiguration
-          AbandonCartAfterTime: Duration }
-
-        static member Default =
-            { ShoppingPeriod =
-                { From = Instant.FromUtc(2020, 1, 1, 0, 0, 0)
-                  To = Instant.FromDateTimeOffset(DateTimeOffset.UtcNow) }
-              CartCount = 1000
-              CartActionCount = { Minimum = 1; Maximum = 10 }
-              TimeBetweenCartActions =
-                { Minimum = Duration.FromSeconds 5.0
-                  Maximum = Duration.FromMinutes 15.0 }
-              AbandonCartAfterTime = Duration.FromHours 1.0 }
-
-    type Configuration =
-        { Shopping: ShoppingConfiguration }
-        static member Default = {
-            Shopping = ShoppingConfiguration.Default
-        }
-
-    let private faker = Faker()
-
-    let private generate_product_id (year: int) =
-        $"""catalog-%d{year}@%d{faker.Random.Int(1, 12)}/{faker.Random.Replace("*****")}"""
-
-    let private generate_customer_id () = $"customer-%d{faker.Random.Int(0)}"
+    let private generate_customer_id (faker: Faker) = $"customer-%d{faker.Random.Int(0)}"
 
     let private generate_cart_id () = $"cart-{Guid.NewGuid():N}"
 
     let private generate_order_id () = $"order-{Guid.NewGuid():N}"
 
-    let simulate (configuration: Configuration) =
+    let simulate (faker: Faker) (configuration: Configuration) (logger: ILogger) =
         taskSeq {
-            for _ in [ 1 .. configuration.Shopping.CartCount ] do
+            let cart_count =
+                faker.Random.Int(configuration.Shopping.CartCount.Minimum, configuration.Shopping.CartCount.Maximum)
+
+            for _ in [ 1..cart_count ] do
                 let instant =
                     faker.Random.Long(
                         configuration.Shopping.ShoppingPeriod.From.ToUnixTimeMilliseconds(),
@@ -72,7 +41,7 @@ module ShoppingSimulator =
                         cart_stream,
                         Shopping.Cart.CustomerStartedShopping
                             { CartId = cart_id
-                              CustomerId = generate_customer_id ()
+                              CustomerId = generate_customer_id faker
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }
 
                     shopper_identified <- true
@@ -110,21 +79,20 @@ module ShoppingSimulator =
                                   Quantity = quantity
                                   At = clock.GetCurrentInstant().ToDateTimeOffset() }
                     else
-                        let product_id =
-                            generate_product_id (clock.GetCurrentInstant().ToDateTimeOffset().Year)
+                        let selected_product = faker.FoodProducts().Product()
 
                         let quantity = faker.Random.Int(1, 5)
-                        removable_products.Add(product_id, quantity)
+                        removable_products.Add(selected_product.Id, quantity)
 
                         yield
                             cart_stream,
                             Shopping.Cart.ItemGotAddedToCart
                                 { CartId = cart_id
-                                  ProductId = product_id
-                                  ProductName = faker.Commerce.ProductName()
+                                  ProductId = selected_product.Id
+                                  ProductName = selected_product.Name
                                   Quantity = quantity
-                                  PricePerUnit = faker.Commerce.Price(0.01m, 1000.00m, 2, "$")
-                                  TaxRate = faker.Random.ArrayElement [| 0.06m; 0.12m; 0.21m |]
+                                  PricePerUnit = selected_product.Price
+                                  TaxRate = selected_product.TaxRate
                                   At = clock.GetCurrentInstant().ToDateTimeOffset() }
 
                     clock.AdvanceTimeBetweenActions
@@ -137,7 +105,7 @@ module ShoppingSimulator =
                         cart_stream,
                         Shopping.Cart.CartShopperGotIdentified
                             { CartId = cart_id
-                              CustomerId = generate_customer_id ()
+                              CustomerId = generate_customer_id faker
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }
 
                     clock.AdvanceTimeBetweenActions

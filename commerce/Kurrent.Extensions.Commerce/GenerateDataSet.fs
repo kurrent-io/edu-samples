@@ -6,6 +6,7 @@ open System.IO
 open System.IO.Compression
 open System.Text.Json
 open System.Text.Json.Serialization
+open Bogus
 open FSharp.Control
 open Microsoft.Extensions.Logging
 open NodaTime
@@ -146,19 +147,22 @@ module GenerateDataSet =
 
                 options.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
 
-                let configuration: ShoppingSimulator.Configuration =
+                let configuration: Configuration =
                     match settings.ConfigurationFile with
-                    | "" ->
-                        ShoppingSimulator.Configuration.Default
+                    | "" -> Configuration.Default
                     | file ->
                         if File.Exists file then
                             let json = JsonDocument.Parse(File.ReadAllText file)
-                            JsonSerializer.Deserialize<ShoppingSimulator.Configuration>(json.RootElement, options)
+                            JsonSerializer.Deserialize<Configuration>(json.RootElement, options)
                         else
                             failwith $"The configuration file '{file}' does not exist."
 
+                let faker = Faker()
+
+                do! ProductCatalogBuilder.build faker configuration.PIM logger
+
                 let output =
-                    ShoppingSimulator.simulate configuration
+                    ShoppingSimulator.simulate faker configuration logger
                     |> TaskSeq.map (fun (stream, event) ->
                         let encoded = JsonSerializer.SerializeToUtf8Bytes(event, options)
                         let json = JsonDocument.Parse(encoded)

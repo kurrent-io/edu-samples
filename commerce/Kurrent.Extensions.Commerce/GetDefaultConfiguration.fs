@@ -21,7 +21,7 @@ module GetDefaultConfiguration =
     [<Description("Gets the default configuration")>]
     type Command(logger: ILogger) =
         inherit AsyncCommand<Settings>()
-        
+
         override this.ExecuteAsync(context, settings) =
             task {
                 this.Describe(settings, logger)
@@ -33,13 +33,15 @@ module GetDefaultConfiguration =
                         .WithUnionUnwrapRecordCases()
                         .ToJsonSerializerOptions()
                         .ConfigureForNodaTime(DateTimeZoneProviders.Tzdb)
-                        
+
                 options.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
-                
+
                 logger.LogInformation("Writing output to {JsonFile}", settings.OutputFile)
-                
-                let json = JsonSerializer.Serialize(ShoppingSimulator.Configuration.Default, options)
+
+                let json =
+                    JsonSerializer.Serialize(Configuration.Default, options)
+
                 File.WriteAllText(settings.OutputFile, json)
-                
+
                 return 0
             }

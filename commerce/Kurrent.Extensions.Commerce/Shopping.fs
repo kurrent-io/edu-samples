@@ -6,26 +6,6 @@ open Minerals.StringCases
 
 [<RequireQualifiedAccess>]
 module Shopping =
-    module ProductCatalog =
-        type Product = {
-          Id: string
-          Name: string
-          Price: string
-          TaxRate: decimal
-        }
-
-        type Catalog = {
-            Version: string
-            Products: Product list
-        }
-
-    module CustomerProfile =
-        type CustomerSignedUp =
-            { CustomerId: string
-              Email: string
-              Name: string
-              At: DateTimeOffset }
-
     module Cart =
         [<Description("Whenever an anonymous visitor starts shopping")>]
         type VisitorStartedShopping = { CartId: string; At: DateTimeOffset }
