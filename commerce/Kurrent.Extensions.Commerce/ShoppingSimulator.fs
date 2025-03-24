@@ -16,12 +16,29 @@ module ShoppingSimulator =
 
     type ShoppingPeriodConfiguration = { From: Instant; To: Instant }
 
-    type Configuration =
+    type ShoppingConfiguration =
         { ShoppingPeriod: ShoppingPeriodConfiguration
           CartCount: int
           CartActionCount: CartActionCountConfiguration
           TimeBetweenCartActions: TimeBetweenCartActionsConfiguration
           AbandonCartAfterTime: Duration }
+
+        static member Default =
+            { ShoppingPeriod =
+                { From = Instant.FromUtc(2020, 1, 1, 0, 0, 0)
+                  To = Instant.FromDateTimeOffset(DateTimeOffset.UtcNow) }
+              CartCount = 1000
+              CartActionCount = { Minimum = 1; Maximum = 10 }
+              TimeBetweenCartActions =
+                { Minimum = Duration.FromSeconds 5.0
+                  Maximum = Duration.FromMinutes 15.0 }
+              AbandonCartAfterTime = Duration.FromHours 1.0 }
+
+    type Configuration =
+        { Shopping: ShoppingConfiguration }
+        static member Default = {
+            Shopping = ShoppingConfiguration.Default
+        }
 
     let private faker = Faker()
 
@@ -36,11 +53,11 @@ module ShoppingSimulator =
 
     let simulate (configuration: Configuration) =
         taskSeq {
-            for _ in [ 1 .. configuration.CartCount ] do
+            for _ in [ 1 .. configuration.Shopping.CartCount ] do
                 let instant =
                     faker.Random.Long(
-                        configuration.ShoppingPeriod.From.ToUnixTimeMilliseconds(),
-                        configuration.ShoppingPeriod.To.ToUnixTimeMilliseconds()
+                        configuration.Shopping.ShoppingPeriod.From.ToUnixTimeMilliseconds(),
+                        configuration.Shopping.ShoppingPeriod.To.ToUnixTimeMilliseconds()
                     )
                     |> Instant.FromUnixTimeMilliseconds
 
@@ -53,31 +70,31 @@ module ShoppingSimulator =
                 if faker.Random.Bool() then
                     yield
                         cart_stream,
-                        Shopping.CustomerStartedShopping
+                        Shopping.Cart.CustomerStartedShopping
                             { CartId = cart_id
                               CustomerId = generate_customer_id ()
-                              When = clock.GetCurrentInstant().ToDateTimeOffset() }
+                              At = clock.GetCurrentInstant().ToDateTimeOffset() }
 
                     shopper_identified <- true
 
                 else
                     yield
                         cart_stream,
-                        Shopping.VisitorStartedShopping
+                        Shopping.Cart.VisitorStartedShopping
                             { CartId = cart_id
-                              When = clock.GetCurrentInstant().ToDateTimeOffset() }
+                              At = clock.GetCurrentInstant().ToDateTimeOffset() }
 
-                clock.TimeBetweenActions
+                clock.AdvanceTimeBetweenActions
                     faker
-                    configuration.TimeBetweenCartActions.Minimum
-                    configuration.TimeBetweenCartActions.Maximum
+                    configuration.Shopping.TimeBetweenCartActions.Minimum
+                    configuration.Shopping.TimeBetweenCartActions.Maximum
 
                 let removable_products = ResizeArray<_>()
 
                 for _ in
                     [ 1 .. faker.Random.Int(
-                          configuration.CartActionCount.Minimum,
-                          configuration.CartActionCount.Maximum
+                          configuration.Shopping.CartActionCount.Minimum,
+                          configuration.Shopping.CartActionCount.Maximum
                       ) ] do
 
                     if removable_products.Count > 1 && faker.Random.Bool() then
@@ -87,11 +104,11 @@ module ShoppingSimulator =
 
                         yield
                             cart_stream,
-                            Shopping.ItemGotRemovedFromCart
+                            Shopping.Cart.ItemGotRemovedFromCart
                                 { CartId = cart_id
                                   ProductId = product_id
                                   Quantity = quantity
-                                  When = clock.GetCurrentInstant().ToDateTimeOffset() }
+                                  At = clock.GetCurrentInstant().ToDateTimeOffset() }
                     else
                         let product_id =
                             generate_product_id (clock.GetCurrentInstant().ToDateTimeOffset().Year)
@@ -101,47 +118,47 @@ module ShoppingSimulator =
 
                         yield
                             cart_stream,
-                            Shopping.ItemGotAddedToCart
+                            Shopping.Cart.ItemGotAddedToCart
                                 { CartId = cart_id
                                   ProductId = product_id
                                   ProductName = faker.Commerce.ProductName()
                                   Quantity = quantity
                                   PricePerUnit = faker.Commerce.Price(0.01m, 1000.00m, 2, "$")
                                   TaxRate = faker.Random.ArrayElement [| 0.06m; 0.12m; 0.21m |]
-                                  When = clock.GetCurrentInstant().ToDateTimeOffset() }
+                                  At = clock.GetCurrentInstant().ToDateTimeOffset() }
 
-                    clock.TimeBetweenActions
+                    clock.AdvanceTimeBetweenActions
                         faker
-                        configuration.TimeBetweenCartActions.Minimum
-                        configuration.TimeBetweenCartActions.Maximum
+                        configuration.Shopping.TimeBetweenCartActions.Minimum
+                        configuration.Shopping.TimeBetweenCartActions.Maximum
 
                 if not shopper_identified && faker.Random.Bool() then
                     yield
                         cart_stream,
-                        Shopping.CartShopperGotIdentified
+                        Shopping.Cart.CartShopperGotIdentified
                             { CartId = cart_id
                               CustomerId = generate_customer_id ()
-                              When = clock.GetCurrentInstant().ToDateTimeOffset() }
+                              At = clock.GetCurrentInstant().ToDateTimeOffset() }
 
-                    clock.TimeBetweenActions
+                    clock.AdvanceTimeBetweenActions
                         faker
-                        configuration.TimeBetweenCartActions.Minimum
-                        configuration.TimeBetweenCartActions.Maximum
+                        configuration.Shopping.TimeBetweenCartActions.Minimum
+                        configuration.Shopping.TimeBetweenCartActions.Maximum
 
                 if faker.Random.Bool() then
                     yield
                         cart_stream,
-                        Shopping.CartGotCheckedOut
+                        Shopping.Cart.CartGotCheckedOut
                             { CartId = cart_id
                               OrderId = generate_order_id ()
-                              When = clock.GetCurrentInstant().ToDateTimeOffset() }
+                              At = clock.GetCurrentInstant().ToDateTimeOffset() }
                 else
-                    clock.Advance configuration.AbandonCartAfterTime
+                    clock.Advance configuration.Shopping.AbandonCartAfterTime
 
                     yield
                         cart_stream,
-                        Shopping.CartGotAbandoned
+                        Shopping.Cart.CartGotAbandoned
                             { CartId = cart_id
-                              AfterBeingIdleFor = configuration.AbandonCartAfterTime.ToTimeSpan()
-                              When = clock.GetCurrentInstant().ToDateTimeOffset() }
+                              AfterBeingIdleFor = configuration.Shopping.AbandonCartAfterTime.ToTimeSpan()
+                              At = clock.GetCurrentInstant().ToDateTimeOffset() }
         }

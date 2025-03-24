@@ -9,6 +9,7 @@ open System.Text.Json.Serialization
 open FSharp.Control
 open Microsoft.Extensions.Logging
 open NodaTime
+open NodaTime.Serialization.SystemTextJson
 open Spectre.Console.Cli
 open Spectre.Console.Cli.AsyncCommandExtensions
 
@@ -28,7 +29,7 @@ module GenerateDataSet =
         { Stream: StreamName
           Events: EventDataRecord[]
           DataLength: int64 }
-        
+
     [<Literal>]
     let private max_append_size = 1_000_000
 
@@ -141,19 +142,20 @@ module GenerateDataSet =
                         .WithUnionUntagged()
                         .WithUnionUnwrapRecordCases()
                         .ToJsonSerializerOptions()
+                        .ConfigureForNodaTime(DateTimeZoneProviders.Tzdb)
 
                 options.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
 
                 let configuration: ShoppingSimulator.Configuration =
-                    { ShoppingPeriod =
-                        { From = Instant.FromUtc(2020, 1, 1, 0, 0, 0)
-                          To = Instant.FromDateTimeOffset(DateTimeOffset.UtcNow) }
-                      CartCount = 1000
-                      CartActionCount = { Minimum = 1; Maximum = 10 }
-                      TimeBetweenCartActions =
-                        { Minimum = Duration.FromSeconds 5.0
-                          Maximum = Duration.FromMinutes 15.0 }
-                      AbandonCartAfterTime = Duration.FromHours 1.0 }
+                    match settings.ConfigurationFile with
+                    | "" ->
+                        ShoppingSimulator.Configuration.Default
+                    | file ->
+                        if File.Exists file then
+                            let json = JsonDocument.Parse(File.ReadAllText file)
+                            JsonSerializer.Deserialize<ShoppingSimulator.Configuration>(json.RootElement, options)
+                        else
+                            failwith $"The configuration file '{file}' does not exist."
 
                 let output =
                     ShoppingSimulator.simulate configuration
@@ -164,7 +166,7 @@ module GenerateDataSet =
                         { Stream = stream
                           Event =
                             { Id = Guid.NewGuid()
-                              Type = event.ToEventName()
+                              Type = event.ToEventType()
                               ContentType = "application/json"
                               Data = json.RootElement }
                           DataLength = encoded.Length })

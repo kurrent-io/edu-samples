@@ -14,6 +14,7 @@
     <Compile Include="Shopping.fs" />
     <Compile Include="ShoppingSimulator.fs" />
     <Compile Include="FileFormat.fs" />
+    <Compile Include="GetDefaultConfiguration.fs" />
     <Compile Include="GenerateDataSet.fs" />
     <Compile Include="SeedDataSet.fs" />
     <Compile Include="Program.fs" />
@@ -29,6 +30,7 @@
     <PackageReference Include="Minerals.StringCases" Version="0.2.1" />
     <PackageReference Include="NJsonSchema" Version="11.1.0" />
     <PackageReference Include="NodaTime" Version="3.2.1" />
+    <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.3.0" />
     <PackageReference Include="NodaTime.Testing" Version="3.2.1" />
     <PackageReference Include="Spectre.Console.Cli" Version="0.49.1" />
   </ItemGroup>

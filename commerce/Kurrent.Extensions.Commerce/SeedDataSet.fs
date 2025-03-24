@@ -10,6 +10,8 @@ open System.Text.Json.Serialization
 open EventStore.Client
 open FSharp.Control
 open Microsoft.Extensions.Logging
+open NodaTime
+open NodaTime.Serialization.SystemTextJson
 open Spectre.Console.Cli
 open Spectre.Console.Cli.AsyncCommandExtensions
 
@@ -100,6 +102,7 @@ module SeedDataSet =
                         .WithUnionUntagged()
                         .WithUnionUnwrapRecordCases()
                         .ToJsonSerializerOptions()
+                        .ConfigureForNodaTime(DateTimeZoneProviders.Tzdb)
 
                 options.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
 
