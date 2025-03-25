@@ -1,26 +1,28 @@
 ﻿namespace PostgresProjection
 {
-    public record VisitorStartedShopping
+    public abstract record Event;
+
+    public record VisitorStartedShopping : Event
     {
         public string cartId { get; set; }
         public DateTimeOffset when { get; set; }
     }
 
-    public record CustomerStartedShopping
-    {
-        public string cartId { get; set; }
-        public string customerId { get; set; }
-        public DateTimeOffset when { get; set; }
-    }
-
-    public record CartShopperGotIdentified
+    public record CustomerStartedShopping : Event
     {
         public string cartId { get; set; }
         public string customerId { get; set; }
         public DateTimeOffset when { get; set; }
     }
 
-    public record ItemGotAdded
+    public record CartShopperGotIdentified : Event
+    {
+        public string cartId { get; set; }
+        public string customerId { get; set; }
+        public DateTimeOffset when { get; set; }
+    }
+
+    public record ItemGotAdded : Event
     {
         public string cartId { get; set; }
         public string productId { get; set; }
@@ -31,7 +33,7 @@
         public DateTimeOffset when { get; set; }
     }
 
-    public record ItemGotRemoved
+    public record ItemGotRemoved : Event
     {
         public string cartId { get; set; }
         public string productId { get; set; }
@@ -39,14 +41,14 @@
         public DateTimeOffset when { get; set; }
     }
 
-    public record CartGotCheckedOut
+    public record CartGotCheckedOut : Event
     {
         public string cartId { get; set; }
         public string orderId { get; set; }
         public DateTimeOffset when { get; set; }
     }
 
-    public record CartGotAbandoned
+    public record CartGotAbandoned : Event
     {
         public string cartId { get; set; }
         public string afterBeingIdleFor { get; set; }

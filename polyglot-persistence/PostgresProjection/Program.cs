@@ -29,11 +29,13 @@ Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
 var postgres = new PostgresDataAccess(new NpgsqlConnection("Host=localhost;Port=5432;Database=postgres;Username=postgres"));
 var esdb = new EventStoreClient(EventStoreClientSettings.Create("esdb://admin:changeit@localhost:2113?tls=false"));
 
+var cartRepository = new CartRepository(postgres);
+
 // ------------------------------------------------- //
 // Subscribe to EventStoreDB from checkpoint onwards //
 // ------------------------------------------------- //
 
-var checkpointValue = postgres.GetCheckpoint("carts");                   // Get the checkpoint value from PostgreSQL checkpoint table
+var checkpointValue = cartRepository.GetCartCheckpoint();                   // Get the checkpoint value from PostgreSQL checkpoint table
 
 var streamPosition = checkpointValue.HasValue                            // Check if the checkpoint exists..
     ? FromStream.After(StreamPosition.FromInt64(checkpointValue.Value))  // if so, subscribe from stream after checkpoint..
@@ -47,18 +49,16 @@ await using var subscription = esdb.SubscribeToStream(                   // Subs
 Console.WriteLine($"Subscribing events from stream after {streamPosition}");
 
 // ------------------------------------------------------------- //
-// Handle events and update PostgreSQL read model and checkpoint //
+// Project events and update PostgreSQL read model and checkpoint //
 // ------------------------------------------------------------- //
 
-var eventHandler = new CartEventHandler(postgres);                       // Initialize event handler
 await foreach (var message in subscription.Messages)                     // Iterate through the messages in the subscription
 {
     if (message is not StreamMessage.Event(var e)) continue;             // Skip if message is not an event
-    
-    postgres.BeginTransaction();                                         // Begin transaction to ensure checkpoint and read model are updated atomically
 
-    eventHandler.UpdatePostgresReadModel(e);                             // Update the PostgreSQL read model according to the event
-    postgres.UpdateCheckpoint("carts", e.OriginalEventNumber.ToInt64()); // Update the checkpoint value in PostgreSQL checkpoint table
-
-    postgres.Commit();                                                   // Commit transaction
+    using (var uow = new PostgresUnitOfWork(postgres))
+    {
+        cartRepository.UpdateReadModel(e.ToEvent());
+        cartRepository.UpdateCartCheckpoint(e.OriginalEventNumber.ToInt64());
+    }
 }
