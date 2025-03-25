@@ -1,73 +1,64 @@
-using System.Text;
-using System.Text.Json;
+// ========================================================================================================
+// PostgreSQL Projection from EventStoreDB
+// ========================================================================================================
+// This sample demonstrates how to project events from EventStoreDB to a read model in PostgreSQL.
+//
+// It:
+// 
+// 1. Connects to PostgreSQL and EventStoreDB
+// 2. Retrieves the last checkpoint position from PostgreSQL
+// 3. Subscribes to the cart category projection stream in EventStoreDB
+// 4. Processes each event to update the PostgreSQL read model
+// 5. Maintains a checkpoint in PostgreSQL to track progress
+// 
+// This creates a current state of the cart optimized for queries while
+// maintaining event sourcing in EventStoreDB as the source of truth.
+// ========================================================================================================
+
 using EventStore.Client;
 using Npgsql;
+using PostgresProjection;
 using StreamPosition = EventStore.Client.StreamPosition;
 
 Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
 
-// Connect to PostgreSQL
-var conn = new NpgsqlConnection("Host=localhost;Port=5432;Database=postgres;Username=postgres");
-conn.Open();
+// -------------------------------------- //
+// Connect to PostgreSQL and EventStoreDB //
+// -------------------------------------- //
 
-// Connect to EventStoreDB
+var postgres = new PostgresDataAccess(new NpgsqlConnection("Host=localhost;Port=5432;Database=postgres;Username=postgres"));
 var esdb = new EventStoreClient(EventStoreClientSettings.Create("esdb://admin:changeit@localhost:2113?tls=false"));
 
-// Create read model table if it doesn't exist already
-new NpgsqlCommand(@"
-    CREATE TABLE IF NOT EXISTS total_payments (
-        id TEXT PRIMARY KEY,
-        total DECIMAL NOT NULL DEFAULT 0,
-        checkpoint BIGINT NULL
-    )", conn).ExecuteNonQuery();
+// ------------------------------------------------- //
+// Subscribe to EventStoreDB from checkpoint onwards //
+// ------------------------------------------------- //
 
-// Get the checkpoint value from PostgreSQL
-long? checkpointValue = null;
-var result = new NpgsqlCommand("SELECT checkpoint FROM total_payments WHERE id = 'payment'", conn).ExecuteScalar();
-if (result != null && result != DBNull.Value) 
-    checkpointValue = Convert.ToInt64(result);
+var checkpointValue = postgres.GetCheckpoint("carts");                   // Get the checkpoint value from PostgreSQL checkpoint table
 
 var streamPosition = checkpointValue.HasValue                            // Check if the checkpoint exists..
-    ? FromStream.After(StreamPosition.FromInt64(checkpointValue.Value))  // If so, set var to subscribe events from stream after checkpoint..
-    : FromStream.Start;                                                  // Otherwise, set var to subscribe events from the start
+    ? FromStream.After(StreamPosition.FromInt64(checkpointValue.Value))  // if so, subscribe from stream after checkpoint..
+    : FromStream.Start;                                                  // otherwise, subscribe from the start of the stream  
 
-await using var subscription = esdb.SubscribeToStream(  // Subscribe events..
-                                "$ce-payment",          // from this stream..
-                                streamPosition,         // from this position..
-                                true);                  // with linked events automatically resolved    
+await using var subscription = esdb.SubscribeToStream(                   // Subscribe events..
+    "$ce-cart",                                                          // from the cart category system projection..        
+    streamPosition,                                                      // from this position..
+    true);                                                               // with linked events automatically resolved (required for system projections)
 
 Console.WriteLine($"Subscribing events from stream after {streamPosition}");
 
-await foreach (var message in subscription.Messages)          // Iterate through the messages in the subscription
+// ------------------------------------------------------------- //
+// Handle events and update PostgreSQL read model and checkpoint //
+// ------------------------------------------------------------- //
+
+var eventHandler = new CartEventHandler(postgres);                       // Initialize event handler
+await foreach (var message in subscription.Messages)                     // Iterate through the messages in the subscription
 {
-    if (message is not StreamMessage.Event(var e)) continue;  // Skip if message is not an event
+    if (message is not StreamMessage.Event(var e)) continue;             // Skip if message is not an event
     
-    var @event = JsonSerializer.Deserialize<PaymentEvent>(    // Deserialize the event
-        Encoding.UTF8.GetString(e.Event.Data.Span));
-     
-    if (@event == null) continue;                             // Skip if deserialization failed
+    postgres.BeginTransaction();                                         // Begin transaction to ensure checkpoint and read model are updated atomically
 
-    // Update payment total and checkpoint within a single transaction
-    var cmd = new NpgsqlCommand(@"
-        INSERT INTO total_payments (id, total, checkpoint)
-        VALUES ('payment', @amount, @checkpoint)
-        ON CONFLICT (id) DO UPDATE 
-        SET total = total_payments.total + @amount,
-            checkpoint = @checkpoint", conn);
-    
-    cmd.Parameters.AddWithValue("amount", (decimal)(@event.amount ?? 0));
-    cmd.Parameters.AddWithValue("checkpoint", e.OriginalEventNumber.ToInt64());
-    cmd.ExecuteNonQuery();
-    
-    Console.WriteLine($"Updated PostgreSQL table 'total_payments'. " +
-                      $"Incremented total by {@event.amount}, " +
-                      $"checkpoint set to {e.OriginalEventNumber.ToInt64()}");
-}
+    eventHandler.UpdatePostgresReadModel(e);                             // Update the PostgreSQL read model according to the event
+    postgres.UpdateCheckpoint("carts", e.OriginalEventNumber.ToInt64()); // Update the checkpoint value in PostgreSQL checkpoint table
 
-conn.Close();
-
-public record PaymentEvent
-{
-    public decimal? amount { get; set; }
-    public DateTime timeStamp { get; set; }
+    postgres.Commit();                                                   // Commit transaction
 }
