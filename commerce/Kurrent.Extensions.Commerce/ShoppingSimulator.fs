@@ -34,24 +34,29 @@ module ShoppingSimulator =
 
                 let cart_id = generate_cart_id ()
                 let cart_stream = StreamName.ofString cart_id
+                let checkout_stream = StreamName.ofString $"checkout-for-{cart_id}"
                 let mutable shopper_identified = false
+                let mutable cart_version = 0L
 
                 if faker.Random.Bool() then
                     yield
                         cart_stream,
-                        Shopping.Cart.CustomerStartedShopping
+                        Shopping.CustomerStartedShopping
                             { CartId = cart_id
                               CustomerId = generate_customer_id faker
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }
 
+                    cart_version <- cart_version + 1L
                     shopper_identified <- true
 
                 else
                     yield
                         cart_stream,
-                        Shopping.Cart.VisitorStartedShopping
+                        Shopping.VisitorStartedShopping
                             { CartId = cart_id
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }
+
+                    cart_version <- cart_version + 1L
 
                 clock.AdvanceTimeBetweenActions
                     faker
@@ -73,11 +78,12 @@ module ShoppingSimulator =
 
                         yield
                             cart_stream,
-                            Shopping.Cart.ItemGotRemovedFromCart
+                            Shopping.ItemGotRemovedFromCart
                                 { CartId = cart_id
                                   ProductId = product_id
                                   Quantity = quantity
                                   At = clock.GetCurrentInstant().ToDateTimeOffset() }
+
                     else
                         let selected_product = faker.FoodProducts().Product()
 
@@ -86,7 +92,7 @@ module ShoppingSimulator =
 
                         yield
                             cart_stream,
-                            Shopping.Cart.ItemGotAddedToCart
+                            Shopping.ItemGotAddedToCart
                                 { CartId = cart_id
                                   ProductId = selected_product.Id
                                   ProductName = selected_product.Name
@@ -94,6 +100,8 @@ module ShoppingSimulator =
                                   PricePerUnit = selected_product.Price
                                   TaxRate = selected_product.TaxRate
                                   At = clock.GetCurrentInstant().ToDateTimeOffset() }
+
+                    cart_version <- cart_version + 1L
 
                     clock.AdvanceTimeBetweenActions
                         faker
@@ -103,10 +111,12 @@ module ShoppingSimulator =
                 if not shopper_identified && faker.Random.Bool() then
                     yield
                         cart_stream,
-                        Shopping.Cart.CartShopperGotIdentified
+                        Shopping.CartShopperGotIdentified
                             { CartId = cart_id
                               CustomerId = generate_customer_id faker
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }
+
+                    cart_version <- cart_version + 1L
 
                     clock.AdvanceTimeBetweenActions
                         faker
@@ -115,8 +125,127 @@ module ShoppingSimulator =
 
                 if faker.Random.Bool() then
                     yield
+                        checkout_stream,
+                        Shopping.CheckoutStarted
+                            { Cart = $"{cart_id}@{cart_version}"
+                              At = clock.GetCurrentInstant().ToDateTimeOffset() }
+
+                    let recipient: Shopping.Checkout.Recipient =
+                        { Title = faker.Name.Prefix()
+                          FullName = faker.Person.FullName
+                          EmailAddress = faker.Person.Email
+                          PhoneNumber = faker.Phone.PhoneNumber() }
+
+                    let address: Shopping.Checkout.Address =
+                        { Lines =
+                            [ yield faker.Address.StreetName() + " " + faker.Address.BuildingNumber()
+                              yield faker.Address.ZipCode() + " " + faker.Address.City()
+                              yield faker.Address.County() ]
+                          Country = faker.Address.CountryCode() }
+
+                    clock.AdvanceTimeBetweenActions
+                        faker
+                        configuration.Shopping.TimeBetweenCheckoutActions.Minimum
+                        configuration.Shopping.TimeBetweenCheckoutActions.Maximum
+
+                    yield
+                        checkout_stream,
+                        Shopping.ShippingInformationCollected
+                            { Cart = $"{cart_id}@{cart_version}"
+                              Recipient = recipient
+                              Address = address
+                              Instructions = faker.Lorem.Lines(2)
+                              At = clock.GetCurrentInstant().ToDateTimeOffset() }
+                    
+                    clock.AdvanceTimeBetweenActions
+                        faker
+                        configuration.Shopping.TimeBetweenCheckoutActions.Minimum
+                        configuration.Shopping.TimeBetweenCheckoutActions.Maximum
+                    
+                    let shipping_method = faker.PickRandom<Shopping.Checkout.ShippingMethod>()
+                    
+                    yield
+                        checkout_stream,
+                        Shopping.ShippingMethodSelected
+                            { Cart = $"{cart_id}@{cart_version}"
+                              Method = shipping_method
+                              At = clock.GetCurrentInstant().ToDateTimeOffset() }
+
+                    yield
+                        checkout_stream,
+                        Shopping.ShippingCostCalculated
+                            { Cart = $"{cart_id}@{cart_version}"
+                              ForMethod = shipping_method
+                              Cost =
+                                  match shipping_method with
+                                  | Shopping.Checkout.ShippingMethod.Express ->
+                                        faker.Commerce.Price(5.0m, 20.00m, 2, "USD")
+                                  | Shopping.Checkout.ShippingMethod.Overnight ->
+                                        faker.Commerce.Price(10.0m, 30.00m, 2, "USD")
+                                  | Shopping.Checkout.ShippingMethod.SameDay ->
+                                        faker.Commerce.Price(15.0m, 40.00m, 2, "USD")
+                                  | _ ->
+                                        faker.Commerce.Price(0.0m, 10.00m, 2, "USD")
+                              At = clock.GetCurrentInstant().ToDateTimeOffset() }
+
+                    clock.AdvanceTimeBetweenActions
+                        faker
+                        configuration.Shopping.TimeBetweenCheckoutActions.Minimum
+                        configuration.Shopping.TimeBetweenCheckoutActions.Maximum
+
+                    if faker.Random.Bool() then
+                        yield
+                            checkout_stream,
+                            Shopping.BillingInformationCollected
+                                { Cart = $"{cart_id}@{cart_version}"
+                                  Recipient =
+                                    { Title = faker.Name.Prefix()
+                                      FullName = faker.Person.FullName
+                                      EmailAddress = faker.Person.Email
+                                      PhoneNumber = faker.Phone.PhoneNumber() }
+                                  Address =
+                                    { Lines =
+                                        [ yield faker.Address.StreetName() + " " + faker.Address.BuildingNumber()
+                                          yield faker.Address.ZipCode() + " " + faker.Address.City()
+                                          yield faker.Address.County() ]
+                                      Country = faker.Address.CountryCode() }
+                                  At = clock.GetCurrentInstant().ToDateTimeOffset() }
+                    else
+                        yield
+                            checkout_stream,
+                            Shopping.BillingInformationCopiedFromShippingInformation
+                                { Cart = $"{cart_id}@{cart_version}"
+                                  Recipient = recipient
+                                  Address = address
+                                  At = clock.GetCurrentInstant().ToDateTimeOffset() }
+
+                    clock.AdvanceTimeBetweenActions
+                        faker
+                        configuration.Shopping.TimeBetweenCheckoutActions.Minimum
+                        configuration.Shopping.TimeBetweenCheckoutActions.Maximum
+                    
+                    yield
+                        checkout_stream,
+                        Shopping.PaymentMethodSelected
+                            { Cart = $"{cart_id}@{cart_version}"
+                              Method = faker.PickRandom<Shopping.Checkout.PaymentMethod>()
+                              At = clock.GetCurrentInstant().ToDateTimeOffset() }
+
+                    clock.AdvanceTimeBetweenActions
+                        faker
+                        configuration.Shopping.TimeBetweenCheckoutActions.Minimum
+                        configuration.Shopping.TimeBetweenCheckoutActions.Maximum
+
+                    yield
+                        checkout_stream,
+                        Shopping.CheckoutCompleted
+                            { Cart = $"{cart_id}@{cart_version}"
+                              OrderId = generate_order_id()
+                              At = clock.GetCurrentInstant().ToDateTimeOffset() }
+
+                    yield
                         cart_stream,
-                        Shopping.Cart.CartGotCheckedOut
+                        Shopping.CartGotCheckedOut
                             { CartId = cart_id
                               OrderId = generate_order_id ()
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }
@@ -125,7 +254,7 @@ module ShoppingSimulator =
 
                     yield
                         cart_stream,
-                        Shopping.Cart.CartGotAbandoned
+                        Shopping.CartGotAbandoned
                             { CartId = cart_id
                               AfterBeingIdleFor = configuration.Shopping.AbandonCartAfterTime.ToTimeSpan()
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }

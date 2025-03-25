@@ -7,6 +7,7 @@ open Flurl.Http
 open FSharp.Control
 open Kurrent.Extensions.Commerce.Framework
 open Microsoft.Extensions.Logging
+open NodaTime.Testing
 
 module ProductCatalogBuilder =
     let private download_open_food_facts_data () =
@@ -21,14 +22,14 @@ module ProductCatalogBuilder =
             do! response_stream.CopyToAsync(file_stream)
         }
 
-    let build (faker: Faker) (configuration: PIMConfiguration) (log: ILogger) =
+    let build (faker: Faker) (configuration: Configuration) (log: ILogger) =
         task {
             if not (File.Exists "food.parquet") then
                 log.LogInformation("Downloading Open Food Facts data ... this can take some time")
                 do! download_open_food_facts_data ()
 
             let product_count =
-                faker.Random.Int(configuration.ProductCount.Minimum, configuration.ProductCount.Maximum)
+                faker.Random.Int(configuration.PIM.ProductCount.Minimum, configuration.PIM.ProductCount.Maximum)
 
             let! weighted_products =
                 Sql.connect_with_defaults ()

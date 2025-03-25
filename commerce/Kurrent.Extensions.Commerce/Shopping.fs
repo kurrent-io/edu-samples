@@ -51,37 +51,24 @@ module Shopping =
               AfterBeingIdleFor: TimeSpan
               At: DateTimeOffset }
 
-        type Event =
-            | VisitorStartedShopping of VisitorStartedShopping
-            | CartShopperGotIdentified of CartShopperGotIdentified
-            | CustomerStartedShopping of CustomerStartedShopping
-            | ItemGotAddedToCart of ItemGotAddedToCart
-            | ItemGotRemovedFromCart of ItemGotRemovedFromCart
-            | CartGotCheckedOut of CartGotCheckedOut
-            | CartGotAbandoned of CartGotAbandoned
-
-            member this.ToEventType() =
-                match this with
-                | VisitorStartedShopping _ -> nameof(VisitorStartedShopping).ToKebabCase()
-                | CartShopperGotIdentified _ -> nameof(CartShopperGotIdentified).ToKebabCase()
-                | CustomerStartedShopping _ -> nameof(CustomerStartedShopping).ToKebabCase()
-                | ItemGotAddedToCart _ -> nameof(ItemGotAddedToCart).ToKebabCase()
-                | ItemGotRemovedFromCart _ -> nameof(ItemGotRemovedFromCart).ToKebabCase()
-                | CartGotCheckedOut _ -> nameof(CartGotCheckedOut).ToKebabCase()
-                | CartGotAbandoned _ -> nameof(CartGotAbandoned).ToKebabCase()
-
     module Checkout =
         [<Description("Whenever the checkout process started")>]
-        type CheckoutStarted =
-            { CheckoutId: string
-              At: DateTimeOffset }
+        type CheckoutStarted = { Cart: string; At: DateTimeOffset }
 
-        type ShippingAddress = { Country: string; Lines: string list }
+        type Recipient =
+            { Title: string
+              FullName: string
+              EmailAddress: string
+              PhoneNumber: string }
+
+        type Address = { Country: string; Lines: string list }
 
         [<Description("Whenever the shipping information was collected")>]
         type ShippingInformationCollected =
-            { CheckoutId: string
-              Address: ShippingAddress
+            { Cart: string
+              Recipient: Recipient
+              Address: Address
+              Instructions: string
               At: DateTimeOffset }
 
         type ShippingMethod =
@@ -90,8 +77,82 @@ module Shopping =
             | Overnight = 2
             | SameDay = 3
 
-        [<Description("Whenever the shipping information was collected")>]
+        [<Description("Whenever the shipping method is selected")>]
         type ShippingMethodSelected =
-            { CheckoutId: string
+            { Cart: string
               Method: ShippingMethod
               At: DateTimeOffset }
+
+        [<Description("Whenever the shipping method is selected, the cost is calculated")>]
+        type ShippingCostCalculated =
+            { Cart: string
+              ForMethod: ShippingMethod
+              Cost: string
+              At: DateTimeOffset }
+
+        type PaymentMethod =
+            | CreditCard = 0
+            | DebitCard = 1
+            | WireTransfer = 2
+
+        [<Description("Whenever the billing information was collected")>]
+        type BillingInformationCollected =
+            { Cart: string
+              Recipient: Recipient
+              Address: Address
+              At: DateTimeOffset }
+
+        [<Description("Whenever the billing information was to be copied from the shipping information")>]
+        type BillingInformationCopiedFromShippingInformation =
+            { Cart: string
+              Recipient: Recipient
+              Address: Address
+              At: DateTimeOffset }
+
+        [<Description("Whenever the payment method is selected")>]
+        type PaymentMethodSelected =
+            { Cart: string
+              Method: PaymentMethod
+              At: DateTimeOffset }
+
+        [<Description("Whenever the checkout completed")>]
+        type CheckoutCompleted =
+            { Cart: string
+              OrderId: string
+              At: DateTimeOffset }
+
+    type Event =
+        | VisitorStartedShopping of Cart.VisitorStartedShopping
+        | CartShopperGotIdentified of Cart.CartShopperGotIdentified
+        | CustomerStartedShopping of Cart.CustomerStartedShopping
+        | ItemGotAddedToCart of Cart.ItemGotAddedToCart
+        | ItemGotRemovedFromCart of Cart.ItemGotRemovedFromCart
+        | CartGotCheckedOut of Cart.CartGotCheckedOut
+        | CartGotAbandoned of Cart.CartGotAbandoned
+        | CheckoutStarted of Checkout.CheckoutStarted
+        | ShippingInformationCollected of Checkout.ShippingInformationCollected
+        | ShippingMethodSelected of Checkout.ShippingMethodSelected
+        | ShippingCostCalculated of Checkout.ShippingCostCalculated
+        | BillingInformationCollected of Checkout.BillingInformationCollected
+        | BillingInformationCopiedFromShippingInformation of Checkout.BillingInformationCopiedFromShippingInformation
+        | PaymentMethodSelected of Checkout.PaymentMethodSelected
+        | CheckoutCompleted of Checkout.CheckoutCompleted
+
+        member this.ToEventType() =
+            match this with
+            | VisitorStartedShopping _ -> nameof(VisitorStartedShopping).ToKebabCase()
+            | CartShopperGotIdentified _ -> nameof(CartShopperGotIdentified).ToKebabCase()
+            | CustomerStartedShopping _ -> nameof(CustomerStartedShopping).ToKebabCase()
+            | ItemGotAddedToCart _ -> nameof(ItemGotAddedToCart).ToKebabCase()
+            | ItemGotRemovedFromCart _ -> nameof(ItemGotRemovedFromCart).ToKebabCase()
+            | CartGotCheckedOut _ -> nameof(CartGotCheckedOut).ToKebabCase()
+            | CartGotAbandoned _ -> nameof(CartGotAbandoned).ToKebabCase()
+            | CheckoutStarted _ -> nameof(CheckoutStarted).ToKebabCase()
+            | ShippingInformationCollected _ -> nameof(ShippingInformationCollected).ToKebabCase()
+            | ShippingMethodSelected _ -> nameof(ShippingMethodSelected).ToKebabCase()
+            | ShippingCostCalculated _ -> nameof(ShippingCostCalculated).ToKebabCase()
+            | BillingInformationCollected _ -> nameof(BillingInformationCollected).ToKebabCase()
+            | BillingInformationCopiedFromShippingInformation _ ->
+                nameof(BillingInformationCopiedFromShippingInformation).ToKebabCase()
+            | PaymentMethodSelected _ -> nameof(PaymentMethodSelected).ToKebabCase()
+            | CheckoutCompleted _ -> nameof(CheckoutCompleted).ToKebabCase()

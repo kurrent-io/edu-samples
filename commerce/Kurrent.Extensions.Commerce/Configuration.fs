@@ -15,6 +15,7 @@ type ShoppingConfiguration =
       CartCount: CountConfiguration
       CartActionCount: CountConfiguration
       TimeBetweenCartActions: DurationConfiguration
+      TimeBetweenCheckoutActions: DurationConfiguration
       AbandonCartAfterTime: Duration }
 
     static member Default =
@@ -26,19 +27,16 @@ type ShoppingConfiguration =
           TimeBetweenCartActions =
             { Minimum = Duration.FromSeconds 5.0
               Maximum = Duration.FromMinutes 15.0 }
+          TimeBetweenCheckoutActions =
+            { Minimum = Duration.FromSeconds 30.0
+              Maximum = Duration.FromMinutes 2.0 }
           AbandonCartAfterTime = Duration.FromHours 1.0 }
 
 type PIMConfiguration =
-    { CatalogPeriod: PeriodConfiguration
-      CatalogRevisionsPerYear: CountConfiguration
-      ProductCount: CountConfiguration }
+    { ProductCount: CountConfiguration }
 
     static member Default =
-        { CatalogPeriod =
-            { From = Instant.FromUtc(2020, 1, 1, 0, 0, 0)
-              To = Instant.FromDateTimeOffset(DateTimeOffset.UtcNow) }
-          CatalogRevisionsPerYear = { Minimum = 1; Maximum = 10 }
-          ProductCount = { Minimum = 1000; Maximum = 5000 } }
+        { ProductCount = { Minimum = 1000; Maximum = 5000 } }
 
 type Configuration =
     { Shopping: ShoppingConfiguration

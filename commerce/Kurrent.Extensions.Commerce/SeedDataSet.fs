@@ -105,6 +105,7 @@ module SeedDataSet =
                         .ConfigureForNodaTime(DateTimeZoneProviders.Tzdb)
 
                 options.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
+                options.Converters.Add(JsonStringEnumConverter(JsonNamingPolicy.CamelCase))
 
                 match settings.DetectInputFormat() with
                 | Json ->

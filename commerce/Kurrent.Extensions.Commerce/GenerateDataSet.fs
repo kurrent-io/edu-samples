@@ -146,6 +146,7 @@ module GenerateDataSet =
                         .ConfigureForNodaTime(DateTimeZoneProviders.Tzdb)
 
                 options.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
+                options.Converters.Add(JsonStringEnumConverter(JsonNamingPolicy.CamelCase))
 
                 let configuration: Configuration =
                     match settings.ConfigurationFile with
@@ -159,7 +160,7 @@ module GenerateDataSet =
 
                 let faker = Faker()
 
-                do! ProductCatalogBuilder.build faker configuration.PIM logger
+                do! ProductCatalogBuilder.build faker configuration logger
 
                 let output =
                     ShoppingSimulator.simulate faker configuration logger

@@ -35,11 +35,11 @@ module GetDefaultConfiguration =
                         .ConfigureForNodaTime(DateTimeZoneProviders.Tzdb)
 
                 options.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
+                options.Converters.Add(JsonStringEnumConverter(JsonNamingPolicy.CamelCase))
 
                 logger.LogInformation("Writing output to {JsonFile}", settings.OutputFile)
 
-                let json =
-                    JsonSerializer.Serialize(Configuration.Default, options)
+                let json = JsonSerializer.Serialize(Configuration.Default, options)
 
                 File.WriteAllText(settings.OutputFile, json)
 
