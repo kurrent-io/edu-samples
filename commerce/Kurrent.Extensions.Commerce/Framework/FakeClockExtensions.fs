@@ -6,7 +6,7 @@ open Bogus
 
 module FakeClockExtensions =
     type FakeClock with
-        member this.TimeBetweenActions (faker: Faker) (minimum: Duration) (maximum: Duration) =
+        member this.AdvanceTimeBetweenActions (faker: Faker) (minimum: Duration) (maximum: Duration) =
             let time =
                 Duration.FromSeconds(faker.Random.Double(minimum.TotalSeconds, maximum.TotalSeconds))
 

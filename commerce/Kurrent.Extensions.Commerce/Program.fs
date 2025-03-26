@@ -63,6 +63,7 @@ module Program =
                 // - the name of the F# module will become the command name in kebab case (e.g. name-of-the-module)
                 // - must be attributed with [<Description("...")>] for the description to be picked up
                 // Please add commands in the order you want them to appear in the help text (mostly alphabetical)
+                .AddCommand<GetDefaultConfiguration.Command>()
                 .AddCommand<GenerateDataSet.Command>()
                 .AddCommand<SeedDataSet.Command>()
             |> ignore)
