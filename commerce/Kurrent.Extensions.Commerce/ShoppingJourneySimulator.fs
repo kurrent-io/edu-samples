@@ -5,34 +5,18 @@ open Bogus
 open Bogus.FakerExtensions
 open FSharp.Control
 open Kurrent.Extensions.Commerce.Framework.ClockExtensions
-open Microsoft.Extensions.Logging
-open NodaTime
-open NodaTime.Testing
 
-[<RequireQualifiedAccess>]
-module ShoppingSimulator =
-    let private generate_customer_id (faker: Faker) = $"customer-%d{faker.Random.Int(0)}"
+type ShoppingJourneySimulator(faker: Faker)  =
+    let generate_customer_id () = $"customer-%d{faker.Random.Int(0)}"
 
-    let private generate_cart_id () = $"cart-{Guid.NewGuid():N}"
+    let generate_cart_id () = $"cart-{Guid.NewGuid():N}"
 
-    let private generate_order_id () = $"order-{Guid.NewGuid():N}"
-
-    let simulate (faker: Faker) (configuration: Configuration) (logger: ILogger) =
-        taskSeq {
-            let cart_count =
-                faker.Random.Int(configuration.Shopping.CartCount.Minimum, configuration.Shopping.CartCount.Maximum)
-
-            for _ in [ 1..cart_count ] do
-                let instant =
-                    faker.Random.Long(
-                        configuration.Shopping.ShoppingPeriod.From.ToUnixTimeMilliseconds(),
-                        configuration.Shopping.ShoppingPeriod.To.ToUnixTimeMilliseconds()
-                    )
-                    |> Instant.FromUnixTimeMilliseconds
-
-                let clock = FakeClock(instant)
-
-                let cart_id = generate_cart_id ()
+    let generate_order_id () = $"order-{Guid.NewGuid():N}"
+    
+    interface ISimulator<Shopping.Event> with
+        member this.Simulate clock configuration =
+            taskSeq {
+                let cart_id = generate_cart_id()
                 let cart_stream = StreamName.ofString cart_id
                 let checkout_stream = StreamName.ofString $"checkout-for-{cart_id}"
                 let mutable shopper_identified = false
@@ -43,7 +27,7 @@ module ShoppingSimulator =
                         cart_stream,
                         Shopping.CustomerStartedShopping
                             { CartId = cart_id
-                              CustomerId = generate_customer_id faker
+                              CustomerId = generate_customer_id ()
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }
 
                     cart_version <- cart_version + 1L
@@ -113,7 +97,7 @@ module ShoppingSimulator =
                         cart_stream,
                         Shopping.CartShopperGotIdentified
                             { CartId = cart_id
-                              CustomerId = generate_customer_id faker
+                              CustomerId = generate_customer_id()
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }
 
                     cart_version <- cart_version + 1L
@@ -257,4 +241,4 @@ module ShoppingSimulator =
                             { CartId = cart_id
                               AfterBeingIdleFor = configuration.Shopping.AbandonCartAfterTime.ToTimeSpan()
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }
-        }
+            }

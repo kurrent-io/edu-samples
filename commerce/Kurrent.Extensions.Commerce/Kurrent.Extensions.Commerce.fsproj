@@ -19,8 +19,8 @@
     <Compile Include="FoodProducts.fs" />
     <Compile Include="FakeExtensions.fs" />
     <Compile Include="ProductCatalogBuilder.fs" />
-    <Compile Include="ShoppingSimulator.fs" />
-    <Compile Include="LiveShoppingSimulator.fs" />
+    <Compile Include="ISimulator.fs" />
+    <Compile Include="ShoppingJourneySimulator.fs" />
     <Compile Include="FileFormat.fs" />
     <Compile Include="GetDefaultConfiguration.fs" />
     <Compile Include="GenerateDataSet.fs" />

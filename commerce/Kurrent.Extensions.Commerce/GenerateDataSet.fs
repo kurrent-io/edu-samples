@@ -11,6 +11,7 @@ open FSharp.Control
 open Microsoft.Extensions.Logging
 open NodaTime
 open NodaTime.Serialization.SystemTextJson
+open NodaTime.Testing
 open Spectre.Console.Cli
 open Spectre.Console.Cli.AsyncCommandExtensions
 
@@ -159,11 +160,31 @@ module GenerateDataSet =
                             failwith $"The configuration file '{file}' does not exist."
 
                 let faker = Faker()
+                
+                let simulator : ISimulator<Shopping.Event> = ShoppingJourneySimulator(faker)
 
                 do! ProductCatalogBuilder.build faker configuration logger
 
                 let output =
-                    ShoppingSimulator.simulate faker configuration logger
+                    taskSeq {
+                        let cart_count = faker.Random.Int(
+                            configuration.Shopping.CartCount.Minimum,
+                            configuration.Shopping.CartCount.Maximum)
+                        
+                        logger.LogInformation("Generating {CartCount} carts", cart_count)
+                        
+                        let time_between_carts =
+                            Duration.FromTicks(
+                                (configuration.Shopping.ShoppingPeriod.To -
+                                configuration.Shopping.ShoppingPeriod.From).TotalTicks / double cart_count)
+                            
+                        logger.LogInformation("Time between carts is {Days} {Hours}:{Minutes}:{Seconds}", time_between_carts.Days, time_between_carts.Hours, time_between_carts.Minutes, time_between_carts.Seconds)
+                        
+                        let clock = FakeClock(configuration.Shopping.ShoppingPeriod.From)
+                        for _ in 1 .. cart_count do
+                            yield! (simulator.Simulate (FakeClock(clock.GetCurrentInstant())) configuration)
+                            clock.Advance(time_between_carts)
+                    }
                     |> TaskSeq.map (fun (stream, event) ->
                         let encoded = JsonSerializer.SerializeToUtf8Bytes(event, options)
                         let json = JsonDocument.Parse(encoded)
