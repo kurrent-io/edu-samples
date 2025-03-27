@@ -23,6 +23,7 @@ module LiveShoppingSimulator =
 
     let private append
         (client: EventStoreClient)
+        (options: JsonSerializerOptions)
         (revisions: ConcurrentDictionary<StreamName, StreamRevision>)
         (stream: StreamName)
         (events: Shopping.Event array)
@@ -36,13 +37,13 @@ module LiveShoppingSimulator =
             let data =
                 events
                 |> Array.map (fun event ->
-                    EventData(Uuid.NewUuid(), event.ToEventType(), JsonSerializer.SerializeToUtf8Bytes(event)))
+                    EventData(Uuid.NewUuid(), event.ToEventType(), ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(event, options))))
 
             let! append_result = client.AppendToStreamAsync(StreamName.toString stream, expected, data)
             revisions[stream] <- append_result.NextExpectedStreamRevision
         }
 
-    let simulate (client: EventStoreClient) (faker: Faker) (configuration: Configuration) (logger: ILogger) =
+    let simulate (client: EventStoreClient) (faker: Faker) (configuration: Configuration) (serializer_options: JsonSerializerOptions) (logger: ILogger) =
         task {
             let revisions = ConcurrentDictionary<StreamName, StreamRevision>()
 
@@ -85,6 +86,7 @@ module LiveShoppingSimulator =
                                 do!
                                     append
                                         client
+                                        serializer_options
                                         revisions
                                         cart_stream
                                         [| Shopping.CustomerStartedShopping
@@ -99,6 +101,7 @@ module LiveShoppingSimulator =
                                 do!
                                     append
                                         client
+                                        serializer_options
                                         revisions
                                         cart_stream
                                         [| Shopping.VisitorStartedShopping
@@ -129,6 +132,7 @@ module LiveShoppingSimulator =
                                     do!
                                         append
                                             client
+                                            serializer_options
                                             revisions
                                             cart_stream
                                             [| Shopping.ItemGotRemovedFromCart
@@ -146,6 +150,7 @@ module LiveShoppingSimulator =
                                     do!
                                         append
                                             client
+                                            serializer_options
                                             revisions
                                             cart_stream
                                             [| Shopping.ItemGotAddedToCart
@@ -169,6 +174,7 @@ module LiveShoppingSimulator =
                                 do!
                                     append
                                         client
+                                        serializer_options
                                         revisions
                                         cart_stream
                                         [| Shopping.CartShopperGotIdentified
@@ -188,6 +194,7 @@ module LiveShoppingSimulator =
                                 do!
                                     append
                                         client
+                                        serializer_options
                                         revisions
                                         checkout_stream
                                         [| Shopping.CheckoutStarted
@@ -216,6 +223,7 @@ module LiveShoppingSimulator =
                                 do!
                                     append
                                         client
+                                        serializer_options
                                         revisions
                                         checkout_stream
                                         [| Shopping.ShippingInformationCollected
@@ -236,6 +244,7 @@ module LiveShoppingSimulator =
                                 do!
                                     append
                                         client
+                                        serializer_options
                                         revisions
                                         checkout_stream
                                         [| Shopping.ShippingMethodSelected
@@ -246,6 +255,7 @@ module LiveShoppingSimulator =
                                 do!
                                     append
                                         client
+                                        serializer_options
                                         revisions
                                         checkout_stream
                                         [| Shopping.ShippingCostCalculated
@@ -272,6 +282,7 @@ module LiveShoppingSimulator =
                                     do!
                                         append
                                             client
+                                            serializer_options
                                             revisions
                                             checkout_stream
                                             [| Shopping.BillingInformationCollected
@@ -295,6 +306,7 @@ module LiveShoppingSimulator =
                                     do!
                                         append
                                             client
+                                            serializer_options
                                             revisions
                                             checkout_stream
                                             [| Shopping.BillingInformationCopiedFromShippingInformation
@@ -312,6 +324,7 @@ module LiveShoppingSimulator =
                                 do!
                                     append
                                         client
+                                        serializer_options
                                         revisions
                                         checkout_stream
                                         [| Shopping.PaymentMethodSelected
@@ -328,6 +341,7 @@ module LiveShoppingSimulator =
                                 do!
                                     append
                                         client
+                                        serializer_options
                                         revisions
                                         checkout_stream
                                         [| Shopping.CheckoutCompleted
@@ -338,6 +352,7 @@ module LiveShoppingSimulator =
                                 do!
                                     append
                                         client
+                                        serializer_options
                                         revisions
                                         cart_stream
                                         [| Shopping.CartGotCheckedOut
@@ -350,6 +365,7 @@ module LiveShoppingSimulator =
                                 do!
                                     append
                                         client
+                                        serializer_options
                                         revisions
                                         cart_stream
                                         [| Shopping.CartGotAbandoned

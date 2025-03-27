@@ -66,7 +66,7 @@ module LiveDataSet =
                 client_settings.OperationOptions.ThrowOnAppendFailure <- false
                 use client = new EventStoreClient(client_settings)
 
-                do! LiveShoppingSimulator.simulate client faker configuration logger
+                do! LiveShoppingSimulator.simulate client faker configuration options logger
                 
                 return 0
             }
