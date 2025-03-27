@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Framework\FakeClockExtensions.fs" />
+    <Compile Include="Framework\ClockExtensions.fs" />
     <Compile Include="Framework\ConfiguratorExtensions.fs" />
     <Compile Include="Framework\AsyncCommandExtensions.fs" />
     <Compile Include="Framework\DuckDBConnectionStringBuilder.fs" />
@@ -20,10 +20,12 @@
     <Compile Include="FakeExtensions.fs" />
     <Compile Include="ProductCatalogBuilder.fs" />
     <Compile Include="ShoppingSimulator.fs" />
+    <Compile Include="LiveShoppingSimulator.fs" />
     <Compile Include="FileFormat.fs" />
     <Compile Include="GetDefaultConfiguration.fs" />
     <Compile Include="GenerateDataSet.fs" />
     <Compile Include="SeedDataSet.fs" />
+    <Compile Include="LiveDataSet.fs" />
     <Compile Include="Program.fs" />
     <Content Include="makefile" />
   </ItemGroup>

@@ -4,7 +4,7 @@ open System
 open Bogus
 open Bogus.FakerExtensions
 open FSharp.Control
-open Kurrent.Extensions.Commerce.Framework.FakeClockExtensions
+open Kurrent.Extensions.Commerce.Framework.ClockExtensions
 open Microsoft.Extensions.Logging
 open NodaTime
 open NodaTime.Testing
@@ -156,14 +156,14 @@ module ShoppingSimulator =
                               Address = address
                               Instructions = faker.Lorem.Lines(2)
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }
-                    
+
                     clock.AdvanceTimeBetweenActions
                         faker
                         configuration.Shopping.TimeBetweenCheckoutActions.Minimum
                         configuration.Shopping.TimeBetweenCheckoutActions.Maximum
-                    
+
                     let shipping_method = faker.PickRandom<Shopping.Checkout.ShippingMethod>()
-                    
+
                     yield
                         checkout_stream,
                         Shopping.ShippingMethodSelected
@@ -177,15 +177,14 @@ module ShoppingSimulator =
                             { Cart = $"{cart_id}@{cart_version}"
                               ForMethod = shipping_method
                               Cost =
-                                  match shipping_method with
-                                  | Shopping.Checkout.ShippingMethod.Express ->
-                                        faker.Commerce.Price(5.0m, 20.00m, 2, "USD")
-                                  | Shopping.Checkout.ShippingMethod.Overnight ->
-                                        faker.Commerce.Price(10.0m, 30.00m, 2, "USD")
-                                  | Shopping.Checkout.ShippingMethod.SameDay ->
-                                        faker.Commerce.Price(15.0m, 40.00m, 2, "USD")
-                                  | _ ->
-                                        faker.Commerce.Price(0.0m, 10.00m, 2, "USD")
+                                match shipping_method with
+                                | Shopping.Checkout.ShippingMethod.Express ->
+                                    faker.Commerce.Price(5.0m, 20.00m, 2, "USD")
+                                | Shopping.Checkout.ShippingMethod.Overnight ->
+                                    faker.Commerce.Price(10.0m, 30.00m, 2, "USD")
+                                | Shopping.Checkout.ShippingMethod.SameDay ->
+                                    faker.Commerce.Price(15.0m, 40.00m, 2, "USD")
+                                | _ -> faker.Commerce.Price(0.0m, 10.00m, 2, "USD")
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }
 
                     clock.AdvanceTimeBetweenActions
@@ -223,7 +222,7 @@ module ShoppingSimulator =
                         faker
                         configuration.Shopping.TimeBetweenCheckoutActions.Minimum
                         configuration.Shopping.TimeBetweenCheckoutActions.Maximum
-                    
+
                     yield
                         checkout_stream,
                         Shopping.PaymentMethodSelected
@@ -240,7 +239,7 @@ module ShoppingSimulator =
                         checkout_stream,
                         Shopping.CheckoutCompleted
                             { Cart = $"{cart_id}@{cart_version}"
-                              OrderId = generate_order_id()
+                              OrderId = generate_order_id ()
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }
 
                     yield

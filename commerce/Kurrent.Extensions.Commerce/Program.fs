@@ -65,6 +65,7 @@ module Program =
                 // Please add commands in the order you want them to appear in the help text (mostly alphabetical)
                 .AddCommand<GetDefaultConfiguration.Command>()
                 .AddCommand<GenerateDataSet.Command>()
+                .AddCommand<LiveDataSet.Command>()
                 .AddCommand<SeedDataSet.Command>()
             |> ignore)
 
