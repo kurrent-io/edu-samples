@@ -130,10 +130,10 @@ module LiveDataSet =
                         concurrency_options,
                         fun (cart: int) (ct: CancellationToken) ->
                             task {
-                                do! Task.Delay(faker.Random.Int(0, initial_delay_in_seconds), ct)
+                                let initial_delay = Duration.FromSeconds(double (faker.Random.Int(0, initial_delay_in_seconds)))
                                 
                                 do!
-                                    simulator.Simulate (FakeClock(clock.GetCurrentInstant())) configuration
+                                    simulator.Simulate (FakeClock(clock.GetCurrentInstant().Plus(initial_delay))) configuration
                                     |> TaskSeq.iterAsync (fun (stream, event) ->
                                         task {
                                             let until =
