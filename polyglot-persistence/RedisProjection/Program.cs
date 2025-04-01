@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Text.Json;
 using EventStore.Client;
+using RedisProjection;
 using StackExchange.Redis;
 using StreamPosition = EventStore.Client.StreamPosition;
 
@@ -17,7 +18,7 @@ var streamPosition = long.TryParse(checkpointValue, out var checkpoint)  // Chec
 
 await using var subscription = 
     esdb.SubscribeToStream(     // Subscribe events..
-        "$ce-payment",          // from this stream..
+        "$et-item-got-added-to-cart",          // from this stream..
         streamPosition,         // from this position..
         true);                  // with linked events automatically resolved (required for system projections)
 
@@ -26,23 +27,17 @@ Console.WriteLine($"Subscribing events from stream after {streamPosition}");
 await foreach (var message in subscription.Messages)                    // Iterate through the messages in the subscription
 {                                                                       
     if (message is not StreamMessage.Event(var e)) continue;            // Skip if message is not an event
-                                                                        
-    var @event = JsonSerializer.Deserialize<PaymentEvent>(              // Deserialize the event
-        Encoding.UTF8.GetString(e.Event.Data.Span));                    
-                                                                         
-    if (@event == null) continue;                                       // Skip if deserialization failed
-                                                                                  
-    var txn = redis.CreateTransaction();                                // Create a transaction for Redis       
-    txn.StringIncrementAsync("total-payments", (double)@event.amount);  // Update the Redis read model
-    txn.StringSetAsync("checkpoint", e.OriginalEventNumber.ToInt64());  // Set the checkpoint to the current event number
-    txn.Execute();                                                      // Execute the transaction
-                                                                        
-    Console.WriteLine($"Incremented redis read model for 'payment'" +   
-                                                " by {@event.amount}"); 
-}                                                                       
 
-public record PaymentEvent
-{
-    public decimal? amount { get; set; }
-    public DateTime timeStamp { get; set; }
-}
+    var evt = e.ToEvent() as ItemGotAdded;
+
+    if (evt == null) continue;   // Convert the event to ItemGotAdded
+
+    var hourKey = $"top-10-products:{evt.at:yyyyMMddHH}";     // Create a key for the current hour
+    var productKey = evt.productName;                             // Use the product ID as the member in the sorted set
+    var txn = redis.CreateTransaction();                        // Create a transaction for Redis
+    txn.SortedSetIncrementAsync(hourKey, productKey, evt.quantity); // Increment the quantity of the product in the sorted set
+    txn.StringSetAsync("checkpoint", e.OriginalEventNumber.ToInt64()); // Set the checkpoint to the current event number
+    txn.Execute();
+
+    Console.WriteLine($"Incremented product {evt.productId} in {hourKey} by {evt.quantity}");
+}                                                                       
