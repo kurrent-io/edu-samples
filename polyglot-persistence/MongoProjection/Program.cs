@@ -18,8 +18,8 @@ var checkpointValue = mongoCollection                      // Get the checkpoint
   .FirstOrDefault()?["checkpoint"]?.AsInt64;               // checkpoint field
 
 var streamPosition = checkpointValue.HasValue                            // Check if the checkpoint exists..
-    ? FromStream.After(StreamPosition.FromInt64(checkpointValue.Value))  // If so, set var to subscribe events from stream after checkpoint..
-    : FromStream.Start;                                                  // Otherwise, set var to subscribe events from the start
+    ? FromStream.After(StreamPosition.FromInt64(checkpointValue.Value))  // If so, subscribe from stream after checkpoint..
+    : FromStream.Start;                                                  // Otherwise, subscribe from the start of the stream
 
 await using var subscription = 
     esdb.SubscribeToStream(     // Subscribe events..
