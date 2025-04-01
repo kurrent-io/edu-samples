@@ -4,7 +4,7 @@ open NodaTime
 open NodaTime.Testing
 open Bogus
 
-module FakeClockExtensions =
+module ClockExtensions =
     type FakeClock with
         member this.AdvanceTimeBetweenActions (faker: Faker) (minimum: Duration) (maximum: Duration) =
             let time =
