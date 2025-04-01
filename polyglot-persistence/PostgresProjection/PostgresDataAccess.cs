@@ -42,10 +42,15 @@ namespace PostgresProjection
         {
             _connection.Execute(sql, @params, transaction: _transaction);
         }
-
-        public T QueryFirstOrDefault<T>(string sql, object param)
+        
+        public T QueryFirstOrDefault<T>(CommandDefinition sql)
         {
-            return _connection.QueryFirstOrDefault<T>(sql, param, transaction: _transaction);
+            return _connection.QueryFirstOrDefault<T>(sql);
+        }
+
+        public void Execute(CommandDefinition? sql)
+        {
+            if (sql != null) _connection.Execute(sql.Value);
         }
     }
 }
