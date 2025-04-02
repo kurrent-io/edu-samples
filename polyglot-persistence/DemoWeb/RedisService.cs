@@ -29,7 +29,7 @@ public class RedisService
     {
         var db = _redis.GetDatabase();
         var keys = await db.ExecuteAsync("KEYS", $"{TopProductsKey}:*");
-        return ((RedisResult[])keys).FirstOrDefault()?.ToString();
+        return (((RedisResult[])keys)!).FirstOrDefault()?.ToString();
     }
 }
 
