@@ -14,7 +14,7 @@ public class TopProductsHub : Hub
 
     public async Task GetTopProducts(string hourKey)
     {
-        string key = hourKey;
+        string? key = hourKey;
         if (string.IsNullOrEmpty(hourKey))
         {
             // look for the first "top products" key in redis

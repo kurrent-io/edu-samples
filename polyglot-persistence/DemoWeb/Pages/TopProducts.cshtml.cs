@@ -10,18 +10,9 @@ namespace DemoWeb.Pages
         public TopProductsModel(RedisService redisService)
         {
             _redisService = redisService;
+            CurrentHour = string.Empty;
         }
 
         public string CurrentHour { get; private set; }
-
-        public async Task OnGetAsync()
-        {
-            //var firstAvailableHour = await _redisService.GetFirstAvailableHourKeyAsync();
-            //if (firstAvailableHour != null)
-            //{
-
-            //    CurrentHour = firstAvailableHour?.Split(':').Last();
-            //}
-        }
     }
 }
