@@ -1,8 +1,6 @@
 using System;
-using System.Text;
-using System.Text.Json;
+using Common;
 using EventStore.Client;
-using RedisProjection;
 using StackExchange.Redis;
 using StreamPosition = EventStore.Client.StreamPosition;
 
@@ -28,12 +26,11 @@ await foreach (var message in subscription.Messages)                    // Itera
 {                                                                       
     if (message is not StreamMessage.Event(var e)) continue;            // Skip if message is not an event
 
-    var evt = e.ToEvent() as ItemGotAdded;
-
-    if (evt == null) continue;   // Convert the event to ItemGotAdded
+    if (CartEventEncoder.Decode(e.Event.Data, e.Event.EventType) is not ItemGotAdded evt) continue;   // Convert the event to ItemGotAdded
 
     var hourKey = $"top-10-products:{evt.at:yyyyMMddHH}";     // Create a key for the current hour
     var productKey = evt.productName;                             // Use the product ID as the member in the sorted set
+    
     var txn = redis.CreateTransaction();                        // Create a transaction for Redis
     txn.SortedSetIncrementAsync(hourKey, productKey, evt.quantity); // Increment the quantity of the product in the sorted set
     txn.StringSetAsync("checkpoint", e.OriginalEventNumber.ToInt64()); // Set the checkpoint to the current event number
