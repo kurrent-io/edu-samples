@@ -2,9 +2,9 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/docker-in-docker
 {
 	"name": "Polyglot Persistence",
-  "dockerComposeFile": "/polyglot-persistence/docker-compose.yml",
-  "workspaceFolder": "/polyglot-persistence",
-	"postCreateCommand": "/polyglot-persistence/setup.sh",
+  "dockerComposeFile": "../polyglot-persistence/docker-compose.yml",
+  "workspaceFolder": "../polyglot-persistence",
+	"postCreateCommand": "../polyglot-persistence/setup.sh",
 	"containerEnv": {
 		"DOTNET_NOLOGO": "true" // Mute dotnet welcome message that appears when dotnet is executed for the first time https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables#dotnet_nologo
 	},
