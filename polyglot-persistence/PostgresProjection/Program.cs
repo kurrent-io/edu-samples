@@ -29,12 +29,15 @@ Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
 var postgres = new PostgresDataAccess(new NpgsqlConnection("Host=localhost;Port=5432;Database=postgres;Username=postgres"));
 var esdb = new EventStoreClient(EventStoreClientSettings.Create("esdb://admin:changeit@localhost:2113?tls=false"));
 
+postgres.Execute(CartProjection.GetCreateCartTableCommand()); // Create the checkpoint table if it doesn't exist
+postgres.Execute(Checkpoint.GetCreateTableCommand()); // Create the checkpoint table if it doesn't exist
+
 // ------------------------------------------------- //
 // Subscribe to EventStoreDB from checkpoint onwards //
 // ------------------------------------------------- //
 
 var checkpointValue = postgres.QueryFirstOrDefault<long?>(
-    CartProjection.GetCartCheckpointQuery());                   // Get the checkpoint value from PostgreSQL checkpoint table
+    Checkpoint.GetQuery(CartProjection.ReadModelName));                   // Get the checkpoint value from PostgreSQL checkpoint table
 
 var streamPosition = checkpointValue.HasValue                            // Check if the checkpoint exists..
     ? FromStream.After(StreamPosition.FromInt64(checkpointValue.Value))  // if so, subscribe from stream after checkpoint..
@@ -57,10 +60,11 @@ await foreach (var message in subscription.Messages)                     // Iter
 
     postgres.BeginTransaction();
 
-    postgres.Execute(CartProjection.ProjectToSqlCommand(e));
+    postgres.Execute(CartProjection.Project(e));
 
-    postgres.Execute(CartProjection.GetCheckpointUpdateCommand(e.OriginalEventNumber.ToInt64()));
+    postgres.Execute(Checkpoint.GetUpdateCommand(CartProjection.ReadModelName, e.OriginalEventNumber.ToInt64()));
     
     postgres.Commit();
-    
+
+    Console.WriteLine($"Projected event #{e.OriginalEventNumber.ToInt64()} {e.Event.EventType}");
 }

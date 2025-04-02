@@ -1,3 +1,4 @@
+using Common;
 using Dapper;
 using EventStore.Client;
 
@@ -5,26 +6,25 @@ namespace PostgresProjection;
 
 public static class CartProjection
 {
-    private const string ReadModelName = "carts";
+    public const string ReadModelName = "carts";
 
-    public static CommandDefinition? ProjectToSqlCommand(ResolvedEvent evt)
+    public static IEnumerable<CommandDefinition> Project(ResolvedEvent evt)
     {
-        var decodeEvent = ResolvedEventEncoder.DecodeEvent(evt);
-        
-        switch (decodeEvent)
+        var decodedEvent = CartEventEncoder.Decode(evt.Event.Data, evt.Event.EventType);
+
+        CommandDefinition? command = decodedEvent switch
         {
-            case VisitorStartedShopping visitor:
-                return Project(visitor);
-            case CustomerStartedShopping customer:
-                return Project(customer);
-            case CartShopperGotIdentified identified:
-                return Project(identified);
-            case CartGotCheckedOut checkedOut:
-                return Project(checkedOut);
-            case CartGotAbandoned abandoned:
-                return Project(abandoned);
-            default:
-                return null;
+            VisitorStartedShopping visitor => Project(visitor),
+            CustomerStartedShopping customer => Project(customer),
+            CartShopperGotIdentified identified => Project(identified),
+            CartGotCheckedOut checkedOut => Project(checkedOut),
+            CartGotAbandoned abandoned => Project(abandoned),
+            _ => null
+        };
+
+        if (command != null)
+        {
+            yield return command.Value;
         }
     }
 
@@ -85,25 +85,16 @@ public static class CartProjection
 
         return new CommandDefinition(sql, parameters);
     }
-    public static CommandDefinition GetCartCheckpointQuery()
+
+    public static CommandDefinition GetCreateCartTableCommand()
     {
-        var sql = "SELECT checkpoint FROM checkpoints WHERE read_model_name = @ReadModelName";
-
-        var parameters = new { ReadModelName };
-
-        return new CommandDefinition(sql, parameters);
-    }
-
-    public static CommandDefinition? GetCheckpointUpdateCommand(long checkpoint)
-    {
-        var sql = @"
-                    INSERT INTO checkpoints (read_model_name, checkpoint)
-                    VALUES (@ReadModelName, @Checkpoint)
-                    ON CONFLICT (read_model_name) DO UPDATE 
-                    SET checkpoint = @Checkpoint";
-
-        var parameters = new { ReadModelName, Checkpoint = checkpoint };
-
-        return new CommandDefinition(sql, parameters);
+        return new CommandDefinition(@"
+                     CREATE TABLE IF NOT EXISTS carts (
+                         cart_id TEXT PRIMARY KEY,
+                         customer_id TEXT NULL,
+                         status TEXT NOT NULL DEFAULT 'STARTED',
+                         created_at TIMESTAMP NOT NULL,
+                         updated_at TIMESTAMP NOT NULL
+                     )");
     }
 }

@@ -3,7 +3,7 @@ using Npgsql;
 
 namespace PostgresProjection
 {
-    public class PostgresDataAccess
+    public class PostgresDataAccess : IDisposable
     {
         private readonly NpgsqlConnection _connection;
         private NpgsqlTransaction? _transaction;
@@ -26,31 +26,28 @@ namespace PostgresProjection
             _transaction = null;
         }
 
-        public void Rollback()
+        public T? QueryFirstOrDefault<T>(CommandDefinition command)
         {
-            _transaction?.Rollback();
+            return _connection.QueryFirstOrDefault<T>(command);
+        }
+
+        public void Execute(CommandDefinition command)
+        {
+            _connection.Execute(command);
+        }
+
+        public void Execute(IEnumerable<CommandDefinition> commands)
+        {
+            foreach (var command in commands)
+            {
+                _connection.Execute(command);
+            }
+        }
+
+        public void Dispose()
+        {
+            _connection.Dispose();
             _transaction?.Dispose();
-            _transaction = null;
-        }
-
-        public void Execute(string sql)
-        {
-            _connection.Execute(sql, transaction: _transaction);
-        }
-
-        public void Execute(string sql, object @params)
-        {
-            _connection.Execute(sql, @params, transaction: _transaction);
-        }
-        
-        public T QueryFirstOrDefault<T>(CommandDefinition sql)
-        {
-            return _connection.QueryFirstOrDefault<T>(sql);
-        }
-
-        public void Execute(CommandDefinition? sql)
-        {
-            if (sql != null) _connection.Execute(sql.Value);
         }
     }
 }
