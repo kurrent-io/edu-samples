@@ -1,34 +1,50 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/docker-in-docker
 {
-	"name": "Polyglot Persistence",
+  "name": "Polyglot Persistence",
   "dockerComposeFile": "../polyglot-persistence/docker-compose.yml",
-  "workspaceFolder": "../polyglot-persistence",
-	"postCreateCommand": "../polyglot-persistence/setup.sh",
-	"containerEnv": {
-		"DOTNET_NOLOGO": "true" // Mute dotnet welcome message that appears when dotnet is executed for the first time https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables#dotnet_nologo
-	},
-	"portsAttributes": {
-		"2113": {
-			"label": "EventStoreDB Admin UI",
-			"onAutoForward": "notify"
-		},
-		"1113": {
-			"label": "EventStoreDB API",
-			"onAutoForward": "silent"
-		}
-	},
-	"customizations": {
-		"vscode": {
-			"settings": {
-				"extensions.ignoreRecommendations": true,
-				"telemetry.enableTelemetry": false,
-				"telemetry.telemetryLevel": "off",				
-				"redhat.telemetry.enabled": false		
-			}
-		},
-		"codespaces": {
-			"openFiles": []
-		}
-	}	
+  "service": null,
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "postCreateCommand": "./polyglot-persistence/setup.sh",
+  "containerEnv": {
+    "DOTNET_NOLOGO": "true"
+  },
+  "runServices": ["mongo", "postgres", "redis", "eventstore"],
+  "portsAttributes": {
+    "2113": {
+      "label": "EventStoreDB Admin UI",
+      "onAutoForward": "notify"
+    },
+    "1113": {
+      "label": "EventStoreDB API",
+      "onAutoForward": "silent"
+    },
+    "27017": {
+      "label": "MongoDB",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "notify"
+    },
+    "6379": {
+      "label": "Redis",
+      "onAutoForward": "notify"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "extensions.ignoreRecommendations": true,
+        "telemetry.enableTelemetry": false,
+        "telemetry.telemetryLevel": "off",
+        "redhat.telemetry.enabled": false
+      },
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-azuretools.vscode-docker"
+      ]
+    },
+    "codespaces": {
+      "openFiles": []
+    }
+  }
 }
