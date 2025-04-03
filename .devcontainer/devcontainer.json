@@ -1,0 +1,52 @@
+{
+  "name": "Polyglot Persistence",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:9.0",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "containerEnv": {
+    "DOTNET_NOLOGO": "true"
+  },
+  "onCreateCommand": "chmod +x /workspaces/developer-bootcamp/polyglot-persistence/onCreateCommand.sh && /workspaces/developer-bootcamp/polyglot-persistence/onCreateCommand.sh",
+  "postCreateCommand": "chmod +x /workspaces/developer-bootcamp/polyglot-persistence/postCreateCommand.sh && /workspaces/developer-bootcamp/polyglot-persistence/postCreateCommand.sh",
+  "forwardPorts": [27017, 5432, 6379, 2113, 1113],
+  "portsAttributes": {
+    "2113": {
+      "label": "EventStoreDB Admin UI",
+      "onAutoForward": "notify"
+    },
+    "1113": {
+      "label": "EventStoreDB API",
+      "onAutoForward": "silent"
+    },
+    "27017": {
+      "label": "MongoDB",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "notify"
+    },
+    "6379": {
+      "label": "Redis",
+      "onAutoForward": "notify"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "extensions.ignoreRecommendations": true,
+        "telemetry.enableTelemetry": false,
+        "telemetry.telemetryLevel": "off",
+        "redhat.telemetry.enabled": false
+      },
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-azuretools.vscode-docker"
+      ]
+    },
+    "codespaces": {
+      "openFiles": []
+    }
+  }
+}
