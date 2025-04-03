@@ -1,13 +1,15 @@
 {
   "name": "Polyglot Persistence",
-  "dockerComposeFile": "../polyglot-persistence/docker-compose.yml",
-  "service": null,
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-  "postCreateCommand": "./polyglot-persistence/setup.sh",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:8.0",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
   "containerEnv": {
     "DOTNET_NOLOGO": "true"
   },
-  "runServices": ["mongo", "postgres", "redis", "eventstore"],
+  "onCreateCommand": "cd /workspaces/developer-bootcamp && docker compose -f polyglot-persistence/docker-compose.yml pull",
+  "postCreateCommand": "cd /workspaces/developer-bootcamp && docker compose -f polyglot-persistence/docker-compose.yml up -d",
+  "forwardPorts": [27017, 5432, 6379, 2113, 1113],
   "portsAttributes": {
     "2113": {
       "label": "EventStoreDB Admin UI",
