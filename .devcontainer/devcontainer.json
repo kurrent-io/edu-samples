@@ -7,7 +7,7 @@
   "containerEnv": {
     "DOTNET_NOLOGO": "true"
   },
-  "onCreateCommand": "cd /workspaces/developer-bootcamp && docker compose -f polyglot-persistence/docker-compose.yml pull",
+  "onCreateCommand": "cd /workspaces/developer-bootcamp && docker compose -f polyglot-persistence/docker-compose.yml pull  && chmod +x /workspaces/developer-bootcamp/polyglot-persistence/setup.sh && /workspaces/developer-bootcamp/polyglot-persistence/setup.sh",
   "postCreateCommand": "cd /workspaces/developer-bootcamp && docker compose -f polyglot-persistence/docker-compose.yml up -d",
   "forwardPorts": [27017, 5432, 6379, 2113, 1113],
   "portsAttributes": {
