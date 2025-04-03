@@ -1,3 +1,5 @@
+docker compose -f /workspaces/developer-bootcamp/polyglot-persistence/docker-compose.yml up -d
+
 unzip -o /workspaces/developer-bootcamp/polyglot-persistence/data/commerce-data-set.zip -d /workspaces/developer-bootcamp/polyglot-persistence/
 
 chmod +x /workspaces/developer-bootcamp/polyglot-persistence/tools/Kurrent.Extensions.Commerce/linux-x64/edb-commerce
@@ -18,3 +20,5 @@ done
 echo "EventStoreDB is ready."
 
 /workspaces/developer-bootcamp/polyglot-persistence/tools/Kurrent.Extensions.Commerce/linux-x64/edb-commerce seed-data-set /workspaces/developer-bootcamp/polyglot-persistence/data.json
+
+dotnet build /workspaces/developer-bootcamp/polyglot-persistence/polyglot-persistence.sln
