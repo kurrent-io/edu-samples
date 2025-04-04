@@ -1,4 +1,4 @@
-docker compose -f /workspaces/developer-bootcamp/polyglot-persistence/docker-compose.yml up -d
+docker compose --profile db -f /workspaces/developer-bootcamp/polyglot-persistence/docker-compose.yml up -d
 
 unzip -o /workspaces/developer-bootcamp/polyglot-persistence/data/init-data.zip -d /workspaces/developer-bootcamp/polyglot-persistence/
 
