@@ -1,6 +1,4 @@
-docker compose -f /workspaces/developer-bootcamp/polyglot-persistence/docker-compose.codespaces-prebuild.yml up -d
-
-docker compose logs -f &
+docker compose -f /workspaces/developer-bootcamp/polyglot-persistence/docker-compose.yml up -d
 
 unzip -o /workspaces/developer-bootcamp/polyglot-persistence/data/init-data.zip -d /workspaces/developer-bootcamp/polyglot-persistence/
 
@@ -25,4 +23,4 @@ echo "EventStoreDB is ready."
 
 echo "Updated EventStoreDB with initial data."
 
-sleep 30
+docker compose logs
