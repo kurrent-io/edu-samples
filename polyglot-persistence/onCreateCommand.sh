@@ -23,4 +23,4 @@ echo "EventStoreDB is ready."
 
 echo "Updated EventStoreDB with initial data."
 
-docker compose logs
+docker compose -f /workspaces/developer-bootcamp/polyglot-persistence/docker-compose.yml logs
