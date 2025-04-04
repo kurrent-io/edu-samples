@@ -46,3 +46,5 @@ app.MapRazorPages();
 app.MapHub<TopProductsHub>("/topProductsHub");
 
 app.Run();
+
+Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
