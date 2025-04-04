@@ -11,8 +11,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 
 // Register Redis services
+var redisHost = Environment.GetEnvironmentVariable("REDIS_HOST") ?? "localhost";
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-    ConnectionMultiplexer.Connect("localhost:6379"));
+    ConnectionMultiplexer.Connect($"{redisHost}:6379"));
 builder.Services.AddSingleton<RedisService>();
 
 // Register PostgreSQL service

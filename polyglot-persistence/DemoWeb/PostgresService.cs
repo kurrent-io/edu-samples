@@ -10,8 +10,8 @@ public class PostgresService
     public PostgresService(IConfiguration configuration, ILogger<PostgresService> logger)
     {
         _logger = logger;
-        _connectionString = configuration.GetConnectionString("PostgreSQL")
-            ?? "Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=postgres";
+        var postgresHost = Environment.GetEnvironmentVariable("POSTGRES_HOST") ?? "localhost";
+        _connectionString = $"Host={postgresHost};Port=5432;Database=postgres;Username=postgres;Password=postgres";
 
         _logger.LogInformation("PostgreSQL connection string: {ConnectionString}",
             _connectionString.Replace("Password=", "Password=***"));
