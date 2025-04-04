@@ -4,8 +4,7 @@ services:
     container_name: mongo
     ports:
       - "27017:27017"
-    profiles: ["db", "all"]
-
+    
   postgres:
     image: postgres:16
     container_name: postgres
@@ -13,15 +12,13 @@ services:
       - "5432:5432"
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
-    profiles: ["db", "all"]
-
+    
   redis:
     image: redis:7.2
     container_name: redis
     ports:
       - "6379:6379"
-    profiles: ["db", "all"]
-      
+    
   eventstore:
     image: eventstore/eventstore:24.10
     container_name: eventstore
@@ -33,8 +30,7 @@ services:
       - EVENTSTORE_START_STANDARD_PROJECTIONS=true
       - EVENTSTORE_INSECURE=true
       - EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP=true
-    profiles: ["db", "all"]
-  
+    
   demoweb:
     image: mcr.microsoft.com/dotnet/sdk:9.0
     container_name: demoweb
@@ -47,8 +43,7 @@ services:
     environment:
       - REDIS_HOST=redis
       - POSTGRES_HOST=postgres
-    profiles: ["app", "all"]
-
+    
   postgresprojection:
     image: mcr.microsoft.com/dotnet/sdk:9.0
     container_name: postgresprojection
@@ -59,8 +54,7 @@ services:
     environment:
       - POSTGRES_HOST=postgres
       - ESDB_HOST=eventstore
-    profiles: ["app", "all"]
-
+    
   redisprojection:
     image: mcr.microsoft.com/dotnet/sdk:9.0
     container_name: redisprojection
@@ -71,8 +65,7 @@ services:
     environment:
       - REDIS_HOST=redis
       - ESDB_HOST=eventstore
-    profiles: ["app", "all"]
-
+    
   mongoprojection:
     image: mcr.microsoft.com/dotnet/sdk:9.0
     container_name: mongoprojection
@@ -83,4 +76,4 @@ services:
     environment:
       - MONGO_HOST=mongo
       - ESDB_HOST=eventstore
-    profiles: ["app", "all"]
+    
