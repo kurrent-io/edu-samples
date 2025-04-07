@@ -36,10 +36,21 @@ type ShoppingConfiguration =
               Maximum = Duration.FromMinutes 2.0 }
           AbandonCartAfterTime = Duration.FromHours 1.0 }
 
-type PIMConfiguration =
-    { ProductCount: CountConfiguration }
+type ProductSource =
+    | OpenFoodFacts = 0
+    | Amazon = 1
+    | Walmart = 2
 
-    static member Default = { ProductCount = { Minimum = 1000; Maximum = 5000 } }
+type PIMConfiguration =
+    {
+        ProductCount: CountConfiguration
+        ProductSource: ProductSource
+    }
+
+    static member Default = {
+        ProductCount = { Minimum = 1000; Maximum = 5000 }
+        ProductSource = ProductSource.Amazon
+    }
 
 type Configuration =
     { Shopping: ShoppingConfiguration
