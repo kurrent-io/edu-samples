@@ -26,8 +26,11 @@ Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
 // Connect to PostgreSQL and EventStoreDB //
 // -------------------------------------- //
 
-var postgres = new PostgresDataAccess(new NpgsqlConnection("Host=localhost;Port=5432;Database=postgres;Username=postgres"));
-var esdb = new EventStoreClient(EventStoreClientSettings.Create("esdb://admin:changeit@localhost:2113?tls=false"));
+var postgresHost = Environment.GetEnvironmentVariable("POSTGRES_HOST") ?? "localhost";
+var postgres = new PostgresDataAccess(new NpgsqlConnection($"Host={postgresHost};Port=5432;Database=postgres;Username=postgres"));
+
+var esdbHost = Environment.GetEnvironmentVariable("ESDB_HOST") ?? "localhost";
+var esdb = new EventStoreClient(EventStoreClientSettings.Create($"esdb://admin:changeit@{esdbHost}:2113?tls=false"));
 
 postgres.Execute(CartProjection.GetCreateCartTableCommand()); // Create the checkpoint table if it doesn't exist
 postgres.Execute(Checkpoint.GetCreateTableCommand()); // Create the checkpoint table if it doesn't exist

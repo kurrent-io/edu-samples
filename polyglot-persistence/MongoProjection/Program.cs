@@ -8,10 +8,12 @@ using StreamPosition = EventStore.Client.StreamPosition;
 Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
 
 // Connect to MongoDB
-var mongoCollection = new MongoClient("mongodb://localhost:27017").GetDatabase("polyglot-persistence").GetCollection<BsonDocument>("total-payment");
+var mongoHost = Environment.GetEnvironmentVariable("MONGO_HOST") ?? "localhost";
+var mongoCollection = new MongoClient($"mongodb://{mongoHost}:27017").GetDatabase("polyglot-persistence").GetCollection<BsonDocument>("total-payment");
 
 // Connect to EventStoreDB
-var esdb = new EventStoreClient(EventStoreClientSettings.Create("esdb://admin:changeit@localhost:2113?tls=false"));
+var esdbHost = Environment.GetEnvironmentVariable("ESDB_HOST") ?? "localhost";
+var esdb = new EventStoreClient(EventStoreClientSettings.Create($"esdb://admin:changeit@{esdbHost}:2113?tls=false"));
 
 var checkpointValue = mongoCollection                      // Get the checkpoint value from MongoDB..
   .Find(Builders<BsonDocument>.Filter.Eq("_id", "total"))  // from the total document's.. 

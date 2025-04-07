@@ -6,8 +6,12 @@ using StreamPosition = EventStore.Client.StreamPosition;
 
 Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
 
-var redis = ConnectionMultiplexer.Connect("localhost:6379").GetDatabase();                                          // Connect to Redis
-var esdb = new EventStoreClient(EventStoreClientSettings.Create("esdb://admin:changeit@localhost:2113?tls=false")); // Connect to EventStoreDB
+// Program.cs
+var redisHost = Environment.GetEnvironmentVariable("REDIS_HOST") ?? "localhost";
+var redis = ConnectionMultiplexer.Connect($"{redisHost}:6379").GetDatabase();    
+                                      // Connect to Redis
+var esdbHost = Environment.GetEnvironmentVariable("ESDB_HOST") ?? "localhost";
+var esdb = new EventStoreClient(EventStoreClientSettings.Create($"esdb://admin:changeit@{esdbHost}:2113?tls=false")); // Connect to EventStoreDB
 
 var checkpointValue = redis.StringGet("checkpoint");                     // Get the checkpoint value from redis
 var streamPosition = long.TryParse(checkpointValue, out var checkpoint)  // Check if it exists and convertible to long
