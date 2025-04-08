@@ -33,7 +33,6 @@ done
 echo "DemoWeb is running."
 
 # Wait for the required projection messages to be detected
-echo "Waiting for 'MongoProjection started', 'RedisProjection started' and 'DemoWeb started' messages..."
 max_attempts=60
 attempt=0
 while true; do
@@ -41,7 +40,7 @@ while true; do
     if echo "$logs" | grep -q "MongoProjection started" && \
        echo "$logs" | grep -q "RedisProjection started" && \
        echo "$logs" | grep -q "PostgresProjection started"; then
-        echo "All required messages detected."
+        echo "All apps are running."
         break
     fi
     attempt=$((attempt+1))
@@ -49,6 +48,6 @@ while true; do
         echo "Required projections did not start after $max_attempts attempts. Exiting."
         exit 1
     fi
-    echo "Waiting for required projections... (attempt $attempt/$max_attempts)"
+    echo "Waiting apps to start... (attempt $attempt)"
     sleep 2
 done
