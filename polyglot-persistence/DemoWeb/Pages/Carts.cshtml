@@ -105,8 +105,8 @@
                                     <td>@item.ProductName</td>
                                     <td class="text-end">@item.Quantity</td>
                                     <td class="text-end">@item.PricePerUnit.ToString("C")</td>
-                                    <td class="text-end">@item.Tax.ToString("C")</td>
-                                    <td class="text-end">@((item.Quantity * item.PricePerUnit).ToString("C"))</td>
+                                    <td class="text-end">@item.Tax.ToString("P0")</td> 
+                                    <td class="text-end">@((item.Quantity * item.PricePerUnit * (1 + item.Tax)).ToString("C"))</td>
                                 </tr>
                             }
                             </tbody>
@@ -119,7 +119,7 @@
                             <tbody>
                             <tr>
                                 <td colspan="6" class="text-end">
-                                    <strong>Total:</strong> @((cart.TotalPrice + cart.TotalTax).ToString("C"))
+                                    <strong>Total:</strong> @cart.Items.Sum(item => item.Quantity * item.PricePerUnit * (1 + item.Tax)).ToString("C")
                                 </td>
                             </tr>
                             </tbody>
