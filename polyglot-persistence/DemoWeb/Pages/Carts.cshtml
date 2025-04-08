@@ -1,12 +1,12 @@
 ﻿@page
 @model DemoWeb.Pages.CartsModel
 @{
-    ViewData["Title"] = "Carts";
+    ViewData["Title"] = "Carts Items";
     const int maxVisiblePages = 5; // Maximum number of page links to display
 }
 
 <div class="container mt-4">
-    <h1>Carts Table (Postgres Projection)</h1>
+    <h1>Cart Items Table (Postgres Projection)</h1>
 
     <form method="get" asp-page="./Carts">
         <div class="row g-3 mb-4">
@@ -68,15 +68,29 @@
                         }
                     </th>
                     <th>
-                        <a href="@Model.GetSortUrl("created_at")">Created At</a>
-                        @if (Model.SortColumn == "created_at")
+                        <a href="@Model.GetSortUrl("product_id")">Product ID</a>
+                        @if (Model.SortColumn == "product_id")
                         {
                             <span>@(Model.SortDirection == "ASC" ? "⬆" : "⬇")</span>
                         }
                     </th>
                     <th>
-                        <a href="@Model.GetSortUrl("updated_at")">Updated At</a>
-                        @if (Model.SortColumn == "updated_at")
+                        <a href="@Model.GetSortUrl("product_name")">Product Name</a>
+                        @if (Model.SortColumn == "product_name")
+                        {
+                            <span>@(Model.SortDirection == "ASC" ? "⬆" : "⬇")</span>
+                        }
+                    </th>
+                    <th>
+                        <a href="@Model.GetSortUrl("quantity")">Quantity</a>
+                        @if (Model.SortColumn == "quantity")
+                        {
+                            <span>@(Model.SortDirection == "ASC" ? "⬆" : "⬇")</span>
+                        }
+                    </th>
+                    <th>
+                        <a href="@Model.GetSortUrl("price_per_unit")">Price Per Unit</a>
+                        @if (Model.SortColumn == "price_per_unit")
                         {
                             <span>@(Model.SortDirection == "ASC" ? "⬆" : "⬇")</span>
                         }
@@ -87,18 +101,18 @@
                 @if (!Model.Carts.Any())
                 {
                     <tr>
-                        <td colspan="5" class="text-center">No carts found</td>
+                        <td colspan="7" class="text-center">No cart items found</td>
                     </tr>
                 }
                 else
                 {
-                    @foreach (var cart in Model.Carts)
+                    @foreach (var item in Model.Carts)
                     {
                         <tr>
-                            <td>@cart.CartId</td>
-                            <td>@(cart.CustomerId ?? "Anonymous")</td>
+                            <td>@item.CartId</td>
+                            <td>@(item.CustomerId ?? "Anonymous")</td>
                             <td>
-                                @switch (cart.Status)
+                                @switch (item.Status)
                                 {
                                     case "STARTED":
                                         <span class="badge bg-primary">Shopping</span>
@@ -110,12 +124,14 @@
                                         <span class="badge bg-warning text-dark">Abandoned</span>
                                         break;
                                     default:
-                                        <span class="badge bg-secondary">@cart.Status</span>
+                                        <span class="badge bg-secondary">@item.Status</span>
                                         break;
                                 }
                             </td>
-                            <td>@cart.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                            <td>@cart.UpdatedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                            <td>@item.ProductId</td>
+                            <td>@item.ProductName</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.PricePerUnit.ToString("C")</td>
                         </tr>
                     }
                 }

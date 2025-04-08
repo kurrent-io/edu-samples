@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DemoWeb.Pages;
+
 public class CartsModel : PageModel
 {
     private readonly PostgresService _postgresService;
@@ -16,6 +17,10 @@ public class CartsModel : PageModel
 
     [BindProperty(SupportsGet = true)]
     public string Status { get; set; }
+    public string ProductId { get; set; } = string.Empty;
+    public string ProductName { get; set; } = string.Empty;
+    public int Quantity { get; set; }
+    public decimal PricePerUnit { get; set; }
 
     [BindProperty(SupportsGet = true)]
     public string SortColumn { get; set; } = "created_at";
@@ -29,7 +34,7 @@ public class CartsModel : PageModel
     [BindProperty(SupportsGet = true)]
     public int PageSize { get; set; } = 25;
 
-    public List<Cart> Carts { get; private set; } = new();
+    public List<CartItem> Carts { get; private set; } = new();
     public int TotalCount { get; private set; }
     public int TotalPages => (int)System.Math.Ceiling(TotalCount / (double)PageSize);
 
@@ -78,8 +83,21 @@ public class CartsModel : PageModel
 
     private async Task LoadDataAsync()
     {
-        Carts = await _postgresService.GetCartsAsync(FilterOptions);
-        TotalCount = await _postgresService.GetCartsTotalCountAsync(FilterOptions);
+        // Set up filter options based on query parameters
+        var filterOptions = new CartFilterOptions
+        {
+            CartId = CartId,
+            CustomerId = CustomerId,
+            Status = Status,
+            SortColumn = SortColumn,
+            SortDirection = SortDirection,
+            Page = PageNumber,
+            PageSize = PageSize
+        };
+
+        // Get cart items with pagination
+        Carts = await _postgresService.GetCartItemsAsync(filterOptions);
+        TotalCount = await _postgresService.GetCartItemsTotalCountAsync(filterOptions);
     }
 
     public string GetPageUrl(int pageNumber)
