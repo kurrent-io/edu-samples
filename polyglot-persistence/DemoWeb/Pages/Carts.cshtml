@@ -6,7 +6,7 @@
 }
 
 <div class="container mt-4">
-    <h1>Carts (Grouped by Cart ID)</h1>
+    <h1>Carts Table (Postgres)</h1>
 
     <form method="get" asp-page="./Carts">
         <div class="row g-3 mb-4">
@@ -51,62 +51,77 @@
         @foreach (var cart in Model.GroupedCarts)
         {
             <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="mb-0">Cart ID: @cart.CartId</h5>
-                        <div class="text-muted">
-                            Customer: @(cart.CustomerId ?? "Anonymous") |
-                            Status:
-                            @switch (cart.Status)
-                            {
-                                case "STARTED":
-                                    <span class="badge bg-primary">Shopping</span>
-                                    break;
-                                case "CHECKED_OUT":
-                                    <span class="badge bg-success">Checked Out</span>
-                                    break;
-                                case "ABANDONED":
-                                    <span class="badge bg-warning text-dark">Abandoned</span>
-                                    break;
-                                default:
-                                    <span class="badge bg-secondary">@cart.Status</span>
-                                    break;
-                            }
-                            | Last Updated: @cart.LastUpdated.ToString("g")
+                <div class="card-header bg-secondary bg-opacity-25">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-0">
+
+                                @switch (cart.Status)
+                                {
+                                    case "STARTED":
+                                        <span class="badge bg-primary">Shopping</span>
+                                        break;
+                                    case "CHECKED_OUT":
+                                        <span class="badge bg-success">Checked Out</span>
+                                        break;
+                                    case "ABANDONED":
+                                        <span class="badge bg-warning text-dark">Abandoned</span>
+                                        break;
+                                    default:
+                                        <span class="badge bg-secondary">@cart.Status</span>
+                                        break;
+                                }
+                                @cart.CartId
+                            </h5>
+                            <div class="text-muted">
+                                Customer: @(cart.CustomerId ?? "Anonymous") |
+                                | Last Updated: @cart.LastUpdated.ToString("g")
+                            </div>
                         </div>
-                    </div>
-                    <div class="text-end">
-                        <div><strong>Items:</strong> @cart.TotalItems</div>
-                        <div><strong>Total Quantity:</strong> @cart.TotalQuantity</div>
-                        <div><strong>Total Price:</strong> @cart.TotalPrice.ToString("C")</div>
-                        <div><strong>Total Tax:</strong> @cart.TotalTax.ToString("C")</div>
+                        <div class="text-end">
+                            <div><strong>Items:</strong> @cart.TotalItems</div>
+                            <div><strong>Total Quantity:</strong> @cart.TotalQuantity</div>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-striped mb-0">
                             <thead>
-                                <tr>
-                                    <th>Product ID</th>
-                                    <th>Product Name</th>
-                                    <th>Quantity</th>
-                                    <th>Price Per Unit</th>
-                                    <th>Tax</th>
-                                    <th>Subtotal</th>
-                                </tr>
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Product Name</th>
+                                <th class="text-end">Quantity</th>
+                                <th class="text-end">Price Per Unit</th>
+                                <th class="text-end">Tax</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in cart.Items)
-                                {
-                                    <tr>
-                                        <td>@item.ProductId</td>
-                                        <td>@item.ProductName</td>
-                                        <td>@item.Quantity</td>
-                                        <td>@item.PricePerUnit.ToString("C")</td>
-                                        <td>@item.Tax.ToString("C")</td>
-                                        <td>@((item.Quantity * item.PricePerUnit).ToString("C"))</td>
-                                    </tr>
-                                }
+                            @foreach (var item in cart.Items)
+                            {
+                                <tr>
+                                    <td>@item.ProductId</td>
+                                    <td>@item.ProductName</td>
+                                    <td class="text-end">@item.Quantity</td>
+                                    <td class="text-end">@item.PricePerUnit.ToString("C")</td>
+                                    <td class="text-end">@item.Tax.ToString("C")</td>
+                                    <td class="text-end">@((item.Quantity * item.PricePerUnit).ToString("C"))</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-body p-0" style="border-top-width: 2px; border-top-style: solid; border-top-color: currentColor;">
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <tbody>
+                            <tr>
+                                <td colspan="6" class="text-end">
+                                    <strong>Total:</strong> @((cart.TotalPrice + cart.TotalTax).ToString("C"))
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
