@@ -19,7 +19,7 @@ sudo apt-get install -y git-lfs
 git lfs install 
 git lfs pull
 
-find "$root_path/tools/" -type f -name \"edb-commerce*\" -exec chmod +x {}
+find "$root_path/tools/" -type f -name "edb-commerce*" -exec chmod +x {} \;
 # Ensure all scripts in the /scripts directory have executable permission
 chmod +x "$root_path/scripts"/*.sh
 
