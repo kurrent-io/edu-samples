@@ -23,9 +23,9 @@ while ! curl -s -o /dev/null -w "%{http_code}" http://localhost:2113/web/index.h
               echo "EventStoreDB is not available. Exiting"
               exit 1
        fi
-       echo "Waiting for EventStoreDB to start... (attempt $attempt)"
+       echo "Waiting for databases to start... (attempt $attempt)"
        attempt=$((attempt+1))                                         # Increment the attempt count
        sleep 2                                                        # Wait for a few seconds before checking again
 done
 
-echo "EventStoreDB is running."
+echo "Databases are running."
