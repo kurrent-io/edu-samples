@@ -17,10 +17,6 @@ public class CartsModel : PageModel
 
     [BindProperty(SupportsGet = true)]
     public string Status { get; set; }
-    public string ProductId { get; set; } = string.Empty;
-    public string ProductName { get; set; } = string.Empty;
-    public int Quantity { get; set; }
-    public decimal PricePerUnit { get; set; }
 
     [BindProperty(SupportsGet = true)]
     public string SortColumn { get; set; } = "created_at";
@@ -111,7 +107,9 @@ public class CartsModel : PageModel
                 Items = g.ToList(),
                 TotalItems = g.Count(),
                 TotalQuantity = g.Sum(i => i.Quantity),
-                TotalPrice = g.Sum(i => i.Quantity * i.PricePerUnit)
+                TotalPrice = g.Sum(i => i.Quantity * i.PricePerUnit),
+                TotalTax = g.Sum(i => i.Tax),
+                LastUpdated = g.Max(i => i.UpdatedAt) // Get the most recent update for the cart
             })
             .ToList();
     }
@@ -164,4 +162,6 @@ public class GroupedCart
     public int TotalItems { get; set; }
     public int TotalQuantity { get; set; }
     public decimal TotalPrice { get; set; }
+    public decimal TotalTax { get; set; } // Total tax for all cart items
+    public DateTime LastUpdated { get; set; } // Last updated timestamp for the cart
 }

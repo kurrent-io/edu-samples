@@ -29,12 +29,12 @@ public class PostgresService
 
             // Build the query with filter options and join
             var query = new System.Text.StringBuilder(@"
-            SELECT c.cart_id, c.customer_id, c.status, 
-                   ci.product_id, ci.product_name, ci.quantity, 
-                   ci.price_per_unit, ci.updated_at
-            FROM carts c
-            JOIN cart_items ci ON c.cart_id = ci.cart_id
-            WHERE 1=1");
+        SELECT c.cart_id, c.customer_id, c.status, c.updated_at as cart_updated_at,
+               ci.product_id, ci.product_name, ci.quantity, 
+               ci.price_per_unit, ci.tax_rate, ci.updated_at
+        FROM carts c
+        JOIN cart_items ci ON c.cart_id = ci.cart_id
+        WHERE 1=1");
 
             var parameters = new List<NpgsqlParameter>();
 
@@ -83,7 +83,11 @@ public class PostgresService
                     ProductId = reader.GetString(reader.GetOrdinal("product_id")),
                     ProductName = reader.GetString(reader.GetOrdinal("product_name")),
                     Quantity = reader.GetInt32(reader.GetOrdinal("quantity")),
-                    PricePerUnit = reader.GetDecimal(reader.GetOrdinal("price_per_unit"))
+                    PricePerUnit = reader.GetDecimal(reader.GetOrdinal("price_per_unit")),
+                    Tax = !reader.IsDBNull(reader.GetOrdinal("tax_rate"))
+                        ? reader.GetDecimal(reader.GetOrdinal("tax_rate"))
+                        : 0m, // Handle null tax values
+                    UpdatedAt = reader.GetDateTime(reader.GetOrdinal("updated_at"))
                 });
             }
 
@@ -157,8 +161,10 @@ public class CartItem
     public string ProductName { get; set; } = string.Empty;
     public int Quantity { get; set; }
     public decimal PricePerUnit { get; set; }
+    public decimal Tax { get; set; } // Added tax property
     public DateTime UpdatedAt { get; set; }
 }
+
 
 public class CartFilterOptions
 {

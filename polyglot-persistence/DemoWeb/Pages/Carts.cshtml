@@ -72,12 +72,14 @@
                                     <span class="badge bg-secondary">@cart.Status</span>
                                     break;
                             }
+                            | Last Updated: @cart.LastUpdated.ToString("g")
                         </div>
                     </div>
                     <div class="text-end">
                         <div><strong>Items:</strong> @cart.TotalItems</div>
                         <div><strong>Total Quantity:</strong> @cart.TotalQuantity</div>
                         <div><strong>Total Price:</strong> @cart.TotalPrice.ToString("C")</div>
+                        <div><strong>Total Tax:</strong> @cart.TotalTax.ToString("C")</div>
                     </div>
                 </div>
                 <div class="card-body p-0">
@@ -89,6 +91,7 @@
                                     <th>Product Name</th>
                                     <th>Quantity</th>
                                     <th>Price Per Unit</th>
+                                    <th>Tax</th>
                                     <th>Subtotal</th>
                                 </tr>
                             </thead>
@@ -100,6 +103,7 @@
                                         <td>@item.ProductName</td>
                                         <td>@item.Quantity</td>
                                         <td>@item.PricePerUnit.ToString("C")</td>
+                                        <td>@item.Tax.ToString("C")</td>
                                         <td>@((item.Quantity * item.PricePerUnit).ToString("C"))</td>
                                     </tr>
                                 }
