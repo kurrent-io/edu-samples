@@ -14,6 +14,12 @@ if [ ! -d "$root_path/data" ]; then
     exit 1
 fi
 
+sudo apt-get update 
+sudo apt-get install -y git-lfs 
+git lfs install 
+git lfs pull
+
+find "$root_path/tools/" -type f -name \"edb-commerce*\" -exec chmod +x {}
 # Ensure all scripts in the /scripts directory have executable permission
 chmod +x "$root_path/scripts"/*.sh
 
