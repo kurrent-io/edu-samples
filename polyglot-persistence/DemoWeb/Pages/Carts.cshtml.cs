@@ -35,6 +35,7 @@ public class CartsModel : PageModel
     public int PageSize { get; set; } = 25;
 
     public List<CartItem> Carts { get; private set; } = new();
+    public List<GroupedCart> GroupedCarts { get; private set; } = new();
     public int TotalCount { get; private set; }
     public int TotalPages => (int)System.Math.Ceiling(TotalCount / (double)PageSize);
 
@@ -98,6 +99,21 @@ public class CartsModel : PageModel
         // Get cart items with pagination
         Carts = await _postgresService.GetCartItemsAsync(filterOptions);
         TotalCount = await _postgresService.GetCartItemsTotalCountAsync(filterOptions);
+
+        // Group cart items by cart ID
+        GroupedCarts = Carts
+            .GroupBy(c => new { c.CartId, c.CustomerId, c.Status })
+            .Select(g => new GroupedCart
+            {
+                CartId = g.Key.CartId,
+                CustomerId = g.Key.CustomerId,
+                Status = g.Key.Status,
+                Items = g.ToList(),
+                TotalItems = g.Count(),
+                TotalQuantity = g.Sum(i => i.Quantity),
+                TotalPrice = g.Sum(i => i.Quantity * i.PricePerUnit)
+            })
+            .ToList();
     }
 
     public string GetPageUrl(int pageNumber)
@@ -136,4 +152,16 @@ public class CartsModel : PageModel
             page = 1
         });
     }
+}
+
+// Class to represent a grouped cart with its items
+public class GroupedCart
+{
+    public string CartId { get; set; } = string.Empty;
+    public string? CustomerId { get; set; }
+    public string Status { get; set; } = string.Empty;
+    public List<CartItem> Items { get; set; } = new();
+    public int TotalItems { get; set; }
+    public int TotalQuantity { get; set; }
+    public decimal TotalPrice { get; set; }
 }

@@ -1,12 +1,12 @@
 ﻿@page
 @model DemoWeb.Pages.CartsModel
 @{
-    ViewData["Title"] = "Carts Items";
+    ViewData["Title"] = "Carts";
     const int maxVisiblePages = 5; // Maximum number of page links to display
 }
 
 <div class="container mt-4">
-    <h1>Cart Items Table (Postgres Projection)</h1>
+    <h1>Carts (Grouped by Cart ID)</h1>
 
     <form method="get" asp-page="./Carts">
         <div class="row g-3 mb-4">
@@ -42,102 +42,74 @@
         <input type="hidden" asp-for="PageSize" />
     </form>
 
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered">
-            <thead class="thead-dark">
-                <tr>
-                    <th>
-                        <a href="@Model.GetSortUrl("cart_id")">Cart ID</a>
-                        @if (Model.SortColumn == "cart_id")
-                        {
-                            <span>@(Model.SortDirection == "ASC" ? "⬆" : "⬇")</span>
-                        }
-                    </th>
-                    <th>
-                        <a href="@Model.GetSortUrl("customer_id")">Customer ID</a>
-                        @if (Model.SortColumn == "customer_id")
-                        {
-                            <span>@(Model.SortDirection == "ASC" ? "⬆" : "⬇")</span>
-                        }
-                    </th>
-                    <th>
-                        <a href="@Model.GetSortUrl("status")">Status</a>
-                        @if (Model.SortColumn == "status")
-                        {
-                            <span>@(Model.SortDirection == "ASC" ? "⬆" : "⬇")</span>
-                        }
-                    </th>
-                    <th>
-                        <a href="@Model.GetSortUrl("product_id")">Product ID</a>
-                        @if (Model.SortColumn == "product_id")
-                        {
-                            <span>@(Model.SortDirection == "ASC" ? "⬆" : "⬇")</span>
-                        }
-                    </th>
-                    <th>
-                        <a href="@Model.GetSortUrl("product_name")">Product Name</a>
-                        @if (Model.SortColumn == "product_name")
-                        {
-                            <span>@(Model.SortDirection == "ASC" ? "⬆" : "⬇")</span>
-                        }
-                    </th>
-                    <th>
-                        <a href="@Model.GetSortUrl("quantity")">Quantity</a>
-                        @if (Model.SortColumn == "quantity")
-                        {
-                            <span>@(Model.SortDirection == "ASC" ? "⬆" : "⬇")</span>
-                        }
-                    </th>
-                    <th>
-                        <a href="@Model.GetSortUrl("price_per_unit")">Price Per Unit</a>
-                        @if (Model.SortColumn == "price_per_unit")
-                        {
-                            <span>@(Model.SortDirection == "ASC" ? "⬆" : "⬇")</span>
-                        }
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (!Model.Carts.Any())
-                {
-                    <tr>
-                        <td colspan="7" class="text-center">No cart items found</td>
-                    </tr>
-                }
-                else
-                {
-                    @foreach (var item in Model.Carts)
-                    {
-                        <tr>
-                            <td>@item.CartId</td>
-                            <td>@(item.CustomerId ?? "Anonymous")</td>
-                            <td>
-                                @switch (item.Status)
+    @if (!Model.GroupedCarts.Any())
+    {
+        <div class="alert alert-info">No carts found</div>
+    }
+    else
+    {
+        @foreach (var cart in Model.GroupedCarts)
+        {
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0">Cart ID: @cart.CartId</h5>
+                        <div class="text-muted">
+                            Customer: @(cart.CustomerId ?? "Anonymous") |
+                            Status:
+                            @switch (cart.Status)
+                            {
+                                case "STARTED":
+                                    <span class="badge bg-primary">Shopping</span>
+                                    break;
+                                case "CHECKED_OUT":
+                                    <span class="badge bg-success">Checked Out</span>
+                                    break;
+                                case "ABANDONED":
+                                    <span class="badge bg-warning text-dark">Abandoned</span>
+                                    break;
+                                default:
+                                    <span class="badge bg-secondary">@cart.Status</span>
+                                    break;
+                            }
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div><strong>Items:</strong> @cart.TotalItems</div>
+                        <div><strong>Total Quantity:</strong> @cart.TotalQuantity</div>
+                        <div><strong>Total Price:</strong> @cart.TotalPrice.ToString("C")</div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Product ID</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price Per Unit</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in cart.Items)
                                 {
-                                    case "STARTED":
-                                        <span class="badge bg-primary">Shopping</span>
-                                        break;
-                                    case "CHECKED_OUT":
-                                        <span class="badge bg-success">Checked Out</span>
-                                        break;
-                                    case "ABANDONED":
-                                        <span class="badge bg-warning text-dark">Abandoned</span>
-                                        break;
-                                    default:
-                                        <span class="badge bg-secondary">@item.Status</span>
-                                        break;
+                                    <tr>
+                                        <td>@item.ProductId</td>
+                                        <td>@item.ProductName</td>
+                                        <td>@item.Quantity</td>
+                                        <td>@item.PricePerUnit.ToString("C")</td>
+                                        <td>@((item.Quantity * item.PricePerUnit).ToString("C"))</td>
+                                    </tr>
                                 }
-                            </td>
-                            <td>@item.ProductId</td>
-                            <td>@item.ProductName</td>
-                            <td>@item.Quantity</td>
-                            <td>@item.PricePerUnit.ToString("C")</td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </div>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    }
 
     @if (Model.TotalPages > 0)
     {
@@ -209,7 +181,7 @@
 
         <div class="text-center mt-2">
             <small class="text-muted">
-                Page @Model.PageNumber of @Model.TotalPages (@Model.TotalCount items)
+                Page @Model.PageNumber of @Model.TotalPages (@Model.TotalCount items in @Model.GroupedCarts.Count carts)
             </small>
         </div>
     }
@@ -217,7 +189,6 @@
 
 @section Scripts {
     <script>
-        // Just a small script to handle the form submission when clicking sort links
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.querySelector('form');
 
