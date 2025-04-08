@@ -32,7 +32,7 @@ var postgres = new PostgresDataAccess(new NpgsqlConnection($"Host={postgresHost}
 var esdbHost = Environment.GetEnvironmentVariable("ESDB_HOST") ?? "localhost";
 var esdb = new EventStoreClient(EventStoreClientSettings.Create($"esdb://admin:changeit@{esdbHost}:2113?tls=false"));
 
-postgres.Execute(CartProjection.GetCreateCartTableCommand()); // Create the checkpoint table if it doesn't exist
+postgres.Execute(CartProjection.GetCreateTableCommand()); // Create the checkpoint table if it doesn't exist
 postgres.Execute(Checkpoint.GetCreateTableCommand()); // Create the checkpoint table if it doesn't exist
 
 // ------------------------------------------------- //

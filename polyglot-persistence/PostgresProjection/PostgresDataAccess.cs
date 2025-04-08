@@ -36,12 +36,13 @@ namespace PostgresProjection
             _connection.Execute(command);
         }
 
-        public void Execute(IEnumerable<CommandDefinition> commands)
+        public void Execute(IEnumerable<CommandDefinition>? commands)
         {
-            foreach (var command in commands)
-            {
-                _connection.Execute(command);
-            }
+            if (commands != null)
+                foreach (var command in commands)
+                {
+                    _connection.Execute(command);
+                }
         }
 
         public void Dispose()

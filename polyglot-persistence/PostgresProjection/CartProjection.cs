@@ -8,87 +8,155 @@ public static class CartProjection
 {
     public const string ReadModelName = "carts";
 
-    public static IEnumerable<CommandDefinition> Project(ResolvedEvent evt)
+    public static IEnumerable<CommandDefinition>? Project(ResolvedEvent evt)
     {
         var decodedEvent = CartEventEncoder.Decode(evt.Event.Data, evt.Event.EventType);
 
-        CommandDefinition? command = decodedEvent switch
+        IEnumerable<CommandDefinition>? command = decodedEvent switch
         {
             VisitorStartedShopping visitor => Project(visitor),
             CustomerStartedShopping customer => Project(customer),
             CartShopperGotIdentified identified => Project(identified),
             CartGotCheckedOut checkedOut => Project(checkedOut),
             CartGotAbandoned abandoned => Project(abandoned),
+            ItemGotAdded added => Project(added),
+            ItemGotRemoved removed => Project(removed),
             _ => null
         };
 
-        if (command != null)
-        {
-            yield return command.Value;
-        }
+        return command;
     }
 
-    private static CommandDefinition Project(VisitorStartedShopping evt)
+    private static IEnumerable<CommandDefinition>? Project(VisitorStartedShopping evt)
     {
         var sql = @"INSERT INTO carts(cart_id, customer_id, status, created_at, updated_at)
-                VALUES(@CartId, null, @Status, @Timestamp, @Timestamp)
-                ON CONFLICT(cart_id) DO NOTHING";
+                        VALUES(@CartId, null, @Status, @Timestamp, @Timestamp)
+                        ON CONFLICT(cart_id) DO NOTHING";
 
         var parameters = new { CartId = evt.cartId, Status = "STARTED", Timestamp = evt.at };
 
-        return new CommandDefinition(sql, parameters);
+        yield return new CommandDefinition(sql, parameters);
     }
 
-    private static CommandDefinition Project(CustomerStartedShopping evt)
+    private static IEnumerable<CommandDefinition>? Project(CustomerStartedShopping evt)
     {
         var sql = @"INSERT INTO carts(cart_id, customer_id, status, created_at, updated_at)
-                VALUES(@CartId, @CustomerId, @Status, @Timestamp, @Timestamp)
-                ON CONFLICT(cart_id) DO NOTHING";
+                        VALUES(@CartId, @CustomerId, @Status, @Timestamp, @Timestamp)
+                        ON CONFLICT(cart_id) DO NOTHING";
 
         var parameters = new { CartId = evt.cartId, CustomerId = evt.customerId, Status = "STARTED", Timestamp = evt.at };
 
-        return new CommandDefinition(sql, parameters);
+        yield return new CommandDefinition(sql, parameters);
     }
 
-    private static CommandDefinition Project(CartShopperGotIdentified evt)
+    private static IEnumerable<CommandDefinition>? Project(CartShopperGotIdentified evt)
     {
         var sql = @"UPDATE carts
-                SET customer_id = @CustomerId,
-                    updated_at = @Timestamp
-                WHERE cart_id = @CartId";
+                        SET customer_id = @CustomerId,
+                            updated_at = @Timestamp
+                        WHERE cart_id = @CartId";
 
         var parameters = new { CartId = evt.cartId, CustomerId = evt.customerId, Timestamp = evt.at };
 
-        return new CommandDefinition(sql, parameters);
+        yield return new CommandDefinition(sql, parameters);
     }
 
-    private static CommandDefinition Project(CartGotCheckedOut evt)
+    private static IEnumerable<CommandDefinition>? Project(CartGotCheckedOut evt)
     {
         var sql = @"UPDATE carts
-                SET status = @Status,
-                    updated_at = @Timestamp
-                WHERE cart_id = @CartId";
+                        SET status = @Status,
+                            updated_at = @Timestamp
+                        WHERE cart_id = @CartId";
 
         var parameters = new { CartId = evt.cartId, Status = "CHECKED_OUT", Timestamp = evt.at };
 
-        return new CommandDefinition(sql, parameters);
+        yield return new CommandDefinition(sql, parameters);
     }
 
-    private static CommandDefinition Project(CartGotAbandoned evt)
+    private static IEnumerable<CommandDefinition>? Project(CartGotAbandoned evt)
     {
         var sql = @"UPDATE carts
-                SET status = @Status,
-                    updated_at = @Timestamp
-                WHERE cart_id = @CartId";
+                        SET status = @Status,
+                            updated_at = @Timestamp
+                        WHERE cart_id = @CartId";
 
         var parameters = new { CartId = evt.cartId, Status = "ABANDONED", Timestamp = evt.at };
 
-        return new CommandDefinition(sql, parameters);
+        yield return new CommandDefinition(sql, parameters);
     }
 
-    public static CommandDefinition GetCreateCartTableCommand()
+    private static IEnumerable<CommandDefinition>? Project(ItemGotAdded evt)
     {
-        return new CommandDefinition(@"
+        var sql = @"INSERT INTO cart_items(
+                    cart_id, 
+                    product_id, 
+                    product_name, 
+                    quantity, 
+                    currency, 
+                    price_per_unit, 
+                    tax_rate, 
+                    updated_at)
+                VALUES(
+                    @CartId, 
+                    @ProductId, 
+                    @ProductName, 
+                    @Quantity, 
+                    @Currency, 
+                    @PricePerUnit, 
+                    @TaxRate, 
+                    @Timestamp)
+                ON CONFLICT(cart_id, product_id) 
+                DO UPDATE SET 
+                    quantity = cart_items.quantity + @Quantity,
+                    updated_at = @Timestamp";
+
+        var parameters = new
+        {
+            CartId = evt.cartId,
+            ProductId = evt.productId,
+            ProductName = evt.productName,
+            Quantity = evt.quantity,
+            Currency = evt.currency,
+            PricePerUnit = evt.pricePerUnit,
+            TaxRate = evt.taxRate,
+            Timestamp = evt.at
+        };
+
+        yield return new CommandDefinition(sql, parameters);
+    }
+
+    private static IEnumerable<CommandDefinition>? Project(ItemGotRemoved evt)
+    {
+        // Use a CTE to determine if we should delete or update the record
+        var sql = @"UPDATE cart_items
+                    SET quantity = quantity - @Quantity,
+                        updated_at = @Timestamp
+                    WHERE cart_id = @CartId AND product_id = @ProductId;
+
+                    DELETE FROM cart_items
+                    WHERE cart_id = @CartId AND product_id = @ProductId AND quantity = 0;";
+
+        var parameters = new
+        {
+            CartId = evt.cartId,
+            ProductId = evt.productId,
+            Quantity = evt.quantity,
+            Timestamp = evt.at
+        };
+
+        yield return new CommandDefinition(sql, parameters);
+
+        var sql2 = @"DELETE FROM cart_items
+                    WHERE cart_id = @CartId AND product_id = @ProductId AND quantity = 0;";
+
+        yield return new CommandDefinition(sql2, parameters);
+
+    }
+
+
+    public static IEnumerable<CommandDefinition> GetCreateTableCommand()
+    {
+        yield return new CommandDefinition(@"
                      CREATE TABLE IF NOT EXISTS carts (
                          cart_id TEXT PRIMARY KEY,
                          customer_id TEXT NULL,
@@ -96,5 +164,20 @@ public static class CartProjection
                          created_at TIMESTAMP NOT NULL,
                          updated_at TIMESTAMP NOT NULL
                      )");
+
+        yield return new CommandDefinition(@"
+                     CREATE TABLE IF NOT EXISTS cart_items (
+                         cart_id TEXT NOT NULL,
+                         product_id TEXT NOT NULL,
+                         product_name TEXT NOT NULL,
+                         quantity INTEGER NOT NULL,
+                         currency TEXT NULL,
+                         price_per_unit DECIMAL(10,2) NOT NULL,
+                         tax_rate DECIMAL(5,2) NOT NULL,
+                         updated_at TIMESTAMP NOT NULL,
+                         PRIMARY KEY (cart_id, product_id),
+                         FOREIGN KEY (cart_id) REFERENCES carts(cart_id) ON DELETE CASCADE
+                     )");
     }
+
 }
