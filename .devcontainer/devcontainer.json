@@ -8,7 +8,7 @@
   "containerEnv": {
     "DOTNET_NOLOGO": "true"
   },
-  "onCreateCommand": "chmod +x /workspaces/developer-bootcamp/polyglot-persistence/scripts/0-prebuild-containers.sh && /workspaces/developer-bootcamp/polyglot-persistence/0-prebuild-containers.sh",
+  "onCreateCommand": "chmod +x /workspaces/developer-bootcamp/polyglot-persistence/scripts/0-prebuild-containers.sh && /workspaces/developer-bootcamp/polyglot-persistence/scripts/0-prebuild-containers.sh",
   "forwardPorts": [27017, 5432, 6379, 2113, 1113],
   "portsAttributes": {
     "2113": {
