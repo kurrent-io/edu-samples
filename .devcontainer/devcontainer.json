@@ -21,16 +21,20 @@
     },
     "27017": {
       "label": "MongoDB",
-      "onAutoForward": "notify"
+      "onAutoForward": "silent"
     },
     "5432": {
       "label": "PostgreSQL",
-      "onAutoForward": "notify"
+      "onAutoForward": "silent"
     },
     "6379": {
       "label": "Redis",
-      "onAutoForward": "notify"
-    }
+      "onAutoForward": "silent"
+    },
+	"5108": {
+      "label": "DemoWeb UI",
+      "onAutoForward": "silent"
+    },
   },
   "customizations": {
     "vscode": {
