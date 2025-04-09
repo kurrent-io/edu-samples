@@ -40,7 +40,7 @@ while true; do
     if echo "$logs" | grep -q "MongoProjection started" && \
        echo "$logs" | grep -q "RedisProjection started" && \
        echo "$logs" | grep -q "PostgresProjection started"; then
-        echo "All apps are running."
+        echo "All projection apps are running."
         break
     fi
     attempt=$((attempt+1))
@@ -48,6 +48,6 @@ while true; do
         echo "Required projections did not start after $max_attempts attempts. Exiting."
         exit 1
     fi
-    echo "Waiting apps to start... (attempt $attempt)"
+    echo "Waiting projection apps to start... (attempt $attempt)"
     sleep 2
 done
