@@ -20,7 +20,7 @@ var streamPosition = long.TryParse(checkpointValue, out var checkpoint)  // Chec
 
 await using var subscription = 
     esdb.SubscribeToStream(     // Subscribe events..
-        "$et-item-got-added-to-cart",          // from this stream..
+        "$ce-cart",          // from this stream..
         streamPosition,         // from this position..
         true);                  // with linked events automatically resolved (required for system projections)
 
@@ -30,15 +30,31 @@ await foreach (var message in subscription.Messages)                    // Itera
 {                                                                       
     if (message is not StreamMessage.Event(var e)) continue;            // Skip if message is not an event
 
-    if (CartEventEncoder.Decode(e.Event.Data, e.Event.EventType) is not ItemGotAdded evt) continue;   // Convert the event to ItemGotAdded
+    var decodedEvent = CartEventEncoder.Decode(e.Event.Data, e.Event.EventType);
+    if (decodedEvent is not ItemGotAdded && decodedEvent is not ItemGotRemoved) continue;   // Convert the event to ItemGotAdded
 
-    var hourKey = $"top-10-products:{evt.at:yyyyMMddHH}";     // Create a key for the current hour
-    var productKey = evt.productName;                             // Use the product ID as the member in the sorted set
-    
     var txn = redis.CreateTransaction();                        // Create a transaction for Redis
-    txn.SortedSetIncrementAsync(hourKey, productKey, evt.quantity); // Increment the quantity of the product in the sorted set
+    if (decodedEvent is ItemGotAdded addedEvent) // If the event is of type ItemGotAdded
+    {
+        var hourKey = $"top-10-products:{addedEvent.at:yyyyMMddHH}";     // Create a key for the current hour
+        var productKey = addedEvent.productId;                             // Use the product ID as the member in the sorted set
+        var productName = addedEvent.productName; // Assuming `productName` is part of the event
+
+        txn.SortedSetIncrementAsync(hourKey, productKey, addedEvent.quantity); // Increment the quantity of the product in the sorted set
+        txn.HashSetAsync("product-names", productKey, productName); // Store product name in a hash
+        Console.WriteLine($"Incremented product {addedEvent.productId} in {hourKey} by {addedEvent.quantity}");
+    }
+    else if (decodedEvent is ItemGotRemoved removedEvent) // If the event is of type ItemGotRemoved
+    {
+        var hourKey = $"top-10-products:{removedEvent.at:yyyyMMddHH}"; // Create a key for the current hour
+        var productKey = removedEvent.productId; // Use the product ID as the member in the sorted set
+        
+        txn.SortedSetDecrementAsync(hourKey, productKey, removedEvent.quantity); // Increment the quantity of the product in the sorted set
+        Console.WriteLine($"Decremented product {removedEvent.productId} in {hourKey} by {removedEvent.quantity}");
+    }
+
     txn.StringSetAsync("checkpoint", e.OriginalEventNumber.ToInt64()); // Set the checkpoint to the current event number
     txn.Execute();
 
-    Console.WriteLine($"Incremented product {evt.productId} in {hourKey} by {evt.quantity}");
+    
 }                                                                       

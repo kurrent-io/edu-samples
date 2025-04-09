@@ -10,9 +10,6 @@ namespace DemoWeb.Pages
         public TopProductsModel(RedisService redisService)
         {
             _redisService = redisService;
-            CurrentHour = string.Empty;
         }
-
-        public string CurrentHour { get; private set; }
     }
 }

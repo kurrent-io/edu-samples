@@ -12,19 +12,9 @@ public class TopProductsHub : Hub
         _redisService = redisService;
     }
 
-    public async Task GetTopProducts(string hourKey)
+    public async Task GetTopProducts()
     {
-        string? key = hourKey;
-        if (string.IsNullOrEmpty(hourKey))
-        {
-            // look for the first "top products" key in redis
-            key = await _redisService.GetFirstAvailableHourKeyAsync();
-
-            // return nothing if not found
-            if (key == null) return;
-        }
-
-        var topProducts = await _redisService.GetTopProductsAsync(key);
-        await Clients.Caller.SendAsync("ReceiveTopProducts", topProducts, key.Split(':').Last());
+        var topProducts = await _redisService.GetTopProductsAsync();
+        await Clients.Caller.SendAsync("ReceiveTopProducts", topProducts);
     }
 }

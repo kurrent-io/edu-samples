@@ -2,29 +2,11 @@
 @model DemoWeb.Pages.TopProductsModel
 @{
     ViewData["Title"] = "Top 10 Products";
-    var currentHour = Model.CurrentHour;
-    
-    // Parse the current hour string to format it consistently
-    string formattedDisplayTime = currentHour;
-    if (DateTime.TryParseExact(currentHour, "yyyyMMddHH", null, System.Globalization.DateTimeStyles.None, out var parsedDateTime))
-    {
-        formattedDisplayTime = parsedDateTime.ToString("yyyy-MM-dd HH:00");
-    }
 }
 
 <div class="container mt-4">
-    <h1>Top 10 Products by the Hour (Redis Projection)</h1>
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div>
-            <input type="datetime-local" id="hourPicker" class="form-control" value="@formattedDisplayTime">
-            <button id="updateHour" class="btn btn-primary mt-2">Select Hour To Display</button>
-        </div>
-        <div class="current-hour">
-            <strong>Selected Hour:</strong> <span id="currentHourDisplay">@formattedDisplayTime</span>
-        </div>
-    </div>
-
+    <h1>Top 10 Products in the past 24 hours (Redis Projection)</h1>
+    
     <table class="table table-striped table-bordered">
         <thead class="thead-dark">
             <tr>
@@ -49,12 +31,9 @@
             .withUrl("/topProductsHub")
             .configureLogging(signalR.LogLevel.Information)
             .build();
-
-        // Get the current hour key from the page
-        let currentHourKey = '@currentHour' ? `top-10-products:@currentHour` : null;;
-
+            
         // Function to update the table with top products
-        connection.on("ReceiveTopProducts", (products, currentHour) => {
+        connection.on("ReceiveTopProducts", (products) => {
             const tableBody = document.getElementById("topProductsTableBody");
             tableBody.innerHTML = "";
 
@@ -63,7 +42,7 @@
                 const cell = row.insertCell(0);
                 cell.colSpan = 3;
                 cell.className = "text-center";
-                cell.innerText = "No products found for the selected hour";
+                cell.innerText = "No products found";
                 return;
             }
 
@@ -79,23 +58,11 @@
                 const quantityCell = row.insertCell(2);
                 quantityCell.innerText = product.quantity;
             });
-
-            // Update the current hour display and hour picker
-            if (currentHour) {
-                const selectedDate = new Date(currentHour.slice(0, 4) + '-' + currentHour.slice(4, 6) + '-' + currentHour.slice(6, 8) + 'T' + currentHour.slice(8, 10) + ':00Z');
-                if (!document.getElementById("hourPicker").value) {
-                    document.getElementById("hourPicker").value = selectedDate.toISOString().slice(0, 16);
-                console.log(document.getElementById("hourPicker").value)
-                }
-
-                document.getElementById("currentHourDisplay").innerText = selectedDate.toISOString().slice(0, 16);
-                
-            }
         });
 
         // Function to request the top products
         function getTopProducts() {
-            connection.invoke("GetTopProducts", currentHourKey)
+            connection.invoke("GetTopProducts")
                 .catch(err => console.error("Error getting top products:", err));
         }
 
@@ -109,30 +76,5 @@
                 setInterval(getTopProducts, 1000);
             })
             .catch(err => console.error("Error connecting to SignalR hub:", err));
-
-        // Set up the hour picker
-        document.getElementById("updateHour").addEventListener("click", () => {
-            const hourPicker = document.getElementById("hourPicker");
-            if (hourPicker.value) {
-                const selectedDate = new Date(hourPicker.value);
-                const formattedHour = selectedDate.getFullYear().toString() +
-                                     (selectedDate.getMonth() + 1).toString().padStart(2, '0') +
-                                     selectedDate.getDate().toString().padStart(2, '0') +
-                                     selectedDate.getHours().toString().padStart(2, '0');
-
-                currentHourKey = `top-10-products:${formattedHour}`;
-                document.getElementById("currentHourDisplay").innerText = selectedDate.getFullYear() + "-" + 
-                    (selectedDate.getMonth() + 1).toString().padStart(2, '0') + "-" +
-                    selectedDate.getDate().toString().padStart(2, '0') + " " +
-                    selectedDate.getHours().toString().padStart(2, '0') + ":00";
-                getTopProducts();
-            }
-        });
     </script>
 }
-
-<style>
-    .current-hour {
-        font-size: 2em; /* Adjust the size as needed */
-    }
-</style>
