@@ -31,8 +31,6 @@ jq --arg from "$shoppingPeriod" --arg to "$shoppingPeriod" \
   '.shopping.shoppingPeriod.from = $from | .shopping.shoppingPeriod.to = $to' \
   "$datagen_init_config_path" > tmp.json && mv tmp.json "$datagen_init_config_path"
 
-echo "Updated datagen config's shopping period to $shoppingPeriod"
-
 # Generate the data set using the updated configuration via edb-commerce
 "$edbcommerce" generate-data-set --configuration "$datagen_init_config_path" --output "$data_dir/data.init.zip"
 
@@ -44,5 +42,16 @@ mv "$data_dir/data.json" "$data_init_path"
 # Seed the data using the edb-commerce tool with the updated initialization JSON
 "$edbcommerce" seed-data-set "$data_init_path"
 
-# Final message indicating that the data set has been generated and seeded successfully
-echo "Generated data set performed with edb-commerce at: $edbcommerce"
+ESDB_URL=http://localhost:2113                                                            # Set default URL to localhost (for EventStoreDB started locally, not in Codespaces)
+if [ "$CODESPACES" == "true" ]; then                                                      # If this environment is Codespaces 
+       ESDB_URL=https://"$CODESPACE_NAME"-2113.$GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN  # Build the URL to forwarded github codespaces domain       
+fi
+
+echo ""
+echo ""
+echo -e "🚀 \e[32mEventStoreDB Server has started!!\e[0m 🚀" 
+echo ""
+echo -e "URL to EventStoreDB Admin UI 👉 \e[0m \e[34m$ESDB_URL\e[0m"                      # Print URL to EventStoreDB Admin UI
+echo ""
+echo ""
+echo "Appended sample data to EventStoreDB"
