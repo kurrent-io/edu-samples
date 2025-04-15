@@ -6,8 +6,6 @@ namespace PostgresProjection;
 
 public static class CartProjection
 {
-    public const string ReadModelName = "carts";
-
     public static IEnumerable<CommandDefinition>? Project(ResolvedEvent evt)
     {
         var decodedEvent = CartEventEncoder.Decode(evt.Event.Data, evt.Event.EventType);
@@ -127,14 +125,10 @@ public static class CartProjection
 
     private static IEnumerable<CommandDefinition>? Project(ItemGotRemoved evt)
     {
-        // Use a CTE to determine if we should delete or update the record
-        var sql = @"UPDATE cart_items
+        var updateSql = @"UPDATE cart_items
                     SET quantity = quantity - @Quantity,
                         updated_at = @Timestamp
-                    WHERE cart_id = @CartId AND product_id = @ProductId;
-
-                    DELETE FROM cart_items
-                    WHERE cart_id = @CartId AND product_id = @ProductId AND quantity = 0;";
+                    WHERE cart_id = @CartId AND product_id = @ProductId;";
 
         var parameters = new
         {
@@ -144,12 +138,12 @@ public static class CartProjection
             Timestamp = evt.at
         };
 
-        yield return new CommandDefinition(sql, parameters);
+        yield return new CommandDefinition(updateSql, parameters);
 
-        var sql2 = @"DELETE FROM cart_items
+        var deleteSql = @"DELETE FROM cart_items
                     WHERE cart_id = @CartId AND product_id = @ProductId AND quantity = 0;";
 
-        yield return new CommandDefinition(sql2, parameters);
+        yield return new CommandDefinition(deleteSql, parameters);
 
     }
 

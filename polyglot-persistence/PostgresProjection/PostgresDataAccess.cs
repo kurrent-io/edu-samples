@@ -31,10 +31,22 @@ namespace PostgresProjection
             return _connection.QueryFirstOrDefault<T>(command);
         }
 
+        public T? QueryFirstOrDefault<T>(string sql)
+        {
+            return _connection.QueryFirstOrDefault<T>(sql);
+        }
+
+
         public void Execute(CommandDefinition command)
         {
             _connection.Execute(command);
         }
+
+        public void Execute(string sql, object? param)
+        {
+            _connection.Execute(sql, param);
+        }
+
 
         public void Execute(IEnumerable<CommandDefinition>? commands)
         {
@@ -43,6 +55,11 @@ namespace PostgresProjection
                 {
                     _connection.Execute(command);
                 }
+        }
+        
+        public void Execute(string sql)
+        {
+            _connection.Execute(sql);
         }
 
         public void Dispose()
