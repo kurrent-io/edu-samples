@@ -11,14 +11,14 @@
   "onCreateCommand": "chmod +x /workspaces/developer-bootcamp/polyglot-persistence/scripts/0-prebuild-containers.sh && /workspaces/developer-bootcamp/polyglot-persistence/scripts/0-prebuild-containers.sh",
   // "postCreateCommand": "sudo cp /workspaces/developer-bootcamp/.devcontainer/welcome.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt",
   "postCreateCommand": "/workspaces/developer-bootcamp/polyglot-persistence/scripts/start-db.sh && /workspaces/developer-bootcamp/polyglot-persistence/scripts/start-app.sh",
-  "forwardPorts": [27017, 5432, 6379, 2113, 1113],
+  "forwardPorts": [27017, 5432, 6379, 2113, 1113, 5108],
   "portsAttributes": {
     "2113": {
-      "label": "EventStoreDB Admin UI",
-      "onAutoForward": "notify"
+      "label": "KurrentDB Admin UI",
+      "onAutoForward": "silent"
     },
     "1113": {
-      "label": "EventStoreDB API",
+      "label": "KurrentDB API",
       "onAutoForward": "silent"
     },
     "27017": {
@@ -34,7 +34,7 @@
       "onAutoForward": "silent"
     },
 	"5108": {
-      "label": "DemoWeb UI",
+      "label": "Demo Web Page",
       "onAutoForward": "silent"
     },
   },
