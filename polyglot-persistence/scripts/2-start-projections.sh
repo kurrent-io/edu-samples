@@ -15,14 +15,3 @@ if [ ! -d "$root_path/data" ]; then
 fi
 
 "$root_path/scripts/start-app.sh" # Start the app containers
-
-DEMOWEB_URL=http://localhost:5108                                                            # Set default URL to localhost
-if [ "$CODESPACES" == "true" ]; then                                                      # If this environment is Codespaces 
-       DEMOWEB_URL=https://"$CODESPACE_NAME"-5108.$GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN  # Build the URL to forwarded github codespaces domain       
-fi
-
-echo ""
-echo ""
-echo -e "URL to the Demo web UI 👉 \e[0m \e[34m$DEMOWEB_URL\e[0m"                      # Print URL to EventStoreDB Admin UI
-echo ""
-echo ""
