@@ -20,7 +20,7 @@ max_attempts=60
 attempt=0
 while ! curl -s -o /dev/null -w "%{http_code}" http://localhost:2113/web/index.html | grep -q "200"; do
        if [ "$attempt" -ge "$max_attempts" ]; then                    # If number of attempts exceeds max_attempts then we exit
-              echo "EventStoreDB is not available. Exiting"
+              echo "KurrentDB is not available. Exiting"
               exit 1
        fi
        echo "Waiting for databases to start... (attempt $attempt)"

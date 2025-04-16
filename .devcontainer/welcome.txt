@@ -1,4 +1,4 @@
-Hello!👋 Welcome to the EventStoreDB Polyglot Persistence Use Case Tutorial (Work in Progress)
+Hello!👋 Welcome to the KurrentDB Polyglot Persistence Use Case Tutorial (Work in Progress)
 
 To continue, please follow instructions found in https://use-case-demo.documentation-21k.pages.dev/getting-started/use-cases/polyglot-persistence-tutorial.html
 
