@@ -1,16 +1,16 @@
 {
-  "name": "Polyglot Persistence",
+  "name": "Mix-and-Match Database",
   "image": "mcr.microsoft.com/devcontainers/dotnet:9.0",
-  "workspaceFolder": "/workspaces/developer-bootcamp/polyglot-persistence/",
+  "workspaceFolder": "/workspaces/developer-bootcamp/mix-and-match-database/",
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
   "containerEnv": {
     "DOTNET_NOLOGO": "true"
   },
-  "onCreateCommand": "chmod +x /workspaces/developer-bootcamp/polyglot-persistence/scripts/0-prebuild-containers.sh && /workspaces/developer-bootcamp/polyglot-persistence/scripts/0-prebuild-containers.sh",
+  "onCreateCommand": "chmod +x /workspaces/developer-bootcamp/mix-and-match-database/scripts/0-prebuild-containers.sh && /workspaces/developer-bootcamp/mix-and-match-database/scripts/0-prebuild-containers.sh",
   // "postCreateCommand": "sudo cp /workspaces/developer-bootcamp/.devcontainer/welcome.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt",
-  "postCreateCommand": "/workspaces/developer-bootcamp/polyglot-persistence/scripts/start-db.sh && /workspaces/developer-bootcamp/polyglot-persistence/scripts/start-app.sh",
+  "postCreateCommand": "/workspaces/developer-bootcamp/mix-and-match-database/scripts/start-db.sh && /workspaces/developer-bootcamp/mix-and-match-database/scripts/start-app.sh",
   "forwardPorts": [27017, 5432, 6379, 2113, 1113, 5108],
   "portsAttributes": {
     "2113": {
