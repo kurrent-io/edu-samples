@@ -23,6 +23,6 @@ fi
 
 echo ""
 echo ""
-echo -e "URL to the Demo web UI 👉 \e[0m \e[34m$DEMOWEB_URL\e[0m"                      # Print URL to KurrentDB Admin UI
+echo -e "URL to the Demo web Page 👉 \e[0m \e[34m$DEMOWEB_URL\e[0m"                      # Print URL to KurrentDB Admin UI
 echo ""
 echo ""
