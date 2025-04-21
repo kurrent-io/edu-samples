@@ -1,3 +1,5 @@
+*.sh    text eol=lf
+
 tools/Kurrent.Extensions.Commerce/osx-arm64/edb-commerce filter=lfs diff=lfs merge=lfs -text
 tools/Kurrent.Extensions.Commerce/osx-x64/edb-commerce filter=lfs diff=lfs merge=lfs -text
 tools/Kurrent.Extensions.Commerce/linux-x64/edb-commerce filter=lfs diff=lfs merge=lfs -text
