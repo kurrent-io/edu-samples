@@ -9,8 +9,8 @@
     "DOTNET_NOLOGO": "true"
   },
   "onCreateCommand": "chmod +x /workspaces/developer-bootcamp/mix-and-match-database/scripts/0-prebuild-containers.sh && /workspaces/developer-bootcamp/mix-and-match-database/scripts/0-prebuild-containers.sh",
-  // "postCreateCommand": "sudo cp /workspaces/developer-bootcamp/.devcontainer/welcome.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt",
-  "postCreateCommand": "/workspaces/developer-bootcamp/mix-and-match-database/scripts/start-db.sh && /workspaces/developer-bootcamp/mix-and-match-database/scripts/start-app.sh",
+  "postCreateCommand": "sudo cp /workspaces/developer-bootcamp/.devcontainer/welcome.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt",
+
   "forwardPorts": [27017, 5432, 6379, 2113, 1113, 5108],
   "portsAttributes": {
     "2113": {
