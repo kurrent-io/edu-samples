@@ -1,0 +1,46 @@
+services:
+  demoweb:
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    container_name: demoweb
+    working_dir: /app
+    volumes:
+      - ./DemoWeb:/app # Mount the DemoWeb project directory
+    command: ["dotnet", "run"]
+    ports:
+      - "5108:5108"
+    environment:
+      - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
+    
+  postgresprojection:
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    container_name: postgresprojection
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: ["dotnet", "run", "--project", "./PostgresProjection"]
+    environment:
+      - POSTGRES_HOST=postgres
+      - ESDB_HOST=eventstore
+    
+  redisprojection:
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    container_name: redisprojection
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: ["dotnet", "run", "--project", "./RedisProjection"]
+    environment:
+      - REDIS_HOST=redis
+      - ESDB_HOST=eventstore
+    
+  mongoprojection:
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    container_name: mongoprojection
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: ["dotnet", "run", "--project", "./MongoProjection"]
+    environment:
+      - MONGO_HOST=mongo
+      - ESDB_HOST=eventstore

@@ -1,0 +1,80 @@
+﻿@page
+@model DemoWeb.Pages.TopProductsModel
+@{
+    ViewData["Title"] = "Top 10 Products";
+}
+
+<div class="container mt-4">
+    <h1>Top 10 Products in the past 24 hours (Redis Projection)</h1>
+    
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>Rank</th>
+                <th>Product ID</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody id="topProductsTableBody">
+            <tr>
+                <td colspan="3" class="text-center">Loading...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@latest/dist/browser/signalr.min.js"></script>
+    <script>
+        // Create the connection
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/topProductsHub")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+            
+        // Function to update the table with top products
+        connection.on("ReceiveTopProducts", (products) => {
+            const tableBody = document.getElementById("topProductsTableBody");
+            tableBody.innerHTML = "";
+
+            if (products.length === 0) {
+                const row = tableBody.insertRow();
+                const cell = row.insertCell(0);
+                cell.colSpan = 3;
+                cell.className = "text-center";
+                cell.innerText = "No products found";
+                return;
+            }
+
+            products.forEach((product, index) => {
+                const row = tableBody.insertRow();
+
+                const rankCell = row.insertCell(0);
+                rankCell.innerText = index + 1;
+
+                const productIdCell = row.insertCell(1);
+                productIdCell.innerText = product.productId;
+
+                const quantityCell = row.insertCell(2);
+                quantityCell.innerText = product.quantity;
+            });
+        });
+
+        // Function to request the top products
+        function getTopProducts() {
+            connection.invoke("GetTopProducts")
+                .catch(err => console.error("Error getting top products:", err));
+        }
+
+        // Start the connection
+        connection.start()
+            .then(() => {
+                console.log("Connected to SignalR hub");
+                getTopProducts();
+
+                // Set up polling for real-time updates (every 5 seconds)
+                setInterval(getTopProducts, 1000);
+            })
+            .catch(err => console.error("Error connecting to SignalR hub:", err));
+    </script>
+}

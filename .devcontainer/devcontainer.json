@@ -1,35 +1,42 @@
 {
-  "name": "Polyglot Persistence",
+  "name": "Mix-and-Match Database",
   "image": "mcr.microsoft.com/devcontainers/dotnet:9.0",
+  "workspaceFolder": "/workspaces/developer-bootcamp/mix-and-match-database/",
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
   "containerEnv": {
     "DOTNET_NOLOGO": "true"
   },
-  "onCreateCommand": "chmod +x /workspaces/developer-bootcamp/polyglot-persistence/onCreateCommand.sh && /workspaces/developer-bootcamp/polyglot-persistence/onCreateCommand.sh",
-  "forwardPorts": [27017, 5432, 6379, 2113, 1113],
+  "onCreateCommand": "chmod +x /workspaces/developer-bootcamp/mix-and-match-database/scripts/0-prebuild-containers.sh && /workspaces/developer-bootcamp/mix-and-match-database/scripts/0-prebuild-containers.sh",
+  // "postCreateCommand": "sudo cp /workspaces/developer-bootcamp/.devcontainer/welcome.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt",
+  "postCreateCommand": "/workspaces/developer-bootcamp/mix-and-match-database/scripts/start-db.sh && /workspaces/developer-bootcamp/mix-and-match-database/scripts/start-app.sh",
+  "forwardPorts": [27017, 5432, 6379, 2113, 1113, 5108],
   "portsAttributes": {
     "2113": {
-      "label": "EventStoreDB Admin UI",
-      "onAutoForward": "notify"
+      "label": "KurrentDB Admin UI",
+      "onAutoForward": "silent"
     },
     "1113": {
-      "label": "EventStoreDB API",
+      "label": "KurrentDB API",
       "onAutoForward": "silent"
     },
     "27017": {
       "label": "MongoDB",
-      "onAutoForward": "notify"
+      "onAutoForward": "silent"
     },
     "5432": {
       "label": "PostgreSQL",
-      "onAutoForward": "notify"
+      "onAutoForward": "silent"
     },
     "6379": {
       "label": "Redis",
-      "onAutoForward": "notify"
-    }
+      "onAutoForward": "silent"
+    },
+	"5108": {
+      "label": "Demo Web Page",
+      "onAutoForward": "silent"
+    },
   },
   "customizations": {
     "vscode": {
