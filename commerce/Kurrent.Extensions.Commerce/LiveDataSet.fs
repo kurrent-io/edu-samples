@@ -140,12 +140,12 @@ module LiveDataSet =
                                                 Instant.FromDateTimeOffset(
                                                     match event with
                                                     | Shopping.VisitorStartedShopping e -> e.At
-                                                    | Shopping.CartShopperGotIdentified e -> e.At
+                                                    | Shopping.CartShopperIdentified e -> e.At
                                                     | Shopping.CustomerStartedShopping e -> e.At
-                                                    | Shopping.ItemGotAddedToCart e -> e.At
-                                                    | Shopping.ItemGotRemovedFromCart e -> e.At
-                                                    | Shopping.CartGotCheckedOut e -> e.At
-                                                    | Shopping.CartGotAbandoned e -> e.At
+                                                    | Shopping.ItemAddedToCart e -> e.At
+                                                    | Shopping.ItemRemovedFromCart e -> e.At
+                                                    | Shopping.CartCheckedOut e -> e.At
+                                                    | Shopping.CartAbandoned e -> e.At
                                                     | Shopping.CheckoutStarted e -> e.At
                                                     | Shopping.ShippingInformationCollected e -> e.At
                                                     | Shopping.ShippingMethodSelected e -> e.At

@@ -11,7 +11,7 @@ module Shopping =
         type VisitorStartedShopping = { CartId: string; At: DateTimeOffset }
 
         [<Description("Whenever a customer signs in or signs up, the cart's shopper becomes known")>]
-        type CartShopperGotIdentified =
+        type CartShopperIdentified =
             { CartId: string
               CustomerId: string
               At: DateTimeOffset }
@@ -23,7 +23,7 @@ module Shopping =
               At: DateTimeOffset }
 
         [<Description("Whenever the shopper adds items to the cart")>]
-        type ItemGotAddedToCart =
+        type ItemAddedToCart =
             { CartId: string
               ProductId: string
               ProductName: string
@@ -33,20 +33,20 @@ module Shopping =
               At: DateTimeOffset }
 
         [<Description("Whenever the shopper removes items from the cart")>]
-        type ItemGotRemovedFromCart =
+        type ItemRemovedFromCart =
             { CartId: string
               ProductId: string
               Quantity: int
               At: DateTimeOffset }
 
         [<Description("Whenever the shopper completes a checkout by placing an order for its contents")>]
-        type CartGotCheckedOut =
+        type CartCheckedOut =
             { CartId: string
               OrderId: string
               At: DateTimeOffset }
 
         [<Description("Whenever the shopper becomes idle in their interaction with the cart")>]
-        type CartGotAbandoned =
+        type CartAbandoned =
             { CartId: string
               AfterBeingIdleFor: TimeSpan
               At: DateTimeOffset }
@@ -123,12 +123,12 @@ module Shopping =
 
     type Event =
         | VisitorStartedShopping of Cart.VisitorStartedShopping
-        | CartShopperGotIdentified of Cart.CartShopperGotIdentified
+        | CartShopperIdentified of Cart.CartShopperIdentified
         | CustomerStartedShopping of Cart.CustomerStartedShopping
-        | ItemGotAddedToCart of Cart.ItemGotAddedToCart
-        | ItemGotRemovedFromCart of Cart.ItemGotRemovedFromCart
-        | CartGotCheckedOut of Cart.CartGotCheckedOut
-        | CartGotAbandoned of Cart.CartGotAbandoned
+        | ItemAddedToCart of Cart.ItemAddedToCart
+        | ItemRemovedFromCart of Cart.ItemRemovedFromCart
+        | CartCheckedOut of Cart.CartCheckedOut
+        | CartAbandoned of Cart.CartAbandoned
         | CheckoutStarted of Checkout.CheckoutStarted
         | ShippingInformationCollected of Checkout.ShippingInformationCollected
         | ShippingMethodSelected of Checkout.ShippingMethodSelected
@@ -141,12 +141,12 @@ module Shopping =
         member this.ToEventType() =
             match this with
             | VisitorStartedShopping _ -> nameof(VisitorStartedShopping).ToKebabCase()
-            | CartShopperGotIdentified _ -> nameof(CartShopperGotIdentified).ToKebabCase()
+            | CartShopperIdentified _ -> nameof(CartShopperIdentified).ToKebabCase()
             | CustomerStartedShopping _ -> nameof(CustomerStartedShopping).ToKebabCase()
-            | ItemGotAddedToCart _ -> nameof(ItemGotAddedToCart).ToKebabCase()
-            | ItemGotRemovedFromCart _ -> nameof(ItemGotRemovedFromCart).ToKebabCase()
-            | CartGotCheckedOut _ -> nameof(CartGotCheckedOut).ToKebabCase()
-            | CartGotAbandoned _ -> nameof(CartGotAbandoned).ToKebabCase()
+            | ItemAddedToCart _ -> nameof(ItemAddedToCart).ToKebabCase()
+            | ItemRemovedFromCart _ -> nameof(ItemRemovedFromCart).ToKebabCase()
+            | CartCheckedOut _ -> nameof(CartCheckedOut).ToKebabCase()
+            | CartAbandoned _ -> nameof(CartAbandoned).ToKebabCase()
             | CheckoutStarted _ -> nameof(CheckoutStarted).ToKebabCase()
             | ShippingInformationCollected _ -> nameof(ShippingInformationCollected).ToKebabCase()
             | ShippingMethodSelected _ -> nameof(ShippingMethodSelected).ToKebabCase()

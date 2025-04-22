@@ -62,7 +62,7 @@ type ShoppingJourneySimulator(faker: Faker)  =
 
                         yield
                             cart_stream,
-                            Shopping.ItemGotRemovedFromCart
+                            Shopping.ItemRemovedFromCart
                                 { CartId = cart_id
                                   ProductId = product_id
                                   Quantity = quantity
@@ -76,7 +76,7 @@ type ShoppingJourneySimulator(faker: Faker)  =
 
                         yield
                             cart_stream,
-                            Shopping.ItemGotAddedToCart
+                            Shopping.ItemAddedToCart
                                 { CartId = cart_id
                                   ProductId = selected_product.Id
                                   ProductName = selected_product.Name
@@ -95,7 +95,7 @@ type ShoppingJourneySimulator(faker: Faker)  =
                 if not shopper_identified && faker.Random.Bool() then
                     yield
                         cart_stream,
-                        Shopping.CartShopperGotIdentified
+                        Shopping.CartShopperIdentified
                             { CartId = cart_id
                               CustomerId = generate_customer_id()
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }
@@ -228,7 +228,7 @@ type ShoppingJourneySimulator(faker: Faker)  =
 
                     yield
                         cart_stream,
-                        Shopping.CartGotCheckedOut
+                        Shopping.CartCheckedOut
                             { CartId = cart_id
                               OrderId = generate_order_id ()
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }
@@ -237,7 +237,7 @@ type ShoppingJourneySimulator(faker: Faker)  =
 
                     yield
                         cart_stream,
-                        Shopping.CartGotAbandoned
+                        Shopping.CartAbandoned
                             { CartId = cart_id
                               AfterBeingIdleFor = configuration.Shopping.AbandonCartAfterTime.ToTimeSpan()
                               At = clock.GetCurrentInstant().ToDateTimeOffset() }
