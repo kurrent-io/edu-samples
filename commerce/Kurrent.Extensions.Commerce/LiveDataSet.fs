@@ -63,7 +63,7 @@ module LiveDataSet =
                 revisions[stream] <- append_result.NextExpectedStreamRevision
             }
 
-        override this.ExecuteAsync(context, settings) =
+        override this.ExecuteAsync(_, settings) =
             task {
                 this.Describe(settings, logger)
 
@@ -159,6 +159,7 @@ module LiveDataSet =
                                                         e.At
                                                     | Shopping.PaymentMethodSelected e -> e.At
                                                     | Shopping.CheckoutCompleted e -> e.At
+                                                    | Shopping.OrderPlaced e -> e.At
                                                 )
 
                                             if until > clock.GetCurrentInstant() then
