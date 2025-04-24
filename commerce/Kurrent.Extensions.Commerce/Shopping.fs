@@ -121,6 +121,54 @@ module Shopping =
               OrderId: string
               At: DateTimeOffset }
 
+    module OrderFulfillment =
+        type OrderLineItem =
+            { ProductId: string
+              ProductName: string
+              Quantity: int
+              PricePerUnit: string
+              TaxRate: decimal }
+
+        type OrderRecipient =
+            { Title: string
+              FullName: string
+              EmailAddress: string
+              PhoneNumber: string }
+
+        type Address = { Country: string; Lines: string list }
+
+        type OrderShippingMethod =
+            | Standard = 0
+            | Express = 1
+            | Overnight = 2
+            | SameDay = 3
+
+        type OrderPaymentMethod =
+            | CreditCard = 0
+            | DebitCard = 1
+            | WireTransfer = 2
+
+        type OrderShippingInformation =
+            { Recipient: OrderRecipient
+              Address: Address
+              Instructions: string
+              Method: OrderShippingMethod }
+
+        type OrderBillingInformation =
+            { Recipient: OrderRecipient
+              Address: Address
+              PaymentMethod: OrderPaymentMethod }
+
+        [<Description("Whenever the order is placed")>]
+        type OrderPlaced =
+            { OrderId: string
+              CustomerId: string
+              CheckoutOfCart: string
+              LineItems: OrderLineItem list
+              Shipping: OrderShippingInformation
+              Billing: OrderBillingInformation
+              At: DateTimeOffset }
+
     type Event =
         | VisitorStartedShopping of Cart.VisitorStartedShopping
         | CartShopperGotIdentified of Cart.CartShopperGotIdentified
@@ -137,6 +185,7 @@ module Shopping =
         | BillingInformationCopiedFromShippingInformation of Checkout.BillingInformationCopiedFromShippingInformation
         | PaymentMethodSelected of Checkout.PaymentMethodSelected
         | CheckoutCompleted of Checkout.CheckoutCompleted
+        | OrderPlaced of OrderFulfillment.OrderPlaced
 
         member this.ToEventType() =
             match this with
@@ -156,3 +205,4 @@ module Shopping =
                 nameof(BillingInformationCopiedFromShippingInformation).ToKebabCase()
             | PaymentMethodSelected _ -> nameof(PaymentMethodSelected).ToKebabCase()
             | CheckoutCompleted _ -> nameof(CheckoutCompleted).ToKebabCase()
+            | OrderPlaced _ -> nameof(OrderPlaced).ToKebabCase()
