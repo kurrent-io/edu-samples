@@ -1,15 +1,15 @@
 {
   "name": "Outbox",
   "image": "mcr.microsoft.com/devcontainers/dotnet:9.0",
-  "workspaceFolder": "/workspaces/developer-bootcamp/outbox/",
+  "workspaceFolder": "/workspaces/edu-samples/outbox/",
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
   "containerEnv": {
     "DOTNET_NOLOGO": "true"
   },
-  "onCreateCommand": "chmod +x /workspaces/developer-bootcamp/outbox/scripts/0-prebuild-containers.sh && /workspaces/developer-bootcamp/outbox/scripts/0-prebuild-containers.sh",
-  "postCreateCommand": "sudo cp /workspaces/developer-bootcamp/outbox/codespaces-welcome.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt",
+  "onCreateCommand": "chmod +x /workspaces/edu-samples/outbox/scripts/0-prebuild-containers.sh && /workspaces/edu-samples/outbox/scripts/0-prebuild-containers.sh",
+  "postCreateCommand": "sudo cp /workspaces/edu-samples/outbox/codespaces-welcome.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt",
 
   "forwardPorts": [2113, 1113],
   "portsAttributes": {
