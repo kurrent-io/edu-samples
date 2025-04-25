@@ -21,25 +21,21 @@ module ProductCatalogBuilder =
             use file_stream = File.Create("open_food_facts.parquet")
             do! response_stream.CopyToAsync(file_stream)
         }
-        
+
     let private download_amazon_data () =
         task {
             let url =
-                Url(
-                    "https://github.com/luminati-io/eCommerce-dataset-samples/raw/refs/heads/main/amazon-products.csv"
-                )
+                Url("https://github.com/luminati-io/eCommerce-dataset-samples/raw/refs/heads/main/amazon-products.csv")
 
             use! response_stream = url.GetStreamAsync()
             use file_stream = File.Create("amazon.csv")
             do! response_stream.CopyToAsync(file_stream)
         }
-        
+
     let private download_walmart_data () =
         task {
             let url =
-                Url(
-                    "https://github.com/luminati-io/eCommerce-dataset-samples/raw/refs/heads/main/walmart-products.csv"
-                )
+                Url("https://github.com/luminati-io/eCommerce-dataset-samples/raw/refs/heads/main/walmart-products.csv")
 
             use! response_stream = url.GetStreamAsync()
             use file_stream = File.Create("walmart.csv")
@@ -63,12 +59,12 @@ module ProductCatalogBuilder =
                     log.LogInformation("Downloading Walmart product data ... this can take some time")
                     do! download_walmart_data ()
             | _ -> ()
-                    
+
             let product_count =
                 faker.Random.Int(configuration.PIM.ProductCount.Minimum, configuration.PIM.ProductCount.Maximum)
-            
+
             log.LogInformation("Generating {ProductCount} products", product_count)
-            
+
             let! weighted_products =
                 match configuration.PIM.ProductSource with
                 | ProductSource.OpenFoodFacts ->
@@ -114,20 +110,19 @@ module ProductCatalogBuilder =
                         : PIM.WeightedProduct)
                     |> TaskSeq.toArrayAsync
                 | _ ->
-                    [
-                        for index in 1 .. product_count do
-                            let product_name = faker.Commerce.ProductName()
-                            { Weight = (float32 index)
-                              Product =
-                                { Id = faker.Commerce.Ean13()
-                                  Name = product_name
-                                  Price = faker.Commerce.Price(0.01m, 1000.00m, 2, "USD")
-                                  TaxRate = faker.Random.ArrayElement [| 0.06m; 0.12m; 0.21m |] } }
-                            : PIM.WeightedProduct
-                    ]
+                    [ for index in 1..product_count do
+                          let product_name = faker.Commerce.ProductName()
+
+                          { Weight = (float32 index)
+                            Product =
+                              { Id = faker.Commerce.Ean13()
+                                Name = product_name
+                                Price = faker.Commerce.Price(0.01m, 1000.00m, 2, "USD")
+                                TaxRate = faker.Random.ArrayElement [| 0.06m; 0.12m; 0.21m |] } }
+                          : PIM.WeightedProduct ]
                     |> TaskSeq.ofList
                     |> TaskSeq.toArrayAsync
-                        
+
             let total_weight = weighted_products |> Array.sumBy _.Weight
 
             let normalized_products =
