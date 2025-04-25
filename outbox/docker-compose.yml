@@ -1,0 +1,22 @@
+services:
+  eventstore:
+    image: eventstore/eventstore:24.10
+    container_name: eventstore
+    ports:
+      - "2113:2113"
+      - "1113:1113"
+    environment:
+      - EVENTSTORE_RUN_PROJECTIONS=All
+      - EVENTSTORE_START_STANDARD_PROJECTIONS=true
+      - EVENTSTORE_INSECURE=true
+      - EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP=true
+  # postgresprojection:
+  #   image: mcr.microsoft.com/dotnet/sdk:9.0
+  #   container_name: postgresprojection
+  #   working_dir: /app
+  #   volumes:
+  #     - ./:/app
+  #   command: ["dotnet", "run", "--project", "./PostgresProjection"]
+  #   environment:
+  #     - POSTGRES_HOST=postgres
+  #     - ESDB_HOST=eventstore
