@@ -1,0 +1,5 @@
+Hello!👋 Welcome to the KurrentDB Outbox Use Case Tutorial
+
+To continue, please follow instructions found in https://docs.kurrent.io/getting-started/use-cases/outbox/tutorial-intro.html
+
+Enjoy!
