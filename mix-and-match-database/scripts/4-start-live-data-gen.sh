@@ -2,7 +2,7 @@
 
 if [ -n "$CODESPACES" ]; then
     # In Codespace environment, use the preset project root path
-    root_path="/workspaces/developer-bootcamp/mix-and-match-database"
+    root_path="/workspaces/edu-samples/mix-and-match-database"
 else
     # Otherwise, assume you are in the project root directory
     root_path="./"
