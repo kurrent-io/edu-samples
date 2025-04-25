@@ -1,5 +1,5 @@
-Hello!👋 Welcome to the KurrentDB Mix-and-Match Use Case Tutorial (Work in Progress)
+Hello!👋 Welcome to the KurrentDB Mix-and-Match Use Case Tutorial
 
-To continue, please follow instructions found in https://docs.kurrent.io/getting-started/use-cases/mix-and-match-database-tutorial.html
+To continue, please follow instructions found in https://docs.kurrent.io/getting-started/use-cases/mix-and-match-database/tutorial-intro.html
 
 Enjoy!
