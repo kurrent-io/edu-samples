@@ -1,15 +1,15 @@
 {
   "name": "Mix-and-Match Database",
   "image": "mcr.microsoft.com/devcontainers/dotnet:9.0",
-  "workspaceFolder": "/workspaces/edu-samples/mix-and-match-database/",
+  "workspaceFolder": "/workspaces/developer-bootcamp/mix-and-match-database/",
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
   "containerEnv": {
     "DOTNET_NOLOGO": "true"
   },
-  "onCreateCommand": "chmod +x /workspaces/edu-samples/mix-and-match-database/scripts/0-prebuild-containers.sh && /workspaces/edu-samples/mix-and-match-database/scripts/0-prebuild-containers.sh",
-  "postCreateCommand": "sudo cp /workspaces/edu-samples/.devcontainer/welcome.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt",
+  "onCreateCommand": "chmod +x /workspaces/developer-bootcamp/mix-and-match-database/scripts/0-prebuild-containers.sh && /workspaces/developer-bootcamp/mix-and-match-database/scripts/0-prebuild-containers.sh",
+  "postCreateCommand": "sudo cp /workspaces/developer-bootcamp/mix-and-match-database/codespaces-welcome.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt",
 
   "forwardPorts": [27017, 5432, 6379, 2113, 1113, 5108],
   "portsAttributes": {
