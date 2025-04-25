@@ -36,7 +36,7 @@ module LiveDataSet =
     [<Description("Generate and seeds a live dataset according to the configuration")>]
     type Command(logger: ILogger) =
         inherit AsyncCommand<Settings>()
-        
+
         let append
             (client: EventStoreClient)
             (options: JsonSerializerOptions)
@@ -53,13 +53,17 @@ module LiveDataSet =
                 let data =
                     events
                     |> Array.map (fun event ->
-                        EventData(Uuid.NewUuid(), event.ToEventType(), ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(event, options))))
+                        EventData(
+                            Uuid.NewUuid(),
+                            event.ToEventType(),
+                            ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(event, options))
+                        ))
 
                 let! append_result = client.AppendToStreamAsync(StreamName.toString stream, expected, data)
                 revisions[stream] <- append_result.NextExpectedStreamRevision
             }
 
-        override this.ExecuteAsync(context, settings) =
+        override this.ExecuteAsync(_, settings) =
             task {
                 this.Describe(settings, logger)
 
@@ -85,20 +89,20 @@ module LiveDataSet =
                             failwith $"The configuration file '{file}' does not exist."
 
                 let clock = SystemClock.Instance
-                
+
                 let faker = Faker()
 
                 do! ProductCatalogBuilder.build faker configuration logger
-                
+
                 let client_settings = EventStoreClientSettings.Create settings.ConnectionString
                 client_settings.OperationOptions.ThrowOnAppendFailure <- false
                 use client = new EventStoreClient(client_settings)
-                
+
                 let revisions = ConcurrentDictionary<StreamName, StreamRevision>()
-                
+
                 let cart_count =
                     faker.Random.Int(configuration.Shopping.CartCount.Minimum, configuration.Shopping.CartCount.Maximum)
-                    
+
                 logger.LogInformation("Generating {CartCount} carts", cart_count)
 
                 let concurrent_cart_count =
@@ -106,22 +110,19 @@ module LiveDataSet =
                         configuration.Shopping.ConcurrentCartCount.Minimum,
                         configuration.Shopping.ConcurrentCartCount.Maximum
                     )
-                    
+
                 logger.LogInformation("With {ConcurrencyCount} carts concurrently", concurrent_cart_count)
-                    
+
                 let concurrency_options =
-                    ParallelOptions(
-                        MaxDegreeOfParallelism =
-                            concurrent_cart_count
-                    )
+                    ParallelOptions(MaxDegreeOfParallelism = concurrent_cart_count)
 
                 let initial_delay_in_seconds =
                     int (
                         (double configuration.Shopping.CartActionCount.Minimum)
                         * configuration.Shopping.TimeBetweenCartActions.Minimum.TotalSeconds
                     )
-                    
-                let simulator : ISimulator<Shopping.Event> = ShoppingJourneySimulator(faker)
+
+                let simulator: ISimulator<Shopping.Event> = ShoppingJourneySimulator(faker)
 
                 do!
                     Parallel.ForAsync(
@@ -130,10 +131,13 @@ module LiveDataSet =
                         concurrency_options,
                         fun (cart: int) (ct: CancellationToken) ->
                             task {
-                                let initial_delay = Duration.FromSeconds(double (faker.Random.Int(0, initial_delay_in_seconds)))
-                                
+                                let initial_delay =
+                                    Duration.FromSeconds(double (faker.Random.Int(0, initial_delay_in_seconds)))
+
                                 do!
-                                    simulator.Simulate (FakeClock(clock.GetCurrentInstant().Plus(initial_delay))) configuration
+                                    simulator.Simulate
+                                        (FakeClock(clock.GetCurrentInstant().Plus(initial_delay)))
+                                        configuration
                                     |> TaskSeq.iterAsync (fun (stream, event) ->
                                         task {
                                             let until =
@@ -151,16 +155,21 @@ module LiveDataSet =
                                                     | Shopping.ShippingMethodSelected e -> e.At
                                                     | Shopping.ShippingCostCalculated e -> e.At
                                                     | Shopping.BillingInformationCollected e -> e.At
-                                                    | Shopping.BillingInformationCopiedFromShippingInformation e -> e.At
+                                                    | Shopping.BillingInformationCopiedFromShippingInformation e ->
+                                                        e.At
                                                     | Shopping.PaymentMethodSelected e -> e.At
-                                                    | Shopping.CheckoutCompleted e -> e.At)
+                                                    | Shopping.CheckoutCompleted e -> e.At
+                                                    | Shopping.OrderPlaced e -> e.At
+                                                )
+
                                             if until > clock.GetCurrentInstant() then
                                                 do! Task.Delay((until - clock.GetCurrentInstant()).ToTimeSpan(), ct)
+
                                             do! append client options revisions stream [| event |]
-                                        }
-                                    )
-                            } |> ValueTask
+                                        })
+                            }
+                            |> ValueTask
                     )
-                
+
                 return 0
             }

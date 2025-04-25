@@ -42,15 +42,12 @@ type ProductSource =
     | Walmart = 2
 
 type PIMConfiguration =
-    {
-        ProductCount: CountConfiguration
-        ProductSource: ProductSource
-    }
+    { ProductCount: CountConfiguration
+      ProductSource: ProductSource }
 
-    static member Default = {
-        ProductCount = { Minimum = 1000; Maximum = 5000 }
-        ProductSource = ProductSource.Amazon
-    }
+    static member Default =
+        { ProductCount = { Minimum = 1000; Maximum = 5000 }
+          ProductSource = ProductSource.Amazon }
 
 type Configuration =
     { Shopping: ShoppingConfiguration
