@@ -21,10 +21,6 @@
       "label": "KurrentDB API",
       "onAutoForward": "silent"
     },
-    "27017": {
-      "label": "MongoDB",
-      "onAutoForward": "silent"
-    },
     "5432": {
       "label": "PostgreSQL",
       "onAutoForward": "silent"

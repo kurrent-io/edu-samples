@@ -1,10 +1,5 @@
 services:
-  mongo:
-    image: mongo:7.0
-    container_name: mongo
-    ports:
-      - "27017:27017"
-    
+
   postgres:
     image: postgres:16
     container_name: postgres
@@ -12,21 +7,62 @@ services:
       - "5432:5432"
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
+    profiles: ["db"]
     
   redis:
     image: redis:7.2
     container_name: redis
     ports:
       - "6379:6379"
+    profiles: ["db"]
     
-  eventstore:
-    image: eventstore/eventstore:24.10
-    container_name: eventstore
+  kurrentdb:
+    image: kurrentplatform/kurrentdb:25.0
+    container_name: kurrentdb
     ports:
       - "2113:2113"
       - "1113:1113"
     environment:
-      - EVENTSTORE_RUN_PROJECTIONS=All
-      - EVENTSTORE_START_STANDARD_PROJECTIONS=true
-      - EVENTSTORE_INSECURE=true
-      - EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP=true
+      - KURRENTDB_RUN_PROJECTIONS=All
+      - KURRENTDB_START_STANDARD_PROJECTIONS=true
+      - KURRENTDB_INSECURE=true
+      - KURRENTDB_ENABLE_ATOM_PUB_OVER_HTTP=true
+    profiles: ["db"]
+      
+  demoweb:
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    container_name: demoweb
+    working_dir: /app
+    volumes:
+      - ./DemoWeb:/app # Mount the DemoWeb project directory
+    command: ["dotnet", "run"]
+    ports:
+      - "5108:5108"
+    environment:
+      - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
+    profiles: ["app"]
+    
+  postgresprojection:
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    container_name: postgresprojection
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: ["dotnet", "run", "--project", "./PostgresProjection"]
+    environment:
+      - POSTGRES_HOST=postgres
+      - KURRENTDB_HOST=kurrentdb
+    profiles: ["app"]
+    
+  redisprojection:
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    container_name: redisprojection
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: ["dotnet", "run", "--project", "./RedisProjection"]
+    environment:
+      - REDIS_HOST=redis
+      - KURRENTDB_HOST=kurrentdb
+    profiles: ["app"]

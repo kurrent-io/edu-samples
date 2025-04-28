@@ -14,9 +14,7 @@ if [ ! -d "$root_path/data" ]; then
     exit 1
 fi
 
-docker_compose_file="$root_path/docker-compose.app.yml"
-
-docker compose -f "$docker_compose_file" up -d
+docker compose --profile app -f "$root_path/docker-compose.yml" up -d
 
 max_attempts=60
 attempt=0
@@ -36,18 +34,19 @@ echo "DemoWeb is running."
 max_attempts=60
 attempt=0
 while true; do
-    logs=$(docker compose -f "$docker_compose_file" logs 2>&1)
-    if echo "$logs" | grep -q "MongoProjection started" && \
-       echo "$logs" | grep -q "RedisProjection started" && \
+    logs=$(docker compose --profile app -f "$root_path/docker-compose.yml" logs 2>&1)
+    if echo "$logs" | grep -q "RedisProjection started" && \
        echo "$logs" | grep -q "PostgresProjection started"; then
         echo "All projection apps are running."
         break
     fi
     attempt=$((attempt+1))
+
     if [ $attempt -ge $max_attempts ]; then
         echo "Required projections did not start after $max_attempts attempts. Exiting."
         exit 1
     fi
     echo "Waiting projection apps to start... (attempt $attempt)"
+
     sleep 2
 done
