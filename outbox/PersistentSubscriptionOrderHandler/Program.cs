@@ -24,18 +24,18 @@ Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
 // Connect to KurrentDB //
 // -------------------- //
 
-var esdbHost = Environment.GetEnvironmentVariable("ESDB_HOST")           // Get the KurrentDB host from environment variable
+var kurrentdbHost = Environment.GetEnvironmentVariable("KURRENTDB_HOST")           // Get the KurrentDB host from environment variable
                     ?? "localhost";                                      // Default to localhost if not set
 
-var esdb = new EventStorePersistentSubscriptionsClient(                                         // Create a connection to KurrentDB
+var kurrentdb = new EventStorePersistentSubscriptionsClient(                                         // Create a connection to KurrentDB
                 EventStoreClientSettings.Create(
-                  $"esdb://admin:changeit@{esdbHost}:2113?tls=false"));
+                  $"esdb://admin:changeit@{kurrentdbHost}:2113?tls=false"));
 
 // ---------------------------------------------- //
 // Subscribe to KurrentDB from checkpoint onwards //
 // ---------------------------------------------- //
 
-await using var subscription = esdb.SubscribeToStream(
+await using var subscription = kurrentdb.SubscribeToStream(
 		"$et-order-placed",
 		"fulfillment-group");
 
