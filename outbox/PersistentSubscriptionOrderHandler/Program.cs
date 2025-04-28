@@ -16,6 +16,7 @@
 // The projection is done in a way that ensures the read model is always up to date with the latest events from KurrentDB.
 // =======================================================================================================================
 
+using Common;
 using EventStore.Client;
 
 Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
@@ -49,9 +50,13 @@ await foreach (var message in subscription.Messages)                     // Iter
 {
     if (message is not PersistentSubscriptionMessage.Event(var e, _)) continue;             // Skip this message if it is not an event
 
+    if (EventEncoder.Decode(e.Event.Data, "order-placed") is not OrderPlaced orderPlaced) continue;
+
     Console.WriteLine($"Projected event " +
                       $"#{e.OriginalEventNumber.ToInt64()} " +
                       $"{e.Event.EventType}");
-    
+
+    Console.WriteLine($"Order ID: {orderPlaced.orderId}");
+
     await subscription.Ack(e); // Acknowledge the event to mark it as processed
 }

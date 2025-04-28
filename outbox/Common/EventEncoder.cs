@@ -1,0 +1,36 @@
+﻿using System.Text;
+using System.Text.Json;
+
+namespace Common;
+
+public static class EventEncoder
+{
+    private static readonly Dictionary<string, Type> EventTypeMap = new()
+    {
+        { "order-placed", typeof(OrderPlaced) }
+    };
+
+    private static readonly JsonSerializerOptions SerializerOptions = new()
+    {
+        Converters = { new OrderPlacedConverter() }
+    };
+        
+    public static object? Decode(ReadOnlyMemory<byte> eventData, string eventTypeName)
+    {
+        if (!EventTypeMap.TryGetValue(eventTypeName, out var eventType))
+        {
+            Console.WriteLine($"Unknown event type: {eventTypeName}");
+            return null;
+        }
+
+        try
+        {
+            return JsonSerializer.Deserialize(Encoding.UTF8.GetString(eventData.Span), eventType, SerializerOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to deserialize event: {eventTypeName}. Error: {ex.Message}");
+            return null;
+        }
+    }
+}
