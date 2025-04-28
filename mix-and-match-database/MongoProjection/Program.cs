@@ -12,8 +12,8 @@ var mongoHost = Environment.GetEnvironmentVariable("MONGO_HOST") ?? "localhost";
 var mongoCollection = new MongoClient($"mongodb://{mongoHost}:27017").GetDatabase("mix-and-match-database").GetCollection<BsonDocument>("total-payment");
 
 // Connect to KurrentDB
-var esdbHost = Environment.GetEnvironmentVariable("ESDB_HOST") ?? "localhost";
-var esdb = new EventStoreClient(EventStoreClientSettings.Create($"esdb://admin:changeit@{esdbHost}:2113?tls=false"));
+var kurrentdbHost = Environment.GetEnvironmentVariable("KURRENTDB_HOST") ?? "localhost";
+var kurrentdb = new EventStoreClient(EventStoreClientSettings.Create($"esdb://admin:changeit@{kurrentdbHost}:2113?tls=false"));
 
 var checkpointValue = mongoCollection                      // Get the checkpoint value from MongoDB..
   .Find(Builders<BsonDocument>.Filter.Eq("_id", "total"))  // from the total document's.. 
@@ -24,7 +24,7 @@ var streamPosition = checkpointValue.HasValue                            // Chec
     : FromStream.Start;                                                  // Otherwise, subscribe from the start of the stream
 
 await using var subscription = 
-    esdb.SubscribeToStream(     // Subscribe events..
+    kurrentdb.SubscribeToStream(     // Subscribe events..
         "$ce-payment",          // from this stream..
         streamPosition,         // from this position..
         true);                  // with linked events automatically resolved (required for system projections)
