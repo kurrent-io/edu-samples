@@ -14,7 +14,7 @@ if [ ! -d "$root_path/data" ]; then
     exit 1
 fi
 
-docker compose -f "$root_path/docker-compose.yml" up -d
+docker compose --profile db -f "$root_path/docker-compose.yml" up -d
 
 max_attempts=60
 attempt=0

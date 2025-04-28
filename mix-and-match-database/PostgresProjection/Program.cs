@@ -45,12 +45,12 @@ postgres.Execute("CREATE TABLE IF NOT EXISTS checkpoints " +             // Crea
 // Connect to KurrentDB //
 // -------------------- //
 
-var esdbHost = Environment.GetEnvironmentVariable("ESDB_HOST")           // Get the KurrentDB host from environment variable
+var kurrentDbHost = Environment.GetEnvironmentVariable("KURRENTDB_HOST")           // Get the KurrentDB host from environment variable
                     ?? "localhost";                                      // Default to localhost if not set
 
-var esdb = new EventStoreClient(                                         // Create a connection to KurrentDB
+var kurrentdb = new EventStoreClient(                                         // Create a connection to KurrentDB
                 EventStoreClientSettings.Create(
-                  $"esdb://admin:changeit@{esdbHost}:2113?tls=false"));
+                  $"esdb://admin:changeit@{kurrentDbHost}:2113?tls=false"));
 
 // --------------------------------------------------- //
 // Retrieve the last checkpoint position from Postgres //
@@ -69,7 +69,7 @@ var streamPosition = checkpointValue.HasValue                            // Chec
 // Subscribe to KurrentDB from checkpoint onwards //
 // ---------------------------------------------- //
 
-await using var subscription = esdb.SubscribeToStream(                   // Subscribe events..
+await using var subscription = kurrentdb.SubscribeToStream(                   // Subscribe events..
     "$ce-cart",                                                          // from the cart category system projection..        
     streamPosition,                                                      // from this position..
     true);                                                               // with linked events automatically resolved (required for system projections)

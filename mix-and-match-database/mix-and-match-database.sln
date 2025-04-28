@@ -17,8 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".devcontainer", ".devcontai
 		.devcontainer\Dockerfile = .devcontainer\Dockerfile
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoProjection", "MongoProjection\MongoProjection.csproj", "{447E20F5-76DA-492D-883F-189EA7FAB8DE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgresProjection", "PostgresProjection\PostgresProjection.csproj", "{CB037517-E7CA-4FE1-96B1-EA286A739DDC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoWeb", "DemoWeb\DemoWeb.csproj", "{748E0FE3-4DD1-4B6F-9588-8F06D60229E6}"
