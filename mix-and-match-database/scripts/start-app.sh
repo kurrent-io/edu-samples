@@ -35,8 +35,7 @@ max_attempts=60
 attempt=0
 while true; do
     logs=$(docker compose -f "$docker_compose_file" logs 2>&1)
-    if echo "$logs" | grep -q "MongoProjection started" && \
-       echo "$logs" | grep -q "RedisProjection started" && \
+    if echo "$logs" | grep -q "RedisProjection started" && \
        echo "$logs" | grep -q "PostgresProjection started"; then
         echo "All projection apps are running."
         break
