@@ -18,6 +18,8 @@
 
 using Common;
 using EventStore.Client;
+using Npgsql;
+using PersistentSubscriptionOrderProcessor;
 
 Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
 
@@ -32,6 +34,18 @@ var kurrentdb = new EventStorePersistentSubscriptionsClient(                    
                 EventStoreClientSettings.Create(
                   $"esdb://admin:changeit@{kurrentdbHost}:2113?tls=false"));
 
+// ------------------------------- //
+// Connect and initialize Postgres //
+// ------------------------------- //
+
+var postgresHost = Environment.GetEnvironmentVariable("POSTGRES_HOST")   // Get the Postgres host from environment variable
+                    ?? "localhost";                                      // Default to localhost if not set
+
+var postgres = new PostgresDataAccess(                                   // Create a postgres connection and inject into a custom data access class
+                    new NpgsqlConnection(
+                        $"Host={postgresHost};Port=5432;" +
+                        $"Database=postgres;Username=postgres"));
+
 // ---------------------------------------------- //
 // Subscribe to KurrentDB from checkpoint onwards //
 // ---------------------------------------------- //
@@ -41,6 +55,8 @@ await using var subscription = kurrentdb.SubscribeToStream(
 		"fulfillment-group");
 
 Console.WriteLine("Subscribing events from stream");
+
+var repository = new OrderFulfillmentRepository(postgres);
 
 // ---------------------------------------- //
 // Process each event from the subscription //
@@ -52,11 +68,9 @@ await foreach (var message in subscription.Messages)                     // Iter
 
     if (EventEncoder.Decode(e.Event.Data, "order-placed") is not OrderPlaced orderPlaced) continue;
 
-    Console.WriteLine($"Projected event " +
-                      $"#{e.OriginalEventNumber.ToInt64()} " +
-                      $"{e.Event.EventType}");
+    var fulfillmentId = repository.StartOrderFulfillment(orderPlaced.orderId);
 
-    Console.WriteLine($"Order ID: {orderPlaced.orderId}");
-
+    Console.WriteLine($"Started OrderFulfillment {fulfillmentId} from Order {orderPlaced.orderId}");
+    
     await subscription.Ack(e); // Acknowledge the event to mark it as processed
 }
