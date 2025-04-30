@@ -1,0 +1,617 @@
+[
+  {
+    "stream": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587",
+    "events": [
+      {
+        "id": "2e849aff-e0f6-4db8-bb8d-bc91459ab73d",
+        "type": "visitor-started-shopping",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587",
+          "at": "2025-01-01T00:00:00\u002B00:00"
+        }
+      },
+      {
+        "id": "72867c46-b463-4ec3-a77c-3c963ca8f847",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587",
+          "productId": "7843360977710",
+          "productName": "BOBO BIRD Mens Wooden Watches Luxury Wood Metal Strap Chronograph \u0026 Date Display Quartz Watch Versatile Male Timepieces",
+          "quantity": 2,
+          "pricePerUnit": "USD277.49",
+          "taxRate": 0.12,
+          "at": "2025-01-01T00:00:27.7424112\u002B00:00"
+        }
+      },
+      {
+        "id": "8aacfbce-6c13-48a0-a966-5eff12595021",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587",
+          "productId": "0701824557090",
+          "productName": "adidas unisex-child Racer Tr21",
+          "quantity": 1,
+          "pricePerUnit": "USD452.96",
+          "taxRate": 0.21,
+          "at": "2025-01-01T00:11:03.7096387\u002B00:00"
+        }
+      },
+      {
+        "id": "0405756c-fba7-44c8-9487-7b198af9615c",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587",
+          "productId": "3906362089844",
+          "productName": "Glamorise Women\u0027s Plus Size MagicLift Natural Shape Bra Wirefree #1210",
+          "quantity": 2,
+          "pricePerUnit": "USD601.05",
+          "taxRate": 0.21,
+          "at": "2025-01-01T00:23:44.5095092\u002B00:00"
+        }
+      },
+      {
+        "id": "3330d543-00d4-4833-8887-0db7bbdccfe1",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587",
+          "productId": "0701824557090",
+          "quantity": 1,
+          "at": "2025-01-01T00:25:24.9534946\u002B00:00"
+        }
+      },
+      {
+        "id": "942340e0-96fa-44cd-9cdf-b7143149d0bd",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587",
+          "productId": "3906362089844",
+          "productName": "Glamorise Women\u0027s Plus Size MagicLift Natural Shape Bra Wirefree #1210",
+          "quantity": 5,
+          "pricePerUnit": "USD601.05",
+          "taxRate": 0.21,
+          "at": "2025-01-01T00:26:47.0311765\u002B00:00"
+        }
+      },
+      {
+        "id": "09a63e9f-3c53-4470-ae21-ca31cb18c8da",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587",
+          "productId": "3906362089844",
+          "quantity": 2,
+          "at": "2025-01-01T00:38:14.3979312\u002B00:00"
+        }
+      },
+      {
+        "id": "de5fefca-b2c4-4b83-8150-041c906e492c",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587",
+          "productId": "7843360977710",
+          "quantity": 2,
+          "at": "2025-01-01T00:48:43.4138524\u002B00:00"
+        }
+      },
+      {
+        "id": "86af9294-ab3e-448b-8df8-ce7de64ac1b8",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587",
+          "productId": "4579864912959",
+          "productName": "Simple Designs LT3039-PRP 14.17\u201D Contemporary Mosaic Tiled Glass Genie Standard Table Lamp with Matching Fabric Shade for Home D\u00E9cor, Bedroom, Living Room, Foyer, Office, Purple",
+          "quantity": 3,
+          "pricePerUnit": "USD392.81",
+          "taxRate": 0.06,
+          "at": "2025-01-01T01:02:38.1617285\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "checkout-for-cart-631dd4d51e6b4f4d9f9e26e55f1cd587",
+    "events": [
+      {
+        "id": "e93cd43e-89c8-475d-9d81-e7118fce4d29",
+        "type": "checkout-started",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587@9",
+          "at": "2025-01-01T01:03:53.9705897\u002B00:00"
+        }
+      },
+      {
+        "id": "6b36b485-e483-4ac3-9f4a-74e7fd2a0ffa",
+        "type": "shipping-information-collected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587@9",
+          "recipient": {
+            "title": "Ms.",
+            "fullName": "Beulah Schmidt",
+            "emailAddress": "Beulah.Schmidt@yahoo.com",
+            "phoneNumber": "1-819-847-8206 x80714"
+          },
+          "address": {
+            "country": "IR",
+            "lines": [
+              "Clementine Mountain 445",
+              "75096-8505 North Chadport",
+              "Bedfordshire"
+            ]
+          },
+          "instructions": "Est a soluta et eaque mollitia.\nVero sunt consectetur molestiae.",
+          "at": "2025-01-01T01:05:00.2852594\u002B00:00"
+        }
+      },
+      {
+        "id": "98c4cda2-1a6e-4808-b504-b0ad2fb1fd75",
+        "type": "shipping-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587@9",
+          "method": "express",
+          "at": "2025-01-01T01:06:55.6128275\u002B00:00"
+        }
+      },
+      {
+        "id": "a08af5ae-6828-4396-a634-4862839e5de0",
+        "type": "shipping-cost-calculated",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587@9",
+          "forMethod": "express",
+          "cost": "USD12.95",
+          "at": "2025-01-01T01:06:55.6128275\u002B00:00"
+        }
+      },
+      {
+        "id": "52afbbb6-da57-429f-a6c8-b216f6b58d10",
+        "type": "billing-information-copied-from-shipping-information",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587@9",
+          "recipient": {
+            "title": "Ms.",
+            "fullName": "Beulah Schmidt",
+            "emailAddress": "Beulah.Schmidt@yahoo.com",
+            "phoneNumber": "1-819-847-8206 x80714"
+          },
+          "address": {
+            "country": "IR",
+            "lines": [
+              "Clementine Mountain 445",
+              "75096-8505 North Chadport",
+              "Bedfordshire"
+            ]
+          },
+          "at": "2025-01-01T01:08:47.1132013\u002B00:00"
+        }
+      },
+      {
+        "id": "2bc12ecc-1203-4065-9399-37e16626fa36",
+        "type": "payment-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587@9",
+          "method": "wireTransfer",
+          "at": "2025-01-01T01:10:28.4033463\u002B00:00"
+        }
+      },
+      {
+        "id": "66cc8f45-9652-4c80-82b1-671e8cebdcc3",
+        "type": "checkout-completed",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587@9",
+          "orderId": "order-b0d1a15a21d24ffa97785ce7b345a87e",
+          "at": "2025-01-01T01:11:30.976938\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587",
+    "events": [
+      {
+        "id": "111ebb9a-b93c-43e9-8678-2e9d051889d2",
+        "type": "cart-got-checked-out",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587",
+          "orderId": "order-b0d1a15a21d24ffa97785ce7b345a87e",
+          "at": "2025-01-01T01:11:30.976938\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "order-b0d1a15a21d24ffa97785ce7b345a87e",
+    "events": [
+      {
+        "id": "8ac54566-28e9-4090-9719-7f41848bd2e2",
+        "type": "order-placed",
+        "content-type": "application/json",
+        "data": {
+          "orderId": "order-b0d1a15a21d24ffa97785ce7b345a87e",
+          "customerId": "customer-185176238",
+          "checkoutOfCart": "cart-631dd4d51e6b4f4d9f9e26e55f1cd587@9",
+          "lineItems": [
+            {
+              "productId": "3906362089844",
+              "productName": "Glamorise Women\u0027s Plus Size MagicLift Natural Shape Bra Wirefree #1210",
+              "quantity": 5,
+              "pricePerUnit": "USD601.05",
+              "taxRate": 0.21
+            },
+            {
+              "productId": "4579864912959",
+              "productName": "Simple Designs LT3039-PRP 14.17\u201D Contemporary Mosaic Tiled Glass Genie Standard Table Lamp with Matching Fabric Shade for Home D\u00E9cor, Bedroom, Living Room, Foyer, Office, Purple",
+              "quantity": 3,
+              "pricePerUnit": "USD392.81",
+              "taxRate": 0.06
+            }
+          ],
+          "shipping": {
+            "recipient": {
+              "title": "Ms.",
+              "fullName": "Beulah Schmidt",
+              "emailAddress": "Beulah.Schmidt@yahoo.com",
+              "phoneNumber": "1-819-847-8206 x80714"
+            },
+            "address": {
+              "country": "IR",
+              "lines": [
+                "Clementine Mountain 445",
+                "75096-8505 North Chadport",
+                "Bedfordshire"
+              ]
+            },
+            "instructions": "",
+            "method": "express"
+          },
+          "billing": {
+            "recipient": {
+              "title": "Ms.",
+              "fullName": "Beulah Schmidt",
+              "emailAddress": "Beulah.Schmidt@yahoo.com",
+              "phoneNumber": "1-819-847-8206 x80714"
+            },
+            "address": {
+              "country": "IR",
+              "lines": [
+                "Clementine Mountain 445",
+                "75096-8505 North Chadport",
+                "Bedfordshire"
+              ]
+            },
+            "paymentMethod": "wireTransfer"
+          },
+          "at": "2025-01-01T01:11:30.976938\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "cart-d69700d72a124900babd720971e98ec9",
+    "events": [
+      {
+        "id": "9dd6e77f-cd81-417c-ae53-583c7e73d228",
+        "type": "visitor-started-shopping",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-d69700d72a124900babd720971e98ec9",
+          "at": "2025-01-01T11:59:59.9999999\u002B00:00"
+        }
+      },
+      {
+        "id": "388fd12c-b310-48a1-8eda-64e18fe5a7b4",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-d69700d72a124900babd720971e98ec9",
+          "productId": "1302306141128",
+          "productName": "Drawealth Touch Control Traditional Table Lamp Set of 2,3-Way Dimmable Farmhouse Bedside Table Lamps with 2 USB Charging Ports Vintage Rustic Table Lamps for Living Room Bedroom Office Study",
+          "quantity": 3,
+          "pricePerUnit": "USD838.28",
+          "taxRate": 0.06,
+          "at": "2025-01-01T12:02:42.9854492\u002B00:00"
+        }
+      },
+      {
+        "id": "a48790dd-67ca-4aac-929d-698bc0ca214c",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-d69700d72a124900babd720971e98ec9",
+          "productId": "8858919448824",
+          "productName": "SkyBound Replacement Trampoline Mat, Fits 15ft Frames w/Spring Tool and Durable V-Rings, Bounce Safely with Extra Rows of Stitching - Jumping Mat for 15ft Round Trampoline - Fit 96 Springs \u0026 6.5-7\u0022",
+          "quantity": 3,
+          "pricePerUnit": "USD869.97",
+          "taxRate": 0.21,
+          "at": "2025-01-01T12:16:10.5918701\u002B00:00"
+        }
+      },
+      {
+        "id": "f0d0cbb0-914f-412e-be86-0e4bd5fe02a9",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-d69700d72a124900babd720971e98ec9",
+          "productId": "7843360977710",
+          "productName": "BOBO BIRD Mens Wooden Watches Luxury Wood Metal Strap Chronograph \u0026 Date Display Quartz Watch Versatile Male Timepieces",
+          "quantity": 5,
+          "pricePerUnit": "USD277.49",
+          "taxRate": 0.12,
+          "at": "2025-01-01T12:26:08.4581093\u002B00:00"
+        }
+      },
+      {
+        "id": "128cbd48-0eb8-42c1-b2cc-5d4c3981b2e9",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-d69700d72a124900babd720971e98ec9",
+          "productId": "8858919448824",
+          "quantity": 3,
+          "at": "2025-01-01T12:27:12.1801487\u002B00:00"
+        }
+      },
+      {
+        "id": "efed8c93-c223-4f9b-91f5-333d5548fe46",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-d69700d72a124900babd720971e98ec9",
+          "productId": "6197121670602",
+          "productName": "guleek for iPhone 6 Screen Replacement White Touch Display LCD Digitizer Assembly with Front Facing Camera,Proximity Sensor,Ear Speaker,Home Button Including Repair Tool and Screen Pretector",
+          "quantity": 4,
+          "pricePerUnit": "USD517.56",
+          "taxRate": 0.21,
+          "at": "2025-01-01T12:29:41.2748091\u002B00:00"
+        }
+      },
+      {
+        "id": "3f143aa5-df6b-442c-83d8-eafb7596f08c",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-d69700d72a124900babd720971e98ec9",
+          "productId": "7843360977710",
+          "productName": "BOBO BIRD Mens Wooden Watches Luxury Wood Metal Strap Chronograph \u0026 Date Display Quartz Watch Versatile Male Timepieces",
+          "quantity": 4,
+          "pricePerUnit": "USD277.49",
+          "taxRate": 0.12,
+          "at": "2025-01-01T12:42:18.2921152\u002B00:00"
+        }
+      },
+      {
+        "id": "f0b1704d-3b4f-4998-89df-203b4ba1ffbb",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-d69700d72a124900babd720971e98ec9",
+          "productId": "5432443030392",
+          "productName": "KATARINA Two Row Infinity Black and White Diamond Ring in Sterling Silver (1/20 cttw, I-J, S-I)",
+          "quantity": 3,
+          "pricePerUnit": "USD593.73",
+          "taxRate": 0.12,
+          "at": "2025-01-01T12:50:30.2326979\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "checkout-for-cart-d69700d72a124900babd720971e98ec9",
+    "events": [
+      {
+        "id": "1de15d18-f3d4-4112-b52b-0e4b7df37a97",
+        "type": "checkout-started",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-d69700d72a124900babd720971e98ec9@8",
+          "at": "2025-01-01T12:59:45.0937504\u002B00:00"
+        }
+      },
+      {
+        "id": "d67e6d97-550d-491c-bc73-8c879dccfb9d",
+        "type": "shipping-information-collected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-d69700d72a124900babd720971e98ec9@8",
+          "recipient": {
+            "title": "Dr.",
+            "fullName": "Beulah Schmidt",
+            "emailAddress": "Beulah.Schmidt@yahoo.com",
+            "phoneNumber": "553-541-6114"
+          },
+          "address": {
+            "country": "NF",
+            "lines": [
+              "Predovic Brooks 3824",
+              "59905 Lueilwitztown",
+              "Bedfordshire"
+            ]
+          },
+          "instructions": "Esse voluptatem consequatur aut ut.\nRepellendus sit qui non odit.",
+          "at": "2025-01-01T13:01:21.309894\u002B00:00"
+        }
+      },
+      {
+        "id": "8aded4b6-8600-413f-866e-a57d56d51da0",
+        "type": "shipping-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-d69700d72a124900babd720971e98ec9@8",
+          "method": "overnight",
+          "at": "2025-01-01T13:03:14.6223352\u002B00:00"
+        }
+      },
+      {
+        "id": "7647e3ca-dce3-43f4-a5ee-c706b26c95cc",
+        "type": "shipping-cost-calculated",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-d69700d72a124900babd720971e98ec9@8",
+          "forMethod": "overnight",
+          "cost": "USD27.24",
+          "at": "2025-01-01T13:03:14.6223352\u002B00:00"
+        }
+      },
+      {
+        "id": "fe2855bc-ba7a-4586-83ca-1303e8f59040",
+        "type": "billing-information-collected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-d69700d72a124900babd720971e98ec9@8",
+          "recipient": {
+            "title": "Dr.",
+            "fullName": "Beulah Schmidt",
+            "emailAddress": "Beulah.Schmidt@yahoo.com",
+            "phoneNumber": "731.959.1334 x45693"
+          },
+          "address": {
+            "country": "MQ",
+            "lines": [
+              "Torphy Circles 2716",
+              "00115-6481 Ryanchester",
+              "Cambridgeshire"
+            ]
+          },
+          "at": "2025-01-01T13:05:14.0143395\u002B00:00"
+        }
+      },
+      {
+        "id": "b99eecc0-2976-4cb1-8c02-83f218db7de1",
+        "type": "payment-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-d69700d72a124900babd720971e98ec9@8",
+          "method": "debitCard",
+          "at": "2025-01-01T13:06:32.0020171\u002B00:00"
+        }
+      },
+      {
+        "id": "579f873c-ebb5-4642-9dbb-e7e2e6a18c9e",
+        "type": "checkout-completed",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-d69700d72a124900babd720971e98ec9@8",
+          "orderId": "order-f16847c9a2e44b23bdacc5c92b6dbb25",
+          "at": "2025-01-01T13:07:28.1435498\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "cart-d69700d72a124900babd720971e98ec9",
+    "events": [
+      {
+        "id": "bd27a152-beeb-43b0-b30d-590937c0a294",
+        "type": "cart-got-checked-out",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-d69700d72a124900babd720971e98ec9",
+          "orderId": "order-f16847c9a2e44b23bdacc5c92b6dbb25",
+          "at": "2025-01-01T13:07:28.1435498\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "order-f16847c9a2e44b23bdacc5c92b6dbb25",
+    "events": [
+      {
+        "id": "c81f5211-5be5-4669-b13d-91ee77e8a631",
+        "type": "order-placed",
+        "content-type": "application/json",
+        "data": {
+          "orderId": "order-f16847c9a2e44b23bdacc5c92b6dbb25",
+          "customerId": "customer-1250437556",
+          "checkoutOfCart": "cart-d69700d72a124900babd720971e98ec9@8",
+          "lineItems": [
+            {
+              "productId": "1302306141128",
+              "productName": "Drawealth Touch Control Traditional Table Lamp Set of 2,3-Way Dimmable Farmhouse Bedside Table Lamps with 2 USB Charging Ports Vintage Rustic Table Lamps for Living Room Bedroom Office Study",
+              "quantity": 3,
+              "pricePerUnit": "USD838.28",
+              "taxRate": 0.06
+            },
+            {
+              "productId": "7843360977710",
+              "productName": "BOBO BIRD Mens Wooden Watches Luxury Wood Metal Strap Chronograph \u0026 Date Display Quartz Watch Versatile Male Timepieces",
+              "quantity": 5,
+              "pricePerUnit": "USD277.49",
+              "taxRate": 0.12
+            },
+            {
+              "productId": "6197121670602",
+              "productName": "guleek for iPhone 6 Screen Replacement White Touch Display LCD Digitizer Assembly with Front Facing Camera,Proximity Sensor,Ear Speaker,Home Button Including Repair Tool and Screen Pretector",
+              "quantity": 4,
+              "pricePerUnit": "USD517.56",
+              "taxRate": 0.21
+            },
+            {
+              "productId": "7843360977710",
+              "productName": "BOBO BIRD Mens Wooden Watches Luxury Wood Metal Strap Chronograph \u0026 Date Display Quartz Watch Versatile Male Timepieces",
+              "quantity": 4,
+              "pricePerUnit": "USD277.49",
+              "taxRate": 0.12
+            },
+            {
+              "productId": "5432443030392",
+              "productName": "KATARINA Two Row Infinity Black and White Diamond Ring in Sterling Silver (1/20 cttw, I-J, S-I)",
+              "quantity": 3,
+              "pricePerUnit": "USD593.73",
+              "taxRate": 0.12
+            }
+          ],
+          "shipping": {
+            "recipient": {
+              "title": "Dr.",
+              "fullName": "Beulah Schmidt",
+              "emailAddress": "Beulah.Schmidt@yahoo.com",
+              "phoneNumber": "553-541-6114"
+            },
+            "address": {
+              "country": "NF",
+              "lines": [
+                "Predovic Brooks 3824",
+                "59905 Lueilwitztown",
+                "Bedfordshire"
+              ]
+            },
+            "instructions": "",
+            "method": "overnight"
+          },
+          "billing": {
+            "recipient": {
+              "title": "Dr.",
+              "fullName": "Beulah Schmidt",
+              "emailAddress": "Beulah.Schmidt@yahoo.com",
+              "phoneNumber": "731.959.1334 x45693"
+            },
+            "address": {
+              "country": "MQ",
+              "lines": [
+                "Torphy Circles 2716",
+                "00115-6481 Ryanchester",
+                "Cambridgeshire"
+              ]
+            },
+            "paymentMethod": "debitCard"
+          },
+          "at": "2025-01-01T13:07:28.1435498\u002B00:00"
+        }
+      }
+    ]
+  }
+]
