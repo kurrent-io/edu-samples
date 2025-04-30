@@ -12,3 +12,23 @@ services:
       - KURRENTDB_ENABLE_ATOM_PUB_OVER_HTTP=true
     profiles:
       - db
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    profiles: ["db"]
+  
+  persistentsubscriptionorderprocessor:
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    container_name: persistentsubscriptionorderprocessor
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: ["dotnet", "run", "--project", "./PersistentSubscriptionOrderProcessor"]
+    environment:
+      - POSTGRES_HOST=postgres
+      - KURRENTDB_HOST=kurrentdb
+    profiles: ["app"]
