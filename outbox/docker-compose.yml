@@ -10,3 +10,5 @@ services:
       - KURRENTDB_START_STANDARD_PROJECTIONS=true
       - KURRENTDB_INSECURE=true
       - KURRENTDB_ENABLE_ATOM_PUB_OVER_HTTP=true
+    profiles:
+      - db

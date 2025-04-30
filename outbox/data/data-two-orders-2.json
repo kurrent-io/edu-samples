@@ -1,0 +1,526 @@
+[
+  {
+    "stream": "cart-15ba4172de1d4fcb9afd593ccef8e78a",
+    "events": [
+      {
+        "id": "b931f8da-7fdd-413c-a702-11190c270f64",
+        "type": "visitor-started-shopping",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-15ba4172de1d4fcb9afd593ccef8e78a",
+          "at": "2025-01-01T00:00:00\u002B00:00"
+        }
+      },
+      {
+        "id": "64eceb44-800a-49da-8de9-090d54bab062",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-15ba4172de1d4fcb9afd593ccef8e78a",
+          "productId": "9782023558645",
+          "productName": "Drawealth Touch Control Traditional Table Lamp Set of 2,3-Way Dimmable Farmhouse Bedside Table Lamps with 2 USB Charging Ports Vintage Rustic Table Lamps for Living Room Bedroom Office Study",
+          "quantity": 4,
+          "pricePerUnit": "USD58.03",
+          "taxRate": 0.06,
+          "at": "2025-01-01T00:09:06.2056417\u002B00:00"
+        }
+      },
+      {
+        "id": "b505ec7b-4e87-4434-b623-984f4fc30b92",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-15ba4172de1d4fcb9afd593ccef8e78a",
+          "productId": "3140635428552",
+          "productName": "Extra Large Orchid Flowers Canvas Print - Abstract Turquoise Floral Wall Art Painting Decor for Home Decoration Artwork Picture Bedroom Green Floral (A,Oversize 80x40inch)",
+          "quantity": 2,
+          "pricePerUnit": "USD763.20",
+          "taxRate": 0.21,
+          "at": "2025-01-01T00:13:13.6526141\u002B00:00"
+        }
+      },
+      {
+        "id": "f9ade571-ab18-451b-8487-8d8d77019fb1",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-15ba4172de1d4fcb9afd593ccef8e78a",
+          "productId": "9782023558645",
+          "quantity": 4,
+          "at": "2025-01-01T00:25:24.4911366\u002B00:00"
+        }
+      },
+      {
+        "id": "952c3cd8-e9f2-476e-a823-531995772182",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-15ba4172de1d4fcb9afd593ccef8e78a",
+          "productId": "1892612275094",
+          "productName": "COMOWARE Number Size Drill Bit Set 60pcs- Jobber Length Drill Bits, Wire Gauge 1 to 60, Black and Gold Finish, 135\u00B0 Split Point, High Speed Steel with Metal Indexed Storage Case",
+          "quantity": 3,
+          "pricePerUnit": "USD903.13",
+          "taxRate": 0.12,
+          "at": "2025-01-01T00:38:35.9520467\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "checkout-for-cart-15ba4172de1d4fcb9afd593ccef8e78a",
+    "events": [
+      {
+        "id": "7f6a54d6-749c-4e0b-a9c0-6d7c8a7a779e",
+        "type": "checkout-started",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-15ba4172de1d4fcb9afd593ccef8e78a@5",
+          "at": "2025-01-01T00:49:22.0258448\u002B00:00"
+        }
+      },
+      {
+        "id": "0a75cc19-5613-4cde-9748-901bec9f1db1",
+        "type": "shipping-information-collected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-15ba4172de1d4fcb9afd593ccef8e78a@5",
+          "recipient": {
+            "title": "Ms.",
+            "fullName": "Josephine Dietrich",
+            "emailAddress": "Josephine.Dietrich@gmail.com",
+            "phoneNumber": "(733) 788-5777"
+          },
+          "address": {
+            "country": "VC",
+            "lines": [
+              "Ondricka Mountain 0074",
+              "08537-9875 Oleburgh",
+              "Avon"
+            ]
+          },
+          "instructions": "Sapiente quod aut.\nImpedit maxime laborum rerum nemo sequi.",
+          "at": "2025-01-01T00:50:37.9209732\u002B00:00"
+        }
+      },
+      {
+        "id": "2d991e74-7317-4d06-a871-a70cc5ab36b4",
+        "type": "shipping-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-15ba4172de1d4fcb9afd593ccef8e78a@5",
+          "method": "express",
+          "at": "2025-01-01T00:51:56.68066\u002B00:00"
+        }
+      },
+      {
+        "id": "2f71348d-9a1f-4740-839c-b7d46cd20d0a",
+        "type": "shipping-cost-calculated",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-15ba4172de1d4fcb9afd593ccef8e78a@5",
+          "forMethod": "express",
+          "cost": "USD19.75",
+          "at": "2025-01-01T00:51:56.68066\u002B00:00"
+        }
+      },
+      {
+        "id": "2d1e0dd7-c3dc-403e-87b8-49c80d9e5471",
+        "type": "billing-information-copied-from-shipping-information",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-15ba4172de1d4fcb9afd593ccef8e78a@5",
+          "recipient": {
+            "title": "Ms.",
+            "fullName": "Josephine Dietrich",
+            "emailAddress": "Josephine.Dietrich@gmail.com",
+            "phoneNumber": "(733) 788-5777"
+          },
+          "address": {
+            "country": "VC",
+            "lines": [
+              "Ondricka Mountain 0074",
+              "08537-9875 Oleburgh",
+              "Avon"
+            ]
+          },
+          "at": "2025-01-01T00:53:28.9932386\u002B00:00"
+        }
+      },
+      {
+        "id": "14b5b6db-046e-4f1c-b00c-67126a01656f",
+        "type": "payment-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-15ba4172de1d4fcb9afd593ccef8e78a@5",
+          "method": "wireTransfer",
+          "at": "2025-01-01T00:54:23.5779629\u002B00:00"
+        }
+      },
+      {
+        "id": "3d819ff3-b672-4f02-ae40-63d293f191bd",
+        "type": "checkout-completed",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-15ba4172de1d4fcb9afd593ccef8e78a@5",
+          "orderId": "order-44c1c762ca1d440bb2e03a2655ba7edb",
+          "at": "2025-01-01T00:55:13.4871377\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "cart-15ba4172de1d4fcb9afd593ccef8e78a",
+    "events": [
+      {
+        "id": "732b3a16-a4f5-4d18-b6e8-342c61f00983",
+        "type": "cart-got-checked-out",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-15ba4172de1d4fcb9afd593ccef8e78a",
+          "orderId": "order-44c1c762ca1d440bb2e03a2655ba7edb",
+          "at": "2025-01-01T00:55:13.4871377\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "order-44c1c762ca1d440bb2e03a2655ba7edb",
+    "events": [
+      {
+        "id": "b52848a8-5610-4d9a-a230-839ca6292509",
+        "type": "order-placed",
+        "content-type": "application/json",
+        "data": {
+          "orderId": "order-44c1c762ca1d440bb2e03a2655ba7edb",
+          "customerId": "customer-1587007745",
+          "checkoutOfCart": "cart-15ba4172de1d4fcb9afd593ccef8e78a@5",
+          "lineItems": [
+            {
+              "productId": "3140635428552",
+              "productName": "Extra Large Orchid Flowers Canvas Print - Abstract Turquoise Floral Wall Art Painting Decor for Home Decoration Artwork Picture Bedroom Green Floral (A,Oversize 80x40inch)",
+              "quantity": 2,
+              "pricePerUnit": "USD763.20",
+              "taxRate": 0.21
+            },
+            {
+              "productId": "1892612275094",
+              "productName": "COMOWARE Number Size Drill Bit Set 60pcs- Jobber Length Drill Bits, Wire Gauge 1 to 60, Black and Gold Finish, 135\u00B0 Split Point, High Speed Steel with Metal Indexed Storage Case",
+              "quantity": 3,
+              "pricePerUnit": "USD903.13",
+              "taxRate": 0.12
+            }
+          ],
+          "shipping": {
+            "recipient": {
+              "title": "Ms.",
+              "fullName": "Josephine Dietrich",
+              "emailAddress": "Josephine.Dietrich@gmail.com",
+              "phoneNumber": "(733) 788-5777"
+            },
+            "address": {
+              "country": "VC",
+              "lines": [
+                "Ondricka Mountain 0074",
+                "08537-9875 Oleburgh",
+                "Avon"
+              ]
+            },
+            "instructions": "",
+            "method": "express"
+          },
+          "billing": {
+            "recipient": {
+              "title": "Ms.",
+              "fullName": "Josephine Dietrich",
+              "emailAddress": "Josephine.Dietrich@gmail.com",
+              "phoneNumber": "(733) 788-5777"
+            },
+            "address": {
+              "country": "VC",
+              "lines": [
+                "Ondricka Mountain 0074",
+                "08537-9875 Oleburgh",
+                "Avon"
+              ]
+            },
+            "paymentMethod": "wireTransfer"
+          },
+          "at": "2025-01-01T00:55:13.4871377\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "cart-60d3766304874af7946ff15503e879ff",
+    "events": [
+      {
+        "id": "87880302-0bab-4afb-9f54-8d614a698902",
+        "type": "customer-started-shopping",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-60d3766304874af7946ff15503e879ff",
+          "customerId": "customer-732102389",
+          "at": "2025-01-01T11:59:59.9999999\u002B00:00"
+        }
+      },
+      {
+        "id": "32a6a1bb-5363-4ac5-96ac-b60513959abf",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-60d3766304874af7946ff15503e879ff",
+          "productId": "6300276241669",
+          "productName": "Hapinest DIY Dinosaur Toy Lantern Night Light Kit - Arts and Crafts Gift for Boys or Girls Ages 6 7 8 9 10 Years Old and Up",
+          "quantity": 5,
+          "pricePerUnit": "USD316.06",
+          "taxRate": 0.06,
+          "at": "2025-01-01T12:11:55.4785234\u002B00:00"
+        }
+      },
+      {
+        "id": "38158987-43ac-48df-8d37-e64fbc2fbe20",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-60d3766304874af7946ff15503e879ff",
+          "productId": "9782023558645",
+          "productName": "Drawealth Touch Control Traditional Table Lamp Set of 2,3-Way Dimmable Farmhouse Bedside Table Lamps with 2 USB Charging Ports Vintage Rustic Table Lamps for Living Room Bedroom Office Study",
+          "quantity": 5,
+          "pricePerUnit": "USD58.03",
+          "taxRate": 0.06,
+          "at": "2025-01-01T12:26:50.5129289\u002B00:00"
+        }
+      },
+      {
+        "id": "92d19dea-3c36-4d09-8755-e165fcfa7151",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-60d3766304874af7946ff15503e879ff",
+          "productId": "6300276241669",
+          "quantity": 5,
+          "at": "2025-01-01T12:30:22.0719989\u002B00:00"
+        }
+      },
+      {
+        "id": "a3d7f281-ad6b-43b5-887f-0a9790e98905",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-60d3766304874af7946ff15503e879ff",
+          "productId": "8337679097218",
+          "productName": "KATARINA Two Row Infinity Black and White Diamond Ring in Sterling Silver (1/20 cttw, I-J, S-I)",
+          "quantity": 2,
+          "pricePerUnit": "USD636.79",
+          "taxRate": 0.12,
+          "at": "2025-01-01T12:32:18.198337\u002B00:00"
+        }
+      },
+      {
+        "id": "be6280f5-c5cc-4fb8-98d3-a742f4910552",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-60d3766304874af7946ff15503e879ff",
+          "productId": "3140635428552",
+          "productName": "Extra Large Orchid Flowers Canvas Print - Abstract Turquoise Floral Wall Art Painting Decor for Home Decoration Artwork Picture Bedroom Green Floral (A,Oversize 80x40inch)",
+          "quantity": 5,
+          "pricePerUnit": "USD763.20",
+          "taxRate": 0.21,
+          "at": "2025-01-01T12:40:38.4448251\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "checkout-for-cart-60d3766304874af7946ff15503e879ff",
+    "events": [
+      {
+        "id": "f562ddda-2526-4f1a-9bdb-491fe41928eb",
+        "type": "checkout-started",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-60d3766304874af7946ff15503e879ff@6",
+          "at": "2025-01-01T12:54:38.7367491\u002B00:00"
+        }
+      },
+      {
+        "id": "e0a16271-4f48-4bd0-831c-ca3934bea400",
+        "type": "shipping-information-collected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-60d3766304874af7946ff15503e879ff@6",
+          "recipient": {
+            "title": "Mrs.",
+            "fullName": "Josephine Dietrich",
+            "emailAddress": "Josephine.Dietrich@gmail.com",
+            "phoneNumber": "857-875-0221 x131"
+          },
+          "address": {
+            "country": "WF",
+            "lines": [
+              "Gaylord Light 92418",
+              "82767-3322 North Uniquebury",
+              "Bedfordshire"
+            ]
+          },
+          "instructions": "Ad harum fuga qui sit nostrum atque.\nEos mollitia quia qui non ut soluta vel ab.",
+          "at": "2025-01-01T12:55:57.089452\u002B00:00"
+        }
+      },
+      {
+        "id": "0560d48a-d06b-41e7-a365-4a2bbb85194a",
+        "type": "shipping-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-60d3766304874af7946ff15503e879ff@6",
+          "method": "standard",
+          "at": "2025-01-01T12:57:50.7325297\u002B00:00"
+        }
+      },
+      {
+        "id": "b57c5d9e-c71b-489f-b6f5-2ed7599d0628",
+        "type": "shipping-cost-calculated",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-60d3766304874af7946ff15503e879ff@6",
+          "forMethod": "standard",
+          "cost": "USD2.94",
+          "at": "2025-01-01T12:57:50.7325297\u002B00:00"
+        }
+      },
+      {
+        "id": "eba82989-e4b7-4a53-b551-731a77e7cafa",
+        "type": "billing-information-collected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-60d3766304874af7946ff15503e879ff@6",
+          "recipient": {
+            "title": "Mr.",
+            "fullName": "Josephine Dietrich",
+            "emailAddress": "Josephine.Dietrich@gmail.com",
+            "phoneNumber": "390-356-0779"
+          },
+          "address": {
+            "country": "MT",
+            "lines": [
+              "Alia Mall 280",
+              "76681-2190 East Ronaldofurt",
+              "Buckinghamshire"
+            ]
+          },
+          "at": "2025-01-01T12:58:53.2735599\u002B00:00"
+        }
+      },
+      {
+        "id": "49f4fd34-dc76-465b-a180-22bbc8e08531",
+        "type": "payment-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-60d3766304874af7946ff15503e879ff@6",
+          "method": "wireTransfer",
+          "at": "2025-01-01T12:59:33.7554484\u002B00:00"
+        }
+      },
+      {
+        "id": "19c7710b-30b5-4b6a-bc14-3a9663af2f2c",
+        "type": "checkout-completed",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-60d3766304874af7946ff15503e879ff@6",
+          "orderId": "order-c49064f930344a72bd6173db57e43f78",
+          "at": "2025-01-01T13:01:31.9157572\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "cart-60d3766304874af7946ff15503e879ff",
+    "events": [
+      {
+        "id": "d21e6df7-9da1-4b0d-afb0-a76409937642",
+        "type": "cart-got-checked-out",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-60d3766304874af7946ff15503e879ff",
+          "orderId": "order-c49064f930344a72bd6173db57e43f78",
+          "at": "2025-01-01T13:01:31.9157572\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "order-c49064f930344a72bd6173db57e43f78",
+    "events": [
+      {
+        "id": "8986f1e3-3ae7-4c4d-ac58-4b84f679f83e",
+        "type": "order-placed",
+        "content-type": "application/json",
+        "data": {
+          "orderId": "order-c49064f930344a72bd6173db57e43f78",
+          "customerId": "customer-732102389",
+          "checkoutOfCart": "cart-60d3766304874af7946ff15503e879ff@6",
+          "lineItems": [
+            {
+              "productId": "9782023558645",
+              "productName": "Drawealth Touch Control Traditional Table Lamp Set of 2,3-Way Dimmable Farmhouse Bedside Table Lamps with 2 USB Charging Ports Vintage Rustic Table Lamps for Living Room Bedroom Office Study",
+              "quantity": 5,
+              "pricePerUnit": "USD58.03",
+              "taxRate": 0.06
+            },
+            {
+              "productId": "8337679097218",
+              "productName": "KATARINA Two Row Infinity Black and White Diamond Ring in Sterling Silver (1/20 cttw, I-J, S-I)",
+              "quantity": 2,
+              "pricePerUnit": "USD636.79",
+              "taxRate": 0.12
+            },
+            {
+              "productId": "3140635428552",
+              "productName": "Extra Large Orchid Flowers Canvas Print - Abstract Turquoise Floral Wall Art Painting Decor for Home Decoration Artwork Picture Bedroom Green Floral (A,Oversize 80x40inch)",
+              "quantity": 5,
+              "pricePerUnit": "USD763.20",
+              "taxRate": 0.21
+            }
+          ],
+          "shipping": {
+            "recipient": {
+              "title": "Mrs.",
+              "fullName": "Josephine Dietrich",
+              "emailAddress": "Josephine.Dietrich@gmail.com",
+              "phoneNumber": "857-875-0221 x131"
+            },
+            "address": {
+              "country": "WF",
+              "lines": [
+                "Gaylord Light 92418",
+                "82767-3322 North Uniquebury",
+                "Bedfordshire"
+              ]
+            },
+            "instructions": "",
+            "method": "standard"
+          },
+          "billing": {
+            "recipient": {
+              "title": "Mr.",
+              "fullName": "Josephine Dietrich",
+              "emailAddress": "Josephine.Dietrich@gmail.com",
+              "phoneNumber": "390-356-0779"
+            },
+            "address": {
+              "country": "MT",
+              "lines": [
+                "Alia Mall 280",
+                "76681-2190 East Ronaldofurt",
+                "Buckinghamshire"
+              ]
+            },
+            "paymentMethod": "wireTransfer"
+          },
+          "at": "2025-01-01T13:01:31.9157572\u002B00:00"
+        }
+      }
+    ]
+  }
+]
