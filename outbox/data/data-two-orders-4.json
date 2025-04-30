@@ -1,0 +1,589 @@
+[
+  {
+    "stream": "cart-abeedbcbaabb44e4828eb68a4830ea37",
+    "events": [
+      {
+        "id": "608e22b8-ee8f-402d-a285-39311f3f3991",
+        "type": "visitor-started-shopping",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-abeedbcbaabb44e4828eb68a4830ea37",
+          "at": "2025-01-01T00:00:00\u002B00:00"
+        }
+      },
+      {
+        "id": "a1db488c-df79-429a-bece-139d9ebd820a",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-abeedbcbaabb44e4828eb68a4830ea37",
+          "productId": "3249955264427",
+          "productName": "Skechers Women\u0027s Max Cushioning Elite Sneaker",
+          "quantity": 1,
+          "pricePerUnit": "USD825.50",
+          "taxRate": 0.06,
+          "at": "2025-01-01T00:06:10.0625147\u002B00:00"
+        }
+      },
+      {
+        "id": "c190e9e3-3b8a-49fb-b799-b739004a7201",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-abeedbcbaabb44e4828eb68a4830ea37",
+          "productId": "7133294713196",
+          "productName": "Extra Large Orchid Flowers Canvas Print - Abstract Turquoise Floral Wall Art Painting Decor for Home Decoration Artwork Picture Bedroom Green Floral (A,Oversize 80x40inch)",
+          "quantity": 5,
+          "pricePerUnit": "USD401.47",
+          "taxRate": 0.12,
+          "at": "2025-01-01T00:10:08.0118726\u002B00:00"
+        }
+      },
+      {
+        "id": "30586062-b29e-4aad-9a2a-2b76d11f6527",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-abeedbcbaabb44e4828eb68a4830ea37",
+          "productId": "3249955264427",
+          "quantity": 1,
+          "at": "2025-01-01T00:20:09.6670786\u002B00:00"
+        }
+      },
+      {
+        "id": "f3c5fd11-856c-4b01-a724-5ec0c18882e0",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-abeedbcbaabb44e4828eb68a4830ea37",
+          "productId": "7671257168886",
+          "productName": "SkyBound Replacement Trampoline Mat, Fits 15ft Frames w/Spring Tool and Durable V-Rings, Bounce Safely with Extra Rows of Stitching - Jumping Mat for 15ft Round Trampoline - Fit 96 Springs \u0026 6.5-7\u0022",
+          "quantity": 3,
+          "pricePerUnit": "USD176.54",
+          "taxRate": 0.06,
+          "at": "2025-01-01T00:22:58.3327386\u002B00:00"
+        }
+      },
+      {
+        "id": "2497e765-24ed-4b34-b20e-7bb4a34537aa",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-abeedbcbaabb44e4828eb68a4830ea37",
+          "productId": "7133294713196",
+          "quantity": 5,
+          "at": "2025-01-01T00:30:32.8222482\u002B00:00"
+        }
+      },
+      {
+        "id": "92f9ccb0-5e79-4029-aad5-e004b8b6400e",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-abeedbcbaabb44e4828eb68a4830ea37",
+          "productId": "3249955264427",
+          "productName": "Skechers Women\u0027s Max Cushioning Elite Sneaker",
+          "quantity": 1,
+          "pricePerUnit": "USD825.50",
+          "taxRate": 0.06,
+          "at": "2025-01-01T00:39:37.4612629\u002B00:00"
+        }
+      },
+      {
+        "id": "31ec7637-a3ea-47c7-96de-3bb7a0e4eba8",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-abeedbcbaabb44e4828eb68a4830ea37",
+          "productId": "1649418692651",
+          "productName": "Drawealth Touch Control Traditional Table Lamp Set of 2,3-Way Dimmable Farmhouse Bedside Table Lamps with 2 USB Charging Ports Vintage Rustic Table Lamps for Living Room Bedroom Office Study",
+          "quantity": 4,
+          "pricePerUnit": "USD176.53",
+          "taxRate": 0.12,
+          "at": "2025-01-01T00:43:35.0667037\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "checkout-for-cart-abeedbcbaabb44e4828eb68a4830ea37",
+    "events": [
+      {
+        "id": "67f4e5fe-af86-4993-b98d-e48ace42a808",
+        "type": "checkout-started",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-abeedbcbaabb44e4828eb68a4830ea37@8",
+          "at": "2025-01-01T00:44:59.4774563\u002B00:00"
+        }
+      },
+      {
+        "id": "e1542681-b503-4a4e-84a4-1c57a14baede",
+        "type": "shipping-information-collected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-abeedbcbaabb44e4828eb68a4830ea37@8",
+          "recipient": {
+            "title": "Mrs.",
+            "fullName": "Ben Quigley",
+            "emailAddress": "Ben81@yahoo.com",
+            "phoneNumber": "262.974.1601"
+          },
+          "address": {
+            "country": "SI",
+            "lines": [
+              "Aliyah Valley 838",
+              "75172 Silasmouth",
+              "Cambridgeshire"
+            ]
+          },
+          "instructions": "Saepe ut tenetur sit at similique nostrum accusamus dolores accusantium.\nIure eum earum velit eius ut.",
+          "at": "2025-01-01T00:46:39.2873087\u002B00:00"
+        }
+      },
+      {
+        "id": "32a03111-7565-4091-b798-d820d1459d5c",
+        "type": "shipping-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-abeedbcbaabb44e4828eb68a4830ea37@8",
+          "method": "overnight",
+          "at": "2025-01-01T00:48:37.7116398\u002B00:00"
+        }
+      },
+      {
+        "id": "2432c7c5-a281-4b51-b879-39a27891a17f",
+        "type": "shipping-cost-calculated",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-abeedbcbaabb44e4828eb68a4830ea37@8",
+          "forMethod": "overnight",
+          "cost": "USD26.16",
+          "at": "2025-01-01T00:48:37.7116398\u002B00:00"
+        }
+      },
+      {
+        "id": "9c6270e3-2452-48dc-889f-b816318507e5",
+        "type": "billing-information-collected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-abeedbcbaabb44e4828eb68a4830ea37@8",
+          "recipient": {
+            "title": "Mr.",
+            "fullName": "Ben Quigley",
+            "emailAddress": "Ben81@yahoo.com",
+            "phoneNumber": "(253) 386-6333 x23158"
+          },
+          "address": {
+            "country": "UM",
+            "lines": [
+              "Nathanael Plains 71562",
+              "49363-4229 West Lorenzo",
+              "Avon"
+            ]
+          },
+          "at": "2025-01-01T00:50:30.8596497\u002B00:00"
+        }
+      },
+      {
+        "id": "f997959e-08bc-4a96-8e7e-4f25dfde4b9d",
+        "type": "payment-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-abeedbcbaabb44e4828eb68a4830ea37@8",
+          "method": "debitCard",
+          "at": "2025-01-01T00:51:19.730735\u002B00:00"
+        }
+      },
+      {
+        "id": "bb500b72-89a5-4db3-9d5b-679b5be87862",
+        "type": "checkout-completed",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-abeedbcbaabb44e4828eb68a4830ea37@8",
+          "orderId": "order-3d268df88f9c451eae9cae49d10656d5",
+          "at": "2025-01-01T00:53:03.036443\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "cart-abeedbcbaabb44e4828eb68a4830ea37",
+    "events": [
+      {
+        "id": "0114ed78-c605-486c-805f-43a4895cdbac",
+        "type": "cart-got-checked-out",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-abeedbcbaabb44e4828eb68a4830ea37",
+          "orderId": "order-3d268df88f9c451eae9cae49d10656d5",
+          "at": "2025-01-01T00:53:03.036443\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "order-3d268df88f9c451eae9cae49d10656d5",
+    "events": [
+      {
+        "id": "2868b0bd-db44-458c-8ac1-48bce835f168",
+        "type": "order-placed",
+        "content-type": "application/json",
+        "data": {
+          "orderId": "order-3d268df88f9c451eae9cae49d10656d5",
+          "customerId": "customer-2084076467",
+          "checkoutOfCart": "cart-abeedbcbaabb44e4828eb68a4830ea37@8",
+          "lineItems": [
+            {
+              "productId": "7671257168886",
+              "productName": "SkyBound Replacement Trampoline Mat, Fits 15ft Frames w/Spring Tool and Durable V-Rings, Bounce Safely with Extra Rows of Stitching - Jumping Mat for 15ft Round Trampoline - Fit 96 Springs \u0026 6.5-7\u0022",
+              "quantity": 3,
+              "pricePerUnit": "USD176.54",
+              "taxRate": 0.06
+            },
+            {
+              "productId": "3249955264427",
+              "productName": "Skechers Women\u0027s Max Cushioning Elite Sneaker",
+              "quantity": 1,
+              "pricePerUnit": "USD825.50",
+              "taxRate": 0.06
+            },
+            {
+              "productId": "1649418692651",
+              "productName": "Drawealth Touch Control Traditional Table Lamp Set of 2,3-Way Dimmable Farmhouse Bedside Table Lamps with 2 USB Charging Ports Vintage Rustic Table Lamps for Living Room Bedroom Office Study",
+              "quantity": 4,
+              "pricePerUnit": "USD176.53",
+              "taxRate": 0.12
+            }
+          ],
+          "shipping": {
+            "recipient": {
+              "title": "Mrs.",
+              "fullName": "Ben Quigley",
+              "emailAddress": "Ben81@yahoo.com",
+              "phoneNumber": "262.974.1601"
+            },
+            "address": {
+              "country": "SI",
+              "lines": [
+                "Aliyah Valley 838",
+                "75172 Silasmouth",
+                "Cambridgeshire"
+              ]
+            },
+            "instructions": "",
+            "method": "overnight"
+          },
+          "billing": {
+            "recipient": {
+              "title": "Mr.",
+              "fullName": "Ben Quigley",
+              "emailAddress": "Ben81@yahoo.com",
+              "phoneNumber": "(253) 386-6333 x23158"
+            },
+            "address": {
+              "country": "UM",
+              "lines": [
+                "Nathanael Plains 71562",
+                "49363-4229 West Lorenzo",
+                "Avon"
+              ]
+            },
+            "paymentMethod": "debitCard"
+          },
+          "at": "2025-01-01T00:53:03.036443\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "cart-5d6e1d6965a44b6db4142cb442c05a76",
+    "events": [
+      {
+        "id": "3685a306-c27b-4519-829c-55f2eaa83bf6",
+        "type": "visitor-started-shopping",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-5d6e1d6965a44b6db4142cb442c05a76",
+          "at": "2025-01-01T11:59:59.9999999\u002B00:00"
+        }
+      },
+      {
+        "id": "cbabfc6e-8c7e-4b35-800a-b59b523299ab",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-5d6e1d6965a44b6db4142cb442c05a76",
+          "productId": "3673552256781",
+          "productName": "KATARINA Two Row Infinity Black and White Diamond Ring in Sterling Silver (1/20 cttw, I-J, S-I)",
+          "quantity": 4,
+          "pricePerUnit": "USD765.53",
+          "taxRate": 0.21,
+          "at": "2025-01-01T12:02:00.8557176\u002B00:00"
+        }
+      },
+      {
+        "id": "24223ce9-57fa-4727-b73f-eb9bb9c774b0",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-5d6e1d6965a44b6db4142cb442c05a76",
+          "productId": "5650529568700",
+          "productName": "LoveHandle Tablet/XL Grip for Most Tablets and Large Smartphones, Black and Honey Comb Elastic Strap Finger Grip with Black Base (LHT-01-BLK-HNYCMB, Pack of 2)",
+          "quantity": 1,
+          "pricePerUnit": "USD792.18",
+          "taxRate": 0.21,
+          "at": "2025-01-01T12:10:03.3180936\u002B00:00"
+        }
+      },
+      {
+        "id": "d2ea0235-1fbd-4fdf-aaf0-f27465a4fc28",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-5d6e1d6965a44b6db4142cb442c05a76",
+          "productId": "3998065026370",
+          "productName": "Sanita Men\u0027s Professional Oil Clog",
+          "quantity": 2,
+          "pricePerUnit": "USD924.38",
+          "taxRate": 0.21,
+          "at": "2025-01-01T12:16:03.703987\u002B00:00"
+        }
+      },
+      {
+        "id": "55100b03-f6ef-4c8a-9a34-f23270a19b7a",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-5d6e1d6965a44b6db4142cb442c05a76",
+          "productId": "1040337573029",
+          "productName": "Hapinest DIY Dinosaur Toy Lantern Night Light Kit - Arts and Crafts Gift for Boys or Girls Ages 6 7 8 9 10 Years Old and Up",
+          "quantity": 1,
+          "pricePerUnit": "USD416.60",
+          "taxRate": 0.06,
+          "at": "2025-01-01T12:23:14.6982971\u002B00:00"
+        }
+      },
+      {
+        "id": "214a00b8-09b2-4fa2-8c10-46de42c52a7b",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-5d6e1d6965a44b6db4142cb442c05a76",
+          "productId": "3998065026370",
+          "quantity": 2,
+          "at": "2025-01-01T12:27:26.4175259\u002B00:00"
+        }
+      },
+      {
+        "id": "94d37fd1-7a8b-4478-b263-9d11bccb5eea",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-5d6e1d6965a44b6db4142cb442c05a76",
+          "productId": "1040337573029",
+          "quantity": 1,
+          "at": "2025-01-01T12:40:55.7432883\u002B00:00"
+        }
+      },
+      {
+        "id": "4b369dd8-a6b7-47fb-a703-f861658a9ac5",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-5d6e1d6965a44b6db4142cb442c05a76",
+          "productId": "3673552256781",
+          "quantity": 4,
+          "at": "2025-01-01T12:53:15.868923\u002B00:00"
+        }
+      },
+      {
+        "id": "5f7a86b3-769d-4bfd-a24b-4aab852f5c24",
+        "type": "cart-shopper-got-identified",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-5d6e1d6965a44b6db4142cb442c05a76",
+          "customerId": "customer-1944299952",
+          "at": "2025-01-01T13:00:52.5208595\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "checkout-for-cart-5d6e1d6965a44b6db4142cb442c05a76",
+    "events": [
+      {
+        "id": "86034b9b-6205-42ad-a269-75c1b946e8b0",
+        "type": "checkout-started",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-5d6e1d6965a44b6db4142cb442c05a76@9",
+          "at": "2025-01-01T13:10:15.0871624\u002B00:00"
+        }
+      },
+      {
+        "id": "8907de8a-5ea0-407c-a2b6-7f0e9bd6a5ee",
+        "type": "shipping-information-collected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-5d6e1d6965a44b6db4142cb442c05a76@9",
+          "recipient": {
+            "title": "Miss",
+            "fullName": "Ben Quigley",
+            "emailAddress": "Ben81@yahoo.com",
+            "phoneNumber": "(808) 358-4677"
+          },
+          "address": {
+            "country": "CW",
+            "lines": [
+              "Lenora Knoll 45236",
+              "36469-8129 Herthahaven",
+              "Berkshire"
+            ]
+          },
+          "instructions": "Sunt molestias dicta vel soluta quia eius et earum reiciendis.\nSoluta facere et voluptatum iste vero eius recusandae dignissimos.",
+          "at": "2025-01-01T13:12:03.3687316\u002B00:00"
+        }
+      },
+      {
+        "id": "01b30005-33b3-4fe0-8072-f55cd51f5609",
+        "type": "shipping-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-5d6e1d6965a44b6db4142cb442c05a76@9",
+          "method": "sameDay",
+          "at": "2025-01-01T13:13:12.1842553\u002B00:00"
+        }
+      },
+      {
+        "id": "1459e088-58f2-44ec-b654-725c89d2f550",
+        "type": "shipping-cost-calculated",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-5d6e1d6965a44b6db4142cb442c05a76@9",
+          "forMethod": "sameDay",
+          "cost": "USD28.50",
+          "at": "2025-01-01T13:13:12.1842553\u002B00:00"
+        }
+      },
+      {
+        "id": "aff2eb1c-3280-4916-a354-7b28e64ba610",
+        "type": "billing-information-copied-from-shipping-information",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-5d6e1d6965a44b6db4142cb442c05a76@9",
+          "recipient": {
+            "title": "Miss",
+            "fullName": "Ben Quigley",
+            "emailAddress": "Ben81@yahoo.com",
+            "phoneNumber": "(808) 358-4677"
+          },
+          "address": {
+            "country": "CW",
+            "lines": [
+              "Lenora Knoll 45236",
+              "36469-8129 Herthahaven",
+              "Berkshire"
+            ]
+          },
+          "at": "2025-01-01T13:14:50.5339174\u002B00:00"
+        }
+      },
+      {
+        "id": "d9e26060-5d21-43ab-a364-78dcff7125fc",
+        "type": "payment-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-5d6e1d6965a44b6db4142cb442c05a76@9",
+          "method": "debitCard",
+          "at": "2025-01-01T13:16:14.6642512\u002B00:00"
+        }
+      },
+      {
+        "id": "c670cdc2-7a46-4267-98ea-9d5d050a6b37",
+        "type": "checkout-completed",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-5d6e1d6965a44b6db4142cb442c05a76@9",
+          "orderId": "order-ad53653936ff469ea208cce8726906eb",
+          "at": "2025-01-01T13:17:30.5935876\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "cart-5d6e1d6965a44b6db4142cb442c05a76",
+    "events": [
+      {
+        "id": "3c6af7c6-22be-4d0b-8384-3ea8febb360a",
+        "type": "cart-got-checked-out",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-5d6e1d6965a44b6db4142cb442c05a76",
+          "orderId": "order-ad53653936ff469ea208cce8726906eb",
+          "at": "2025-01-01T13:17:30.5935876\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "order-ad53653936ff469ea208cce8726906eb",
+    "events": [
+      {
+        "id": "ed922495-20c7-41ae-81d8-6dad636f2c77",
+        "type": "order-placed",
+        "content-type": "application/json",
+        "data": {
+          "orderId": "order-ad53653936ff469ea208cce8726906eb",
+          "customerId": "customer-1944299952",
+          "checkoutOfCart": "cart-5d6e1d6965a44b6db4142cb442c05a76@9",
+          "lineItems": [
+            {
+              "productId": "5650529568700",
+              "productName": "LoveHandle Tablet/XL Grip for Most Tablets and Large Smartphones, Black and Honey Comb Elastic Strap Finger Grip with Black Base (LHT-01-BLK-HNYCMB, Pack of 2)",
+              "quantity": 1,
+              "pricePerUnit": "USD792.18",
+              "taxRate": 0.21
+            }
+          ],
+          "shipping": {
+            "recipient": {
+              "title": "Miss",
+              "fullName": "Ben Quigley",
+              "emailAddress": "Ben81@yahoo.com",
+              "phoneNumber": "(808) 358-4677"
+            },
+            "address": {
+              "country": "CW",
+              "lines": [
+                "Lenora Knoll 45236",
+                "36469-8129 Herthahaven",
+                "Berkshire"
+              ]
+            },
+            "instructions": "",
+            "method": "sameDay"
+          },
+          "billing": {
+            "recipient": {
+              "title": "Miss",
+              "fullName": "Ben Quigley",
+              "emailAddress": "Ben81@yahoo.com",
+              "phoneNumber": "(808) 358-4677"
+            },
+            "address": {
+              "country": "CW",
+              "lines": [
+                "Lenora Knoll 45236",
+                "36469-8129 Herthahaven",
+                "Berkshire"
+              ]
+            },
+            "paymentMethod": "debitCard"
+          },
+          "at": "2025-01-01T13:17:30.5935876\u002B00:00"
+        }
+      }
+    ]
+  }
+]
