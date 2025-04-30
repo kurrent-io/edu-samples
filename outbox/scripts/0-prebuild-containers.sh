@@ -25,8 +25,3 @@ chmod +x "$root_path/scripts"/*.sh
 
 "$root_path/scripts/start-db.sh" # Start the database containers
 "$root_path/scripts/start-app.sh" # Start the application containers
-
-# Create the persistence subscription for the fulfillment group
-curl -i -X PUT -d $'{"startFrom": 0,"resolveLinktos": true}' \
-    http://localhost:2113/subscriptions/%24et-order-placed/fulfillment-group \
-    -u admin:changeit -H "Content-Type: application/json"
