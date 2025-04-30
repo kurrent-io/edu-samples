@@ -1,0 +1,577 @@
+[
+  {
+    "stream": "cart-0daa85a016264b22a0b47b3f48b65821",
+    "events": [
+      {
+        "id": "a79fe7f0-b5ca-477f-8d91-b25c1ac03750",
+        "type": "customer-started-shopping",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-0daa85a016264b22a0b47b3f48b65821",
+          "customerId": "customer-1122481661",
+          "at": "2025-01-01T00:00:00\u002B00:00"
+        }
+      },
+      {
+        "id": "326faf16-7c43-4c11-8e7e-c17d9af01bcf",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-0daa85a016264b22a0b47b3f48b65821",
+          "productId": "0011995305643",
+          "productName": "New Balance Women\u0027s 997H V1 Sneaker",
+          "quantity": 3,
+          "pricePerUnit": "USD76.97",
+          "taxRate": 0.06,
+          "at": "2025-01-01T00:08:42.9461315\u002B00:00"
+        }
+      },
+      {
+        "id": "a8f87611-0437-4fb6-abbe-99d075593fcb",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-0daa85a016264b22a0b47b3f48b65821",
+          "productId": "6236605538196",
+          "productName": "WINGBO 64 Inch DC Ceiling Fan without Lights, 5 Reversible Carved Solid Wood Blades, 6-Speed Noiseless DC Motor, Ceiling Fan No Light with Remote, Brass Finish with Black Blades, ETL Listed",
+          "quantity": 3,
+          "pricePerUnit": "USD348.44",
+          "taxRate": 0.21,
+          "at": "2025-01-01T00:18:54.4669973\u002B00:00"
+        }
+      },
+      {
+        "id": "a2fa63b3-3d38-4372-b8f0-b38b8868fd4e",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-0daa85a016264b22a0b47b3f48b65821",
+          "productId": "3038974529118",
+          "productName": "Ergodyne ProFlex 900 Impact Protection Work Gloves, Padded Palm, Half-Finger, Medium,Black",
+          "quantity": 4,
+          "pricePerUnit": "USD410.67",
+          "taxRate": 0.12,
+          "at": "2025-01-01T00:28:42.8174875\u002B00:00"
+        }
+      },
+      {
+        "id": "5af0a5f9-f571-40fb-8a07-09a2a1b7c5fa",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-0daa85a016264b22a0b47b3f48b65821",
+          "productId": "0729093674836",
+          "productName": "Women Kiss Lock Vintage Handbags for Women Oil Leather Evening Clutch Satchel Purse Tote",
+          "quantity": 1,
+          "pricePerUnit": "USD186.07",
+          "taxRate": 0.06,
+          "at": "2025-01-01T00:32:42.5113885\u002B00:00"
+        }
+      },
+      {
+        "id": "9e85f530-fceb-4ddf-a19b-2b764d9e05ca",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-0daa85a016264b22a0b47b3f48b65821",
+          "productId": "3038974529118",
+          "quantity": 4,
+          "at": "2025-01-01T00:38:12.0612039\u002B00:00"
+        }
+      },
+      {
+        "id": "eeb26189-c072-4254-8001-38b5909d4395",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-0daa85a016264b22a0b47b3f48b65821",
+          "productId": "0729093674836",
+          "quantity": 1,
+          "at": "2025-01-01T00:48:33.5857116\u002B00:00"
+        }
+      },
+      {
+        "id": "6b1dccd2-9bb6-4f49-a5a0-298e2a44d711",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-0daa85a016264b22a0b47b3f48b65821",
+          "productId": "0011995305643",
+          "quantity": 3,
+          "at": "2025-01-01T00:53:22.0513729\u002B00:00"
+        }
+      },
+      {
+        "id": "bbe6a640-5e66-4625-b5e1-e2bb56e9254a",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-0daa85a016264b22a0b47b3f48b65821",
+          "productId": "6236605538196",
+          "productName": "WINGBO 64 Inch DC Ceiling Fan without Lights, 5 Reversible Carved Solid Wood Blades, 6-Speed Noiseless DC Motor, Ceiling Fan No Light with Remote, Brass Finish with Black Blades, ETL Listed",
+          "quantity": 3,
+          "pricePerUnit": "USD348.44",
+          "taxRate": 0.21,
+          "at": "2025-01-01T01:03:41.1609758\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "checkout-for-cart-0daa85a016264b22a0b47b3f48b65821",
+    "events": [
+      {
+        "id": "c5787f30-8b7d-403c-a787-8ad8f6b00747",
+        "type": "checkout-started",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-0daa85a016264b22a0b47b3f48b65821@9",
+          "at": "2025-01-01T01:17:27.1966137\u002B00:00"
+        }
+      },
+      {
+        "id": "0f160c05-a269-41d4-90ff-c23ccf5c6693",
+        "type": "shipping-information-collected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-0daa85a016264b22a0b47b3f48b65821@9",
+          "recipient": {
+            "title": "Mr.",
+            "fullName": "Courtney Anderson",
+            "emailAddress": "Courtney60@gmail.com",
+            "phoneNumber": "1-355-790-5565"
+          },
+          "address": {
+            "country": "BZ",
+            "lines": [
+              "Ernestina Mission 76584",
+              "63051 Rexside",
+              "Avon"
+            ]
+          },
+          "instructions": "Impedit assumenda voluptas tenetur quia nihil tenetur sunt quia est.\nAb ea quis unde vel dolore est temporibus inventore tempore.",
+          "at": "2025-01-01T01:19:19.4884855\u002B00:00"
+        }
+      },
+      {
+        "id": "2366f2f1-4b01-49b6-ab38-06e8788cd697",
+        "type": "shipping-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-0daa85a016264b22a0b47b3f48b65821@9",
+          "method": "sameDay",
+          "at": "2025-01-01T01:20:27.2709971\u002B00:00"
+        }
+      },
+      {
+        "id": "3ce2161c-b5d1-4483-a98e-23b45a0eb7e2",
+        "type": "shipping-cost-calculated",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-0daa85a016264b22a0b47b3f48b65821@9",
+          "forMethod": "sameDay",
+          "cost": "USD20.72",
+          "at": "2025-01-01T01:20:27.2709971\u002B00:00"
+        }
+      },
+      {
+        "id": "bf876344-aeac-46d0-8a1f-202ddf89a32f",
+        "type": "billing-information-copied-from-shipping-information",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-0daa85a016264b22a0b47b3f48b65821@9",
+          "recipient": {
+            "title": "Mr.",
+            "fullName": "Courtney Anderson",
+            "emailAddress": "Courtney60@gmail.com",
+            "phoneNumber": "1-355-790-5565"
+          },
+          "address": {
+            "country": "BZ",
+            "lines": [
+              "Ernestina Mission 76584",
+              "63051 Rexside",
+              "Avon"
+            ]
+          },
+          "at": "2025-01-01T01:21:53.2972061\u002B00:00"
+        }
+      },
+      {
+        "id": "fa6f1236-f6fd-4ec4-85d9-71df1dc290f9",
+        "type": "payment-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-0daa85a016264b22a0b47b3f48b65821@9",
+          "method": "debitCard",
+          "at": "2025-01-01T01:22:33.8583743\u002B00:00"
+        }
+      },
+      {
+        "id": "557ffdfc-b45c-43eb-8230-a5961e990b23",
+        "type": "checkout-completed",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-0daa85a016264b22a0b47b3f48b65821@9",
+          "orderId": "order-6eca2b03d96e423d87db9ae3e7d4333c",
+          "at": "2025-01-01T01:23:34.4152129\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "cart-0daa85a016264b22a0b47b3f48b65821",
+    "events": [
+      {
+        "id": "548a7934-19ab-4421-86d1-39ce3b8c008c",
+        "type": "cart-got-checked-out",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-0daa85a016264b22a0b47b3f48b65821",
+          "orderId": "order-6eca2b03d96e423d87db9ae3e7d4333c",
+          "at": "2025-01-01T01:23:34.4152129\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "order-6eca2b03d96e423d87db9ae3e7d4333c",
+    "events": [
+      {
+        "id": "76516dbb-d33d-41a3-9858-a7da00ab5413",
+        "type": "order-placed",
+        "content-type": "application/json",
+        "data": {
+          "orderId": "order-6eca2b03d96e423d87db9ae3e7d4333c",
+          "customerId": "customer-1122481661",
+          "checkoutOfCart": "cart-0daa85a016264b22a0b47b3f48b65821@9",
+          "lineItems": [
+            {
+              "productId": "6236605538196",
+              "productName": "WINGBO 64 Inch DC Ceiling Fan without Lights, 5 Reversible Carved Solid Wood Blades, 6-Speed Noiseless DC Motor, Ceiling Fan No Light with Remote, Brass Finish with Black Blades, ETL Listed",
+              "quantity": 3,
+              "pricePerUnit": "USD348.44",
+              "taxRate": 0.21
+            },
+            {
+              "productId": "6236605538196",
+              "productName": "WINGBO 64 Inch DC Ceiling Fan without Lights, 5 Reversible Carved Solid Wood Blades, 6-Speed Noiseless DC Motor, Ceiling Fan No Light with Remote, Brass Finish with Black Blades, ETL Listed",
+              "quantity": 3,
+              "pricePerUnit": "USD348.44",
+              "taxRate": 0.21
+            }
+          ],
+          "shipping": {
+            "recipient": {
+              "title": "Mr.",
+              "fullName": "Courtney Anderson",
+              "emailAddress": "Courtney60@gmail.com",
+              "phoneNumber": "1-355-790-5565"
+            },
+            "address": {
+              "country": "BZ",
+              "lines": [
+                "Ernestina Mission 76584",
+                "63051 Rexside",
+                "Avon"
+              ]
+            },
+            "instructions": "",
+            "method": "sameDay"
+          },
+          "billing": {
+            "recipient": {
+              "title": "Mr.",
+              "fullName": "Courtney Anderson",
+              "emailAddress": "Courtney60@gmail.com",
+              "phoneNumber": "1-355-790-5565"
+            },
+            "address": {
+              "country": "BZ",
+              "lines": [
+                "Ernestina Mission 76584",
+                "63051 Rexside",
+                "Avon"
+              ]
+            },
+            "paymentMethod": "debitCard"
+          },
+          "at": "2025-01-01T01:23:34.4152129\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "cart-2d75e86095034022a6b8d16719098b7d",
+    "events": [
+      {
+        "id": "e3c5be0c-3777-4766-b470-6e9da0010c97",
+        "type": "customer-started-shopping",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-2d75e86095034022a6b8d16719098b7d",
+          "customerId": "customer-2049245613",
+          "at": "2025-01-01T11:59:59.9999999\u002B00:00"
+        }
+      },
+      {
+        "id": "37a225a6-7978-4a04-9fb6-8660f899a386",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-2d75e86095034022a6b8d16719098b7d",
+          "productId": "1863298034381",
+          "productName": "Ambesonne Western Fitted Sheet \u0026 Pillow Sham Set, Wild West Themed Cowboy Hat and Old Ranching Rope on Wooden Display Rodeo Cowboy Style, Decorative Printed 2 Piece Bedding Decor Set, Twinxl, Brown",
+          "quantity": 4,
+          "pricePerUnit": "USD99.35",
+          "taxRate": 0.12,
+          "at": "2025-01-01T12:08:31.8122549\u002B00:00"
+        }
+      },
+      {
+        "id": "fd74e546-5c1a-400b-ac0f-5ca84fc85c4e",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-2d75e86095034022a6b8d16719098b7d",
+          "productId": "5689193746534",
+          "productName": "GPATIO 120FT Outdoor String Lights, Waterproof Patio Lights with 64 Hanging Lights Globe G40 Bulbs, 2700k Shatterproof for Backyard Outside Decor",
+          "quantity": 5,
+          "pricePerUnit": "USD279.37",
+          "taxRate": 0.06,
+          "at": "2025-01-01T12:20:58.3580353\u002B00:00"
+        }
+      },
+      {
+        "id": "070cc2f1-1aef-47c5-8d58-b5d727fdce7f",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-2d75e86095034022a6b8d16719098b7d",
+          "productId": "3038974529118",
+          "productName": "Ergodyne ProFlex 900 Impact Protection Work Gloves, Padded Palm, Half-Finger, Medium,Black",
+          "quantity": 5,
+          "pricePerUnit": "USD410.67",
+          "taxRate": 0.12,
+          "at": "2025-01-01T12:32:52.2119551\u002B00:00"
+        }
+      },
+      {
+        "id": "adc4f7e2-3c4b-460f-b3a9-34c2aab554f4",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-2d75e86095034022a6b8d16719098b7d",
+          "productId": "5689193746534",
+          "quantity": 5,
+          "at": "2025-01-01T12:38:08.1343775\u002B00:00"
+        }
+      },
+      {
+        "id": "d6a77557-80ff-459d-8e89-c2e53a0e6bae",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-2d75e86095034022a6b8d16719098b7d",
+          "productId": "3038974529118",
+          "productName": "Ergodyne ProFlex 900 Impact Protection Work Gloves, Padded Palm, Half-Finger, Medium,Black",
+          "quantity": 4,
+          "pricePerUnit": "USD410.67",
+          "taxRate": 0.12,
+          "at": "2025-01-01T12:39:50.9672064\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "checkout-for-cart-2d75e86095034022a6b8d16719098b7d",
+    "events": [
+      {
+        "id": "68610cf1-d66b-4da2-9b82-5aeb40fe5100",
+        "type": "checkout-started",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-2d75e86095034022a6b8d16719098b7d@6",
+          "at": "2025-01-01T12:43:15.3509837\u002B00:00"
+        }
+      },
+      {
+        "id": "d6e6b3d3-c5e8-4fef-af75-39f5db1e19ab",
+        "type": "shipping-information-collected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-2d75e86095034022a6b8d16719098b7d@6",
+          "recipient": {
+            "title": "Mrs.",
+            "fullName": "Courtney Anderson",
+            "emailAddress": "Courtney60@gmail.com",
+            "phoneNumber": "1-901-534-3787 x2480"
+          },
+          "address": {
+            "country": "IM",
+            "lines": [
+              "Hegmann Mill 99855",
+              "83534-8190 New Onaview",
+              "Berkshire"
+            ]
+          },
+          "instructions": "Tenetur officia vel iusto.\nFuga quis tempore.",
+          "at": "2025-01-01T12:45:13.0854949\u002B00:00"
+        }
+      },
+      {
+        "id": "e79f36b9-20c7-402e-a91c-9d7378f8f0a5",
+        "type": "shipping-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-2d75e86095034022a6b8d16719098b7d@6",
+          "method": "standard",
+          "at": "2025-01-01T12:46:34.6831329\u002B00:00"
+        }
+      },
+      {
+        "id": "65ae7a08-33aa-4674-ab88-3355a7c812ab",
+        "type": "shipping-cost-calculated",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-2d75e86095034022a6b8d16719098b7d@6",
+          "forMethod": "standard",
+          "cost": "USD1.71",
+          "at": "2025-01-01T12:46:34.6831329\u002B00:00"
+        }
+      },
+      {
+        "id": "44b82d0d-8a67-4a84-ba65-f2a4a85c3753",
+        "type": "billing-information-collected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-2d75e86095034022a6b8d16719098b7d@6",
+          "recipient": {
+            "title": "Dr.",
+            "fullName": "Courtney Anderson",
+            "emailAddress": "Courtney60@gmail.com",
+            "phoneNumber": "232-926-8307 x93431"
+          },
+          "address": {
+            "country": "KI",
+            "lines": [
+              "Gibson Trail 864",
+              "15354 Fisherbury",
+              "Borders"
+            ]
+          },
+          "at": "2025-01-01T12:47:32.1635888\u002B00:00"
+        }
+      },
+      {
+        "id": "d4d7c8fc-4ee8-457b-b934-c0d5933c5275",
+        "type": "payment-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-2d75e86095034022a6b8d16719098b7d@6",
+          "method": "debitCard",
+          "at": "2025-01-01T12:48:33.5766313\u002B00:00"
+        }
+      },
+      {
+        "id": "e43d7145-ec1c-423c-bbe8-ed5f06d80430",
+        "type": "checkout-completed",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-2d75e86095034022a6b8d16719098b7d@6",
+          "orderId": "order-518fc532ce4b46508a8297ccac692638",
+          "at": "2025-01-01T12:49:29.7622086\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "cart-2d75e86095034022a6b8d16719098b7d",
+    "events": [
+      {
+        "id": "fbbed80b-52d8-46df-9e18-34dd783433fd",
+        "type": "cart-got-checked-out",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-2d75e86095034022a6b8d16719098b7d",
+          "orderId": "order-518fc532ce4b46508a8297ccac692638",
+          "at": "2025-01-01T12:49:29.7622086\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "order-518fc532ce4b46508a8297ccac692638",
+    "events": [
+      {
+        "id": "f2a79236-0f03-4a36-8f9e-5dc43bb147e7",
+        "type": "order-placed",
+        "content-type": "application/json",
+        "data": {
+          "orderId": "order-518fc532ce4b46508a8297ccac692638",
+          "customerId": "customer-2049245613",
+          "checkoutOfCart": "cart-2d75e86095034022a6b8d16719098b7d@6",
+          "lineItems": [
+            {
+              "productId": "1863298034381",
+              "productName": "Ambesonne Western Fitted Sheet \u0026 Pillow Sham Set, Wild West Themed Cowboy Hat and Old Ranching Rope on Wooden Display Rodeo Cowboy Style, Decorative Printed 2 Piece Bedding Decor Set, Twinxl, Brown",
+              "quantity": 4,
+              "pricePerUnit": "USD99.35",
+              "taxRate": 0.12
+            },
+            {
+              "productId": "3038974529118",
+              "productName": "Ergodyne ProFlex 900 Impact Protection Work Gloves, Padded Palm, Half-Finger, Medium,Black",
+              "quantity": 5,
+              "pricePerUnit": "USD410.67",
+              "taxRate": 0.12
+            },
+            {
+              "productId": "3038974529118",
+              "productName": "Ergodyne ProFlex 900 Impact Protection Work Gloves, Padded Palm, Half-Finger, Medium,Black",
+              "quantity": 4,
+              "pricePerUnit": "USD410.67",
+              "taxRate": 0.12
+            }
+          ],
+          "shipping": {
+            "recipient": {
+              "title": "Mrs.",
+              "fullName": "Courtney Anderson",
+              "emailAddress": "Courtney60@gmail.com",
+              "phoneNumber": "1-901-534-3787 x2480"
+            },
+            "address": {
+              "country": "IM",
+              "lines": [
+                "Hegmann Mill 99855",
+                "83534-8190 New Onaview",
+                "Berkshire"
+              ]
+            },
+            "instructions": "",
+            "method": "standard"
+          },
+          "billing": {
+            "recipient": {
+              "title": "Dr.",
+              "fullName": "Courtney Anderson",
+              "emailAddress": "Courtney60@gmail.com",
+              "phoneNumber": "232-926-8307 x93431"
+            },
+            "address": {
+              "country": "KI",
+              "lines": [
+                "Gibson Trail 864",
+                "15354 Fisherbury",
+                "Borders"
+              ]
+            },
+            "paymentMethod": "debitCard"
+          },
+          "at": "2025-01-01T12:49:29.7622086\u002B00:00"
+        }
+      }
+    ]
+  }
+]

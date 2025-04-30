@@ -1,0 +1,506 @@
+[
+  {
+    "stream": "cart-e930590076474cd4ae2caaca4930141d",
+    "events": [
+      {
+        "id": "8b04cf33-a4e8-4a9d-9e7c-e305ac356b51",
+        "type": "customer-started-shopping",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-e930590076474cd4ae2caaca4930141d",
+          "customerId": "customer-641075422",
+          "at": "2025-01-01T00:00:00\u002B00:00"
+        }
+      },
+      {
+        "id": "3b5c7f7c-dd0a-4990-842c-418cd4a4f106",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-e930590076474cd4ae2caaca4930141d",
+          "productId": "1172212222637",
+          "productName": "Sanita Men\u0027s Professional Oil Clog",
+          "quantity": 4,
+          "pricePerUnit": "USD40.44",
+          "taxRate": 0.06,
+          "at": "2025-01-01T00:05:06.3778071\u002B00:00"
+        }
+      },
+      {
+        "id": "0699452f-3f75-4289-b812-437e9da012de",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-e930590076474cd4ae2caaca4930141d",
+          "productId": "6679025402065",
+          "productName": "Skechers Women\u0027s Max Cushioning Elite Sneaker",
+          "quantity": 5,
+          "pricePerUnit": "USD905.83",
+          "taxRate": 0.06,
+          "at": "2025-01-01T00:11:37.0322682\u002B00:00"
+        }
+      },
+      {
+        "id": "3391c6b9-6bcc-43ae-b0d0-a325d107a910",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-e930590076474cd4ae2caaca4930141d",
+          "productId": "0876243289485",
+          "productName": "LoveHandle Tablet/XL Grip for Most Tablets and Large Smartphones, Black and Honey Comb Elastic Strap Finger Grip with Black Base (LHT-01-BLK-HNYCMB, Pack of 2)",
+          "quantity": 1,
+          "pricePerUnit": "USD760.25",
+          "taxRate": 0.21,
+          "at": "2025-01-01T00:19:32.7845032\u002B00:00"
+        }
+      },
+      {
+        "id": "de89eec7-4c80-496c-9f88-255a45e50aa6",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-e930590076474cd4ae2caaca4930141d",
+          "productId": "0876243289485",
+          "quantity": 1,
+          "at": "2025-01-01T00:24:35.4318965\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "checkout-for-cart-e930590076474cd4ae2caaca4930141d",
+    "events": [
+      {
+        "id": "03bb2bf9-3f41-4f0d-ab81-def7ef44cf19",
+        "type": "checkout-started",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-e930590076474cd4ae2caaca4930141d@5",
+          "at": "2025-01-01T00:27:25.6857527\u002B00:00"
+        }
+      },
+      {
+        "id": "e9bf295c-4827-4b4e-83f8-3c84e9a8e62a",
+        "type": "shipping-information-collected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-e930590076474cd4ae2caaca4930141d@5",
+          "recipient": {
+            "title": "Mr.",
+            "fullName": "Freddie Beer",
+            "emailAddress": "Freddie.Beer28@yahoo.com",
+            "phoneNumber": "1-935-595-6817"
+          },
+          "address": {
+            "country": "AR",
+            "lines": [
+              "Nader Lakes 2135",
+              "72637 Madisenburgh",
+              "Avon"
+            ]
+          },
+          "instructions": "Labore aut cumque quaerat ab rerum dolor beatae.\nLaboriosam dolorem recusandae molestias perspiciatis quia molestias.",
+          "at": "2025-01-01T00:28:32.6904969\u002B00:00"
+        }
+      },
+      {
+        "id": "c655a192-a243-44d5-a175-36f9c3789436",
+        "type": "shipping-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-e930590076474cd4ae2caaca4930141d@5",
+          "method": "overnight",
+          "at": "2025-01-01T00:30:06.7539372\u002B00:00"
+        }
+      },
+      {
+        "id": "56cdc24e-a997-4680-ae80-177fcfd88aaf",
+        "type": "shipping-cost-calculated",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-e930590076474cd4ae2caaca4930141d@5",
+          "forMethod": "overnight",
+          "cost": "USD16.72",
+          "at": "2025-01-01T00:30:06.7539372\u002B00:00"
+        }
+      },
+      {
+        "id": "602ee65e-07d3-4542-a337-9813d062259c",
+        "type": "billing-information-copied-from-shipping-information",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-e930590076474cd4ae2caaca4930141d@5",
+          "recipient": {
+            "title": "Mr.",
+            "fullName": "Freddie Beer",
+            "emailAddress": "Freddie.Beer28@yahoo.com",
+            "phoneNumber": "1-935-595-6817"
+          },
+          "address": {
+            "country": "AR",
+            "lines": [
+              "Nader Lakes 2135",
+              "72637 Madisenburgh",
+              "Avon"
+            ]
+          },
+          "at": "2025-01-01T00:32:00.5972167\u002B00:00"
+        }
+      },
+      {
+        "id": "ce073df9-4482-4a9d-9622-580c9f13b24a",
+        "type": "payment-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-e930590076474cd4ae2caaca4930141d@5",
+          "method": "debitCard",
+          "at": "2025-01-01T00:32:43.881735\u002B00:00"
+        }
+      },
+      {
+        "id": "17cf5f20-051f-426f-acc1-c3072293ad3f",
+        "type": "checkout-completed",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-e930590076474cd4ae2caaca4930141d@5",
+          "orderId": "order-36bf75fe641e453b906946ba4b5288c5",
+          "at": "2025-01-01T00:33:41.276506\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "cart-e930590076474cd4ae2caaca4930141d",
+    "events": [
+      {
+        "id": "edc120c1-9637-4b00-9a4c-1f8a3d1eb5ca",
+        "type": "cart-got-checked-out",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-e930590076474cd4ae2caaca4930141d",
+          "orderId": "order-36bf75fe641e453b906946ba4b5288c5",
+          "at": "2025-01-01T00:33:41.276506\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "order-36bf75fe641e453b906946ba4b5288c5",
+    "events": [
+      {
+        "id": "fc4d11d1-e20b-4878-8b87-2a7832a102a7",
+        "type": "order-placed",
+        "content-type": "application/json",
+        "data": {
+          "orderId": "order-36bf75fe641e453b906946ba4b5288c5",
+          "customerId": "customer-641075422",
+          "checkoutOfCart": "cart-e930590076474cd4ae2caaca4930141d@5",
+          "lineItems": [
+            {
+              "productId": "1172212222637",
+              "productName": "Sanita Men\u0027s Professional Oil Clog",
+              "quantity": 4,
+              "pricePerUnit": "USD40.44",
+              "taxRate": 0.06
+            },
+            {
+              "productId": "6679025402065",
+              "productName": "Skechers Women\u0027s Max Cushioning Elite Sneaker",
+              "quantity": 5,
+              "pricePerUnit": "USD905.83",
+              "taxRate": 0.06
+            }
+          ],
+          "shipping": {
+            "recipient": {
+              "title": "Mr.",
+              "fullName": "Freddie Beer",
+              "emailAddress": "Freddie.Beer28@yahoo.com",
+              "phoneNumber": "1-935-595-6817"
+            },
+            "address": {
+              "country": "AR",
+              "lines": [
+                "Nader Lakes 2135",
+                "72637 Madisenburgh",
+                "Avon"
+              ]
+            },
+            "instructions": "",
+            "method": "overnight"
+          },
+          "billing": {
+            "recipient": {
+              "title": "Mr.",
+              "fullName": "Freddie Beer",
+              "emailAddress": "Freddie.Beer28@yahoo.com",
+              "phoneNumber": "1-935-595-6817"
+            },
+            "address": {
+              "country": "AR",
+              "lines": [
+                "Nader Lakes 2135",
+                "72637 Madisenburgh",
+                "Avon"
+              ]
+            },
+            "paymentMethod": "debitCard"
+          },
+          "at": "2025-01-01T00:33:41.276506\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "cart-6d672e208551488eba22a4386de3cf99",
+    "events": [
+      {
+        "id": "feab07b7-77ed-43c4-a602-58afa17b7f2d",
+        "type": "customer-started-shopping",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-6d672e208551488eba22a4386de3cf99",
+          "customerId": "customer-1097320739",
+          "at": "2025-01-01T11:59:59.9999999\u002B00:00"
+        }
+      },
+      {
+        "id": "3f007a93-b908-4abb-bbae-8da7f32431e1",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-6d672e208551488eba22a4386de3cf99",
+          "productId": "6679025402065",
+          "productName": "Skechers Women\u0027s Max Cushioning Elite Sneaker",
+          "quantity": 4,
+          "pricePerUnit": "USD905.83",
+          "taxRate": 0.06,
+          "at": "2025-01-01T12:02:25.3190527\u002B00:00"
+        }
+      },
+      {
+        "id": "d57e3a36-2c97-433e-8bb2-5efd6019fdff",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-6d672e208551488eba22a4386de3cf99",
+          "productId": "5530612919919",
+          "productName": "SkyBound Replacement Trampoline Mat, Fits 15ft Frames w/Spring Tool and Durable V-Rings, Bounce Safely with Extra Rows of Stitching - Jumping Mat for 15ft Round Trampoline - Fit 96 Springs \u0026 6.5-7\u0022",
+          "quantity": 4,
+          "pricePerUnit": "USD577.91",
+          "taxRate": 0.12,
+          "at": "2025-01-01T12:08:59.7152467\u002B00:00"
+        }
+      },
+      {
+        "id": "9025636b-bf2d-42b3-9283-8da4b0aefe24",
+        "type": "item-got-removed-from-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-6d672e208551488eba22a4386de3cf99",
+          "productId": "6679025402065",
+          "quantity": 4,
+          "at": "2025-01-01T12:20:09.9106984\u002B00:00"
+        }
+      },
+      {
+        "id": "acf9fc35-df35-409d-a868-2c891b6f6882",
+        "type": "item-got-added-to-cart",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-6d672e208551488eba22a4386de3cf99",
+          "productId": "2107240968263",
+          "productName": "Drawealth Touch Control Traditional Table Lamp Set of 2,3-Way Dimmable Farmhouse Bedside Table Lamps with 2 USB Charging Ports Vintage Rustic Table Lamps for Living Room Bedroom Office Study",
+          "quantity": 1,
+          "pricePerUnit": "USD369.09",
+          "taxRate": 0.12,
+          "at": "2025-01-01T12:32:12.202067\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "checkout-for-cart-6d672e208551488eba22a4386de3cf99",
+    "events": [
+      {
+        "id": "f49a710e-4d15-4fe1-b9e7-fd7e8643c147",
+        "type": "checkout-started",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-6d672e208551488eba22a4386de3cf99@5",
+          "at": "2025-01-01T12:40:50.4286361\u002B00:00"
+        }
+      },
+      {
+        "id": "25255d36-46ca-48b9-a8b6-b4a1bd21be1c",
+        "type": "shipping-information-collected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-6d672e208551488eba22a4386de3cf99@5",
+          "recipient": {
+            "title": "Dr.",
+            "fullName": "Freddie Beer",
+            "emailAddress": "Freddie.Beer28@yahoo.com",
+            "phoneNumber": "1-229-776-7994"
+          },
+          "address": {
+            "country": "ES",
+            "lines": [
+              "Herzog Spurs 1569",
+              "65633-2899 East Lillianatown",
+              "Bedfordshire"
+            ]
+          },
+          "instructions": "Consequatur exercitationem excepturi nulla consequatur iste vel.\nRerum tenetur quae enim et.",
+          "at": "2025-01-01T12:42:28.1535561\u002B00:00"
+        }
+      },
+      {
+        "id": "565fc493-baed-45ca-862e-9ae2ea199645",
+        "type": "shipping-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-6d672e208551488eba22a4386de3cf99@5",
+          "method": "standard",
+          "at": "2025-01-01T12:43:41.904778\u002B00:00"
+        }
+      },
+      {
+        "id": "f5b70d0b-98a7-4318-8ec0-ee1bbf8db2d9",
+        "type": "shipping-cost-calculated",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-6d672e208551488eba22a4386de3cf99@5",
+          "forMethod": "standard",
+          "cost": "USD0.99",
+          "at": "2025-01-01T12:43:41.904778\u002B00:00"
+        }
+      },
+      {
+        "id": "2c86478b-9b98-4f8d-9b50-35396e28c1ce",
+        "type": "billing-information-collected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-6d672e208551488eba22a4386de3cf99@5",
+          "recipient": {
+            "title": "Mrs.",
+            "fullName": "Freddie Beer",
+            "emailAddress": "Freddie.Beer28@yahoo.com",
+            "phoneNumber": "466.261.1334 x16823"
+          },
+          "address": {
+            "country": "KP",
+            "lines": [
+              "Anjali Shore 32605",
+              "77543-6403 New Chasestad",
+              "Berkshire"
+            ]
+          },
+          "at": "2025-01-01T12:45:37.9098006\u002B00:00"
+        }
+      },
+      {
+        "id": "9cd48367-fdaf-443a-8057-b0f0681d5970",
+        "type": "payment-method-selected",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-6d672e208551488eba22a4386de3cf99@5",
+          "method": "wireTransfer",
+          "at": "2025-01-01T12:47:28.380985\u002B00:00"
+        }
+      },
+      {
+        "id": "27930839-d088-4767-9ff0-0670bf62151b",
+        "type": "checkout-completed",
+        "content-type": "application/json",
+        "data": {
+          "cart": "cart-6d672e208551488eba22a4386de3cf99@5",
+          "orderId": "order-babc43583617421a90d4c7d039900142",
+          "at": "2025-01-01T12:49:22.6133122\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "cart-6d672e208551488eba22a4386de3cf99",
+    "events": [
+      {
+        "id": "d0ef42b2-8b8f-4fdc-8f1a-bfac23d9259c",
+        "type": "cart-got-checked-out",
+        "content-type": "application/json",
+        "data": {
+          "cartId": "cart-6d672e208551488eba22a4386de3cf99",
+          "orderId": "order-babc43583617421a90d4c7d039900142",
+          "at": "2025-01-01T12:49:22.6133122\u002B00:00"
+        }
+      }
+    ]
+  },
+  {
+    "stream": "order-babc43583617421a90d4c7d039900142",
+    "events": [
+      {
+        "id": "73192dd4-db55-49ed-a228-e0b573c213c5",
+        "type": "order-placed",
+        "content-type": "application/json",
+        "data": {
+          "orderId": "order-babc43583617421a90d4c7d039900142",
+          "customerId": "customer-1097320739",
+          "checkoutOfCart": "cart-6d672e208551488eba22a4386de3cf99@5",
+          "lineItems": [
+            {
+              "productId": "5530612919919",
+              "productName": "SkyBound Replacement Trampoline Mat, Fits 15ft Frames w/Spring Tool and Durable V-Rings, Bounce Safely with Extra Rows of Stitching - Jumping Mat for 15ft Round Trampoline - Fit 96 Springs \u0026 6.5-7\u0022",
+              "quantity": 4,
+              "pricePerUnit": "USD577.91",
+              "taxRate": 0.12
+            },
+            {
+              "productId": "2107240968263",
+              "productName": "Drawealth Touch Control Traditional Table Lamp Set of 2,3-Way Dimmable Farmhouse Bedside Table Lamps with 2 USB Charging Ports Vintage Rustic Table Lamps for Living Room Bedroom Office Study",
+              "quantity": 1,
+              "pricePerUnit": "USD369.09",
+              "taxRate": 0.12
+            }
+          ],
+          "shipping": {
+            "recipient": {
+              "title": "Dr.",
+              "fullName": "Freddie Beer",
+              "emailAddress": "Freddie.Beer28@yahoo.com",
+              "phoneNumber": "1-229-776-7994"
+            },
+            "address": {
+              "country": "ES",
+              "lines": [
+                "Herzog Spurs 1569",
+                "65633-2899 East Lillianatown",
+                "Bedfordshire"
+              ]
+            },
+            "instructions": "",
+            "method": "standard"
+          },
+          "billing": {
+            "recipient": {
+              "title": "Mrs.",
+              "fullName": "Freddie Beer",
+              "emailAddress": "Freddie.Beer28@yahoo.com",
+              "phoneNumber": "466.261.1334 x16823"
+            },
+            "address": {
+              "country": "KP",
+              "lines": [
+                "Anjali Shore 32605",
+                "77543-6403 New Chasestad",
+                "Berkshire"
+              ]
+            },
+            "paymentMethod": "wireTransfer"
+          },
+          "at": "2025-01-01T12:49:22.6133122\u002B00:00"
+        }
+      }
+    ]
+  }
+]
