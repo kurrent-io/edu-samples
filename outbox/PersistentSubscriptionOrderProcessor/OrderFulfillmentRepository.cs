@@ -1,3 +1,5 @@
+using Npgsql;
+
 namespace PersistentSubscriptionOrderProcessor
 {
     public class OrderFulfillmentRepository
@@ -24,19 +26,25 @@ namespace PersistentSubscriptionOrderProcessor
             _dataAccess.Execute(sql);
         }
 
-        public Guid StartOrderFulfillment(string orderId)
+        public void StartOrderFulfillment(string orderId)
         {
             if (string.IsNullOrEmpty(orderId))
                 throw new ArgumentException("Order ID cannot be null or empty", nameof(orderId));
 
             var sql = @"
                 INSERT INTO OrderFulfillment (OrderId, Status)
-                VALUES (@OrderId, 'Started')
-                ON CONFLICT (OrderId) 
-                DO UPDATE SET Status = 'Started', UpdatedAt = CURRENT_TIMESTAMP
-                RETURNING Id;";
+                VALUES (@OrderId, 'Started')";
+            
+            try
+            {
+                _dataAccess.Execute(sql, new { OrderId = orderId });
+                Console.WriteLine($"Order fulfillment for {orderId} started.");
 
-            return _dataAccess.QueryFirstOrDefault<Guid>(sql, new { OrderId = orderId });
+            }
+            catch (PostgresException ex) when (ex.SqlState == "23505") // Unique violation
+            {
+                Console.WriteLine($"Order fulfillment for {orderId} already started. Ignoring start request.");
+            }
         }
     }
 }
