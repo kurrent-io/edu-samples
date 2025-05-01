@@ -18,7 +18,6 @@ namespace PersistentSubscriptionOrderProcessor
             _connection.Execute(sql, param);
         }
 
-
         public void Execute(string sql)
         {
             _connection.Execute(sql);
