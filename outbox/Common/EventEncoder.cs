@@ -30,7 +30,7 @@ public static class EventEncoder
         catch (Exception ex)
         {
             Console.WriteLine($"Failed to deserialize event: {eventTypeName}. Error: {ex.Message}");
-            return null;
+            throw;
         }
     }
 }
