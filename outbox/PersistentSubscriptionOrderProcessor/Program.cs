@@ -64,13 +64,34 @@ var repository = new OrderFulfillmentRepository(postgres);
 
 await foreach (var message in subscription.Messages)                     // Iterate through the messages in the subscription
 {
-    if (message is not PersistentSubscriptionMessage.Event(var e, _)) continue;             // Skip this message if it is not an event
+    if (message is PersistentSubscriptionMessage.NotFound)
+    {
+        Console.WriteLine("Persistent subscription consumer group not found. Please recreate it.");
+        continue;
+    }
 
-    if (EventEncoder.Decode(e.Event.Data, "order-placed") is not OrderPlaced orderPlaced) continue;
+    if (message is not PersistentSubscriptionMessage.Event(var e, var retryCount)) continue;             // Skip this message if it is not an event
 
-    var fulfillmentId = repository.StartOrderFulfillment(orderPlaced.orderId);
+    try
+    {
+        if (EventEncoder.Decode(e.Event.Data, "order-placed") is not OrderPlaced orderPlaced) continue;
 
-    Console.WriteLine($"Started OrderFulfillment {fulfillmentId} from Order {orderPlaced.orderId}");
-    
-    await subscription.Ack(e); // Acknowledge the event to mark it as processed
+        repository.StartOrderFulfillment(orderPlaced.orderId);
+
+        await subscription.Ack(e); // Acknowledge the event to mark it as processed
+    }
+    catch (Exception ex)
+    {
+        if (ex is NpgsqlException { IsTransient: true })
+        {
+            Console.WriteLine($"Detected DB transient error {ex.Message}. Retrying.");
+            await subscription.Nack(PersistentSubscriptionNakEventAction.Retry, "Detected DB transient error", e);
+            Thread.Sleep(1000);
+        }
+        else
+        {
+            Console.WriteLine($"Detected permanent error {ex.Message}. Skipping.");
+            await subscription.Nack(PersistentSubscriptionNakEventAction.Skip, "Detected permanent error", e);
+        }
+    }
 }
