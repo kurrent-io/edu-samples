@@ -27,7 +27,7 @@ fi
 # Set variables based on input arguments
 edbcommerce="$root_path/tools/Kurrent.Extensions.Commerce/linux-x64/edb-commerce"                                  # Path to the edb-commerce executable
 
-"$root_path/scripts/start-db.sh" # Start the database containers
+"$root_path/scripts/start-kurrentdb.sh" # Start kurrentdb container
 
 # Seed the data using the edb-commerce tool with the updated initialization JSON
 "$edbcommerce" seed-data-set "$data_path"
