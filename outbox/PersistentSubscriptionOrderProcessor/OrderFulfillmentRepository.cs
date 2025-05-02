@@ -38,12 +38,12 @@ namespace PersistentSubscriptionOrderProcessor
             try
             {
                 _dataAccess.Execute(sql, new { OrderId = orderId });
-                Console.WriteLine($"Order fulfillment for {orderId} started.");
+                Console.WriteLine($"Order fulfillment for {orderId} created.");
 
             }
             catch (PostgresException ex) when (ex.SqlState == "23505") // Unique violation
             {
-                Console.WriteLine($"Order fulfillment for {orderId} already started. Ignoring start request.");
+                Console.WriteLine($"Order fulfillment for {orderId} create request ignored. Already exists.");
             }
         }
     }
