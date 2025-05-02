@@ -52,7 +52,7 @@ var postgres = new PostgresDataAccess(                                   // Crea
 // ---------------------------------------------- //
 
 await using var subscription = kurrentdb.SubscribeToStream(
-		"$et-order-placed",
+		"$ce-order",
 		"fulfillment-group");
 
 Console.WriteLine("Subscribing events from stream");
