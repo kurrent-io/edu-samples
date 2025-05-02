@@ -26,7 +26,7 @@ namespace PersistentSubscriptionOrderProcessor
             _dataAccess.Execute(sql);
         }
 
-        public void StartOrderFulfillment(string orderId)
+        public void StartOrderFulfillment(string? orderId)
         {
             if (string.IsNullOrEmpty(orderId))
                 throw new ArgumentException("Order ID cannot be null or empty", nameof(orderId));

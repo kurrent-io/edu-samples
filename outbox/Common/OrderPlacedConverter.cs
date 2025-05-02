@@ -291,12 +291,12 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
 
         writer.WritePropertyName("lineItems");
         writer.WriteStartArray();
-        foreach (var item in value.lineItems)
+        foreach (var item in value.lineItems!)
         {
             writer.WriteStartObject();
             writer.WriteString("productId", item.productId);
             writer.WriteString("productName", item.productName);
-            writer.WriteNumber("quantity", item.quantity);
+            writer.WriteNumber("quantity", item.quantity!.Value);
             
             // Combine currency and price for serialization
             if (!string.IsNullOrEmpty(item.currency))
@@ -305,18 +305,18 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
             }
             else
             {
-                writer.WriteNumber("pricePerUnit", item.pricePerUnit);
+                writer.WriteNumber("pricePerUnit", item.pricePerUnit!.Value);
             }
             
-            writer.WriteNumber("taxRate", item.taxRate);
+            writer.WriteNumber("taxRate", item.taxRate!.Value);
             writer.WriteEndObject();
         }
         writer.WriteEndArray();
 
-        WriteShippingInfo(writer, value.shipping);
-        WriteBillingInfo(writer, value.billing);
+        WriteShippingInfo(writer, value.shipping!);
+        WriteBillingInfo(writer, value.billing!);
 
-        writer.WriteString("at", value.at);
+        writer.WriteString("at", value.at!.Value);
 
         writer.WriteEndObject();
     }
@@ -326,8 +326,8 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
         writer.WritePropertyName("shipping");
         writer.WriteStartObject();
         
-        WriteRecipientInfo(writer, shipping.recipient);
-        WriteAddressInfo(writer, shipping.address);
+        WriteRecipientInfo(writer, shipping.recipient!);
+        WriteAddressInfo(writer, shipping.address!);
         
         writer.WriteString("instructions", shipping.instructions);
         writer.WriteString("method", shipping.method);
@@ -340,8 +340,8 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
         writer.WritePropertyName("billing");
         writer.WriteStartObject();
         
-        WriteRecipientInfo(writer, billing.recipient);
-        WriteAddressInfo(writer, billing.address);
+        WriteRecipientInfo(writer, billing.recipient!);
+        WriteAddressInfo(writer, billing.address!);
         
         writer.WriteString("paymentMethod", billing.paymentMethod);
         
@@ -370,7 +370,7 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
         
         writer.WritePropertyName("lines");
         writer.WriteStartArray();
-        foreach (var line in address.lines)
+        foreach (var line in address.lines!)
         {
             writer.WriteStringValue(line);
         }
