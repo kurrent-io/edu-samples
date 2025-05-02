@@ -8,9 +8,9 @@ else
     root_path="./"
 fi
 
-"$root_path/scripts/start-db.sh" # Start the database containers
+"$root_path/scripts/start-kurrentdb.sh" # Start the database containers
 
 # Create the persistence subscription for the fulfillment group
-curl -i -X PUT -d $'{"startFrom": 0,"resolveLinktos": true, "maxRetryCount": 100}' \
-    http://localhost:2113/subscriptions/%24et-order-placed/fulfillment-group \
+curl -i -X PUT -d $'{ "startFrom": 0, "resolveLinktos": true, "maxRetryCount": 100 }' \
+    http://localhost:2113/subscriptions/%24ce-order/fulfillment-group \
     -u admin:changeit -H "Content-Type: application/json"
