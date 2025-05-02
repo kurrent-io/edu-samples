@@ -14,14 +14,4 @@ if [ ! -d "$root_path/data" ]; then
     exit 1
 fi
 
-sudo apt-get update 
-sudo apt-get install -y git-lfs 
-git lfs install 
-git lfs pull
-
-find "$root_path/tools/" -type f -name "edb-commerce*" -exec chmod +x {} \;
-# Ensure all scripts in the /scripts directory have executable permission
-chmod +x "$root_path/scripts"/*.sh
-
-"$root_path/scripts/start-db.sh" # Start the database containers
-"$root_path/scripts/start-app.sh" # Start the application containers
+"$root_path/scripts/seed-data.sh" "$root_path/data/data-two-orders-4.json" # Seed the data using the seed-data.sh script with the provided JSON file

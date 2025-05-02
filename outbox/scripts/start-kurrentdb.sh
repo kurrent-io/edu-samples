@@ -14,7 +14,11 @@ if [ ! -d "$root_path/data" ]; then
     exit 1
 fi
 
-docker compose --profile db -f "$root_path/docker-compose.yml" up -d
+echo "Starting KurrentDB if not already started ..."
+
+docker compose --profile db -f "$root_path/docker-compose.yml" up kurrentdb -d
+
+#!/bin/bash
 
 max_attempts=60
 attempt=0
@@ -28,4 +32,4 @@ while ! curl -s -o /dev/null -w "%{http_code}" http://localhost:2113/web/index.h
        sleep 2                                                        # Wait for a few seconds before checking again
 done
 
-echo "Databases are running."
+echo "KurrentDB has started."
