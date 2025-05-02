@@ -16,6 +16,7 @@
 // The projection is done in a way that ensures the read model is always up to date with the latest events from KurrentDB.
 // =======================================================================================================================
 
+using System.Net.Sockets;
 using Common;
 using EventStore.Client;
 using Npgsql;
@@ -82,15 +83,19 @@ await foreach (var message in subscription.Messages)                     // Iter
     }
     catch (Exception ex)
     {
-        if (ex is NpgsqlException { IsTransient: true })
+        // Warning: This is just one example of a transient error check; you should to add more checks based on your needs
+        var exceptionIsTransient = ex is SocketException { SocketErrorCode: SocketError.TryAgain } ||
+                                   ex is NpgsqlException { IsTransient: true };
+
+        if (exceptionIsTransient)
         {
-            Console.WriteLine($"Detected DB transient error {ex.Message}. Retrying.");
+            Console.WriteLine($"Detected DB transient error {ex}. Retrying.");
             await subscription.Nack(PersistentSubscriptionNakEventAction.Retry, "Detected DB transient error", e);
             Thread.Sleep(1000);
         }
         else
         {
-            Console.WriteLine($"Detected permanent error {ex.Message}. Skipping.");
+            Console.WriteLine($"Detected permanent error {ex}. Skipping.");
             await subscription.Nack(PersistentSubscriptionNakEventAction.Skip, "Detected permanent error", e);
         }
     }
