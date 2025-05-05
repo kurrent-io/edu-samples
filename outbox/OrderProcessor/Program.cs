@@ -20,7 +20,7 @@ using System.Net.Sockets;
 using Common;
 using EventStore.Client;
 using Npgsql;
-using PersistentSubscriptionOrderProcessor;
+using OrderProcessor;
 
 Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
 

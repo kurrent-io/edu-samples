@@ -1,6 +1,6 @@
 using Npgsql;
 
-namespace PersistentSubscriptionOrderProcessor
+namespace OrderProcessor
 {
     public class OrderFulfillmentRepository
     {

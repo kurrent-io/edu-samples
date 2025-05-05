@@ -21,13 +21,13 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=trust
     profiles: ["db"]
   
-  persistentsubscriptionorderprocessor:
+  orderprocessor:
     image: mcr.microsoft.com/dotnet/sdk:9.0
-    container_name: persistentsubscriptionorderprocessor
+    container_name: orderprocessor
     working_dir: /app
     volumes:
       - ./:/app
-    command: ["dotnet", "run", "--project", "./PersistentSubscriptionOrderProcessor"]
+    command: ["dotnet", "run", "--project", "./OrderProcessor"]
     environment:
       - POSTGRES_HOST=postgres
       - KURRENTDB_HOST=kurrentdb
