@@ -11,6 +11,6 @@ fi
 "$root_path/scripts/start-kurrentdb.sh" # Start the database containers
 
 # Create the persistence subscription for the fulfillment group
-curl -i -X PUT -d $'{ "startFrom": 0, "resolveLinktos": true, "maxRetryCount": 100 }' \
-    http://localhost:2113/subscriptions/%24ce-order/fulfillment-group \
-    -u admin:changeit -H "Content-Type: application/json"
+curl -i -X PUT -d $'{ "minCheckPointCount": 0, "maxCheckPointCount": 0, "resolveLinktos": true, "maxRetryCount": 100 }' \
+    http://localhost:2113/subscriptions/%24ce-order/fulfillment \
+    -H "Content-Type: application/json"
