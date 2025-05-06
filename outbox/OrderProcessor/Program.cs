@@ -97,14 +97,14 @@ await foreach (var message in subscription.Messages)                            
 
         if (exceptionIsTransient)                                               // If exception is transient..
         {
-            Console.WriteLine($"Detected DB transient error {ex}. Retrying.");
+            Console.WriteLine($"Detected DB transient error {ex.Message}. Retrying.");
             await subscription.Nack(PersistentSubscriptionNakEventAction.Retry, // Send a not acknowledge message to the consumer group and request it to retry
                 "Detected DB transient error", e);
             Thread.Sleep(1000);                                                 // Wait for a second before retrying to avoid overwhelming the database
         }
         else                                                                    // If exception is not transient (i.e. permanent)..
         {
-            Console.WriteLine($"Detected permanent error {ex}. Skipping.");
+            Console.WriteLine($"Detected permanent error {ex.Message}. Skipping.");
             await subscription.Nack(PersistentSubscriptionNakEventAction.Skip, // Send a not acknowledge message to the consumer group and request it to skip
                 "Detected permanent error", e);
         }
