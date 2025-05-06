@@ -32,4 +32,5 @@ edbcommerce="$root_path/tools/Kurrent.Extensions.Commerce/linux-x64/edb-commerce
 # Seed the data using the edb-commerce tool with the updated initialization JSON
 "$edbcommerce" seed-data-set "$data_path"
 
+echo ""
 echo "Appended data to KurrentDB"
