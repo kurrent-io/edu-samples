@@ -1,0 +1,63 @@
+.pageRoot {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.timeTravelSliderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboardContent {
+  display: flex;
+  flex-direction: row;
+}
+
+.salesData {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 70%;
+}
+
+.salesTable {
+  border: 1px solid #666;
+}
+
+.salesData, .eventStream {
+  padding: 0 1rem;
+  border: 1px solid #666;
+  border-radius: 4px;
+}
+
+.eventStream {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 30%;
+  margin-left: 1rem;
+  padding: 1rem;
+
+  .eventCard {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #666;
+    padding: 0.5rem;
+
+    &:not(:nth-child(2)) {
+      margin-top: 1rem;
+    }
+
+    .eventType {
+      font-weight: bold;
+    }
+
+    .eventTimestamp {
+      font-size: 0.8rem;
+    }
+  }
+}
