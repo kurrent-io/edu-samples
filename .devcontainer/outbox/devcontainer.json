@@ -20,6 +20,10 @@
     "1113": {
       "label": "KurrentDB API",
       "onAutoForward": "silent"
+    },    
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "silent"
     }
   },
   "customizations": {
