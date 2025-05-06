@@ -1,19 +1,17 @@
 // =======================================================================================================================
-// Postgres Projection from KurrentDB
+// Order Processor with KurrentDB
 // =======================================================================================================================
-// This sample demonstrates how to project events from KurrentDB to a read model in Postgres.
+// This sample demonstrates how to process OrderPlaced events from KurrentDB and update a fulfillment table in Postgres.
 //
 // It:
 // 
-// 1. Connects to Postgres and KurrentDB
-// 2. Retrieves the last checkpoint position from Postgres
-// 3. Subscribes to the cart category projection stream in KurrentDB
-// 4. Iterates each event from the subscription
-// 5. Processes each event to update the Postgres read model
-// 6. Maintains a checkpoint in Postgres to track progress
+// 1. Connects to KurrentDB and Postgres databases
+// 2. Creates a subscription to the "$ce-order" stream in KurrentDB
+// 3. Listens for incoming order events through the subscription
+// 4. Processes OrderPlaced events and records them in the fulfillment table in Postgres
+// 5. Implements error handling for both transient and permanent database errors
+// 6. Acknowledges events appropriately based on processing outcome
 // 
-// The read model is a denormalized view of the cart events, which can be used for reporting or querying purposes.
-// The projection is done in a way that ensures the read model is always up to date with the latest events from KurrentDB.
 // =======================================================================================================================
 
 using System.Net.Sockets;
@@ -28,75 +26,87 @@ Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
 // Connect to KurrentDB //
 // -------------------- //
 
-var kurrentdbHost = Environment.GetEnvironmentVariable("KURRENTDB_HOST")           // Get the KurrentDB host from environment variable
-                    ?? "localhost";                                      // Default to localhost if not set
+var kurrentdbHost = Environment.GetEnvironmentVariable("KURRENTDB_HOST")        // Get the KurrentDB host from environment variable
+                    ?? "localhost";                                             // Default to localhost if not set
 
-var kurrentdb = new EventStorePersistentSubscriptionsClient(                                         // Create a connection to KurrentDB
-                EventStoreClientSettings.Create(
-                  $"esdb://admin:changeit@{kurrentdbHost}:2113?tls=false"));
+var kurrentdb = new EventStorePersistentSubscriptionsClient(                    // Create a connection to KurrentDB
+                        EventStoreClientSettings.Create(
+                            $"esdb://{kurrentdbHost}:2113?tls=false"));
 
 // ------------------------------- //
 // Connect and initialize Postgres //
 // ------------------------------- //
 
-var postgresHost = Environment.GetEnvironmentVariable("POSTGRES_HOST")   // Get the Postgres host from environment variable
-                    ?? "localhost";                                      // Default to localhost if not set
+var postgresHost = Environment.GetEnvironmentVariable("POSTGRES_HOST")          // Get the Postgres host from environment variable
+                    ?? "localhost";                                             // Default to localhost if not set
 
-var postgres = new PostgresDataAccess(                                   // Create a postgres connection and inject into a custom data access class
+var postgres = new PostgresDataAccess(                                          // Create a postgres connection and inject into a custom data access class
                     new NpgsqlConnection(
                         $"Host={postgresHost};Port=5432;" +
                         $"Database=postgres;Username=postgres"));
 
 // ---------------------------------------------- //
-// Subscribe to KurrentDB from checkpoint onwards //
+// Subscribe to the $ce-order stream in KurrentDB //
 // ---------------------------------------------- //
 
-await using var subscription = kurrentdb.SubscribeToStream(
+await using var subscription = kurrentdb.SubscribeToStream(                     // Subscribe to the $ce-order stream in KurrentDB
 		"$ce-order",
-		"fulfillment-group");
+		"fulfillment");
 
 Console.WriteLine("Subscribing events from stream");
 
-var repository = new OrderFulfillmentRepository(postgres);
+var repository = new OrderFulfillmentRepository(postgres);                      // Create an instance of the repository to insert order fulfillment to postgres
 
 // ---------------------------------------- //
 // Process each event from the subscription //
 // ---------------------------------------- //
 
-await foreach (var message in subscription.Messages)                     // Iterate through the messages in the subscription
+await foreach (var message in subscription.Messages)                            // Iterate through the messages in the subscription
 {
-    if (message is PersistentSubscriptionMessage.NotFound)
+    if (message is PersistentSubscriptionMessage.NotFound)                      // Skip this message if the subscription is not found
     {
-        Console.WriteLine("Persistent subscription consumer group not found. Please recreate it.");
+        Console.WriteLine("Persistent subscription consumer group not found." +
+            "Please recreate it.");
         continue;
     }
 
-    if (message is not PersistentSubscriptionMessage.Event(var e, var retryCount)) continue;             // Skip this message if it is not an event
+    if (message is not PersistentSubscriptionMessage.Event(var e, _))           // Skip this message if it is not an event 
+            continue;                                                   
 
     try
     {
-        if (EventEncoder.Decode(e.Event.Data, "order-placed") is not OrderPlaced orderPlaced) continue;
+        Console.WriteLine($"Received event #{e.Link.EventNumber} in " +         // Log the event number of the event in the $ce-order stream
+                          $"{e.Link.EventStreamId} stream");             
+        if (EventEncoder.Decode(e.Event.Data, "order-placed")                   // Try to deserialize the event to an OrderPlaced event
+            is not OrderPlaced orderPlaced)                                     // Skip this message if it is not an OrderPlaced event
+            continue;
 
-        repository.StartOrderFulfillment(orderPlaced.orderId);
+        repository.StartOrderFulfillment(orderPlaced.orderId);                  // Process the OrderPlaced event by inserting an order fulfillment record into Postgres
 
-        await subscription.Ack(e); // Acknowledge the event to mark it as processed
+        await subscription.Ack(e);                                              // Send an acknowledge message to the consumer group so that it will send the next event
     }
     catch (Exception ex)
     {
-        // Warning: This is just one example of a transient error check; you should to add more checks based on your needs
-        var exceptionIsTransient = ex is SocketException { SocketErrorCode: SocketError.TryAgain } ||
-                                   ex is NpgsqlException { IsTransient: true };
+        // ------------------------------------------------------------- //
+        // Warning: This is just one example of a transient error check; //
+        //          You should to add more checks based on your needs    //
+        // ------------------------------------------------------------- //
+        var exceptionIsTransient =                                              // Exception is transient if it mateches one of the following patterns:
+            ex is SocketException { SocketErrorCode: SocketError.TryAgain } ||  // Socket error indicating the name of the host could not be resolved (https://learn.microsoft.com/en-us/dotnet/api/system.net.sockets.socketerror?view=net-9.0)
+            ex is NpgsqlException { IsTransient: true };                        // Postgres exception indicating the error is transient (https://www.npgsql.org/doc/api/Npgsql.NpgsqlException.html#Npgsql_NpgsqlException_IsTransient)
 
-        if (exceptionIsTransient)
+        if (exceptionIsTransient)                                               // If exception is transient..
         {
             Console.WriteLine($"Detected DB transient error {ex}. Retrying.");
-            await subscription.Nack(PersistentSubscriptionNakEventAction.Retry, "Detected DB transient error", e);
-            Thread.Sleep(1000);
+            await subscription.Nack(PersistentSubscriptionNakEventAction.Retry, // Send a not acknowledge message to the consumer group and request it to retry
+                "Detected DB transient error", e);
+            Thread.Sleep(1000);                                                 // Wait for a second before retrying to avoid overwhelming the database
         }
-        else
+        else                                                                    // If exception is not transient (i.e. permanent)..
         {
             Console.WriteLine($"Detected permanent error {ex}. Skipping.");
-            await subscription.Nack(PersistentSubscriptionNakEventAction.Skip, "Detected permanent error", e);
+            await subscription.Nack(PersistentSubscriptionNakEventAction.Skip, // Send a not acknowledge message to the consumer group and request it to skip
+                "Detected permanent error", e);
         }
     }
 }

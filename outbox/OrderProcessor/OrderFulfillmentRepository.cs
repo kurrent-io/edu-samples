@@ -8,8 +8,10 @@ namespace OrderProcessor
 
         public OrderFulfillmentRepository(PostgresDataAccess dataAccess)
         {
-            _dataAccess = dataAccess ?? throw new ArgumentNullException(nameof(dataAccess));
-            CreateTableIfNotExists();
+            _dataAccess = dataAccess ?? 
+                throw new ArgumentNullException(nameof(dataAccess));
+
+            CreateTableIfNotExists();                                               // Ensure the table exists when the repository is created
         }
 
         private void CreateTableIfNotExists()
@@ -29,7 +31,8 @@ namespace OrderProcessor
         public void StartOrderFulfillment(string? orderId)
         {
             if (string.IsNullOrEmpty(orderId))
-                throw new ArgumentException("Order ID cannot be null or empty", nameof(orderId));
+                throw new ArgumentException("Order ID cannot be null or empty",
+                    nameof(orderId));
 
             var sql = @"
                 INSERT INTO OrderFulfillment (OrderId, Status)
@@ -41,9 +44,10 @@ namespace OrderProcessor
                 Console.WriteLine($"Order fulfillment for {orderId} created.");
 
             }
-            catch (PostgresException ex) when (ex.SqlState == "23505") // Unique violation
-            {
-                Console.WriteLine($"Order fulfillment for {orderId} create request ignored. Already exists.");
+            catch (PostgresException ex) when (ex.SqlState == "23505")              // If the error is a unique violation (duplicate key)..
+            {                                                                       // then it means the order fulfillment already exists.
+                Console.WriteLine($"Order fulfillment for {orderId} " +             // Ignore the error and log a message
+                    "create request ignored. Already exists.");
             }
         }
     }
