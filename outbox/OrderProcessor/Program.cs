@@ -75,7 +75,7 @@ await foreach (var message in subscription.Messages)                            
 
     try
     {
-        Console.WriteLine($"Received event #{e.Link.EventNumber} in " +         // Log the event number of the event in the $ce-order stream
+        Console.WriteLine($"Received event #{e.Link!.EventNumber} in " +         // Log the event number of the event in the $ce-order stream
                           $"{e.Link.EventStreamId} stream");             
         if (EventEncoder.Decode(e.Event.Data, "order-placed")                   // Try to deserialize the event to an OrderPlaced event
             is not OrderPlaced orderPlaced)                                     // Skip this message if it is not an OrderPlaced event
