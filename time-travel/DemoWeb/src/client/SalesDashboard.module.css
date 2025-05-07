@@ -6,12 +6,42 @@
 .header {
   display: flex;
   align-items: center;
+  padding: 1rem;
+
+  .headerTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+
+  }
 }
 
-.timeTravelSliderContainer {
+.timeSelector {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  margin-bottom: 1rem;
+
+  .timeSliderContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .timeSliderLabel {
+      font-size: 0.8rem;
+      margin: 0 1rem;
+    }
+  }
+
+  .reportSelector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    label {
+      margin-right: 0.5rem;
+    }
+  }
 }
 
 .dashboardContent {
@@ -29,10 +59,17 @@
   border: 1px solid #666;
 }
 
-.salesData, .eventStream {
-  padding: 0 1rem;
-  border: 1px solid #666;
+.salesData, .eventStream, .timeSelector {
+  padding: 1rem;
+  background-color: #fff;
+  border: 1px solid #fff;
   border-radius: 4px;
+}
+
+.sectionTitle {
+  font-size: large;
+  font-weight: bold;
+  margin-bottom: 1rem;
 }
 
 .eventStream {
@@ -40,13 +77,14 @@
   flex-direction: column;
   flex: 1 1 30%;
   margin-left: 1rem;
-  padding: 1rem;
 
   .eventCard {
     display: flex;
     flex-direction: column;
-    border: 1px solid #666;
+    border: 1px solid #d7d7d7;
+    border-radius: 4px;
     padding: 0.5rem;
+    background-color: #fdfdfd;
 
     &:not(:nth-child(2)) {
       margin-top: 1rem;
