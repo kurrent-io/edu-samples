@@ -5,8 +5,8 @@ import {
   SalesReadModel,
   SalesReport,
 } from "./SalesDataReadModel"
-import { useEffect, useState } from "react"
-import _ from "lodash"
+import { useEffect, useMemo, useState } from "react"
+import _, { first } from "lodash"
 
 const READ_MODEL_ENDPOINT = "/api/sales-data"
 
@@ -34,9 +34,13 @@ const SalesDashboard = () => {
   return (
     <div className={styles.pageRoot}>
       <Header />
-      {!!selectedReport && (
+      {!!selectedReport && !!salesData && (
         <>
-          <TimeSlider />
+          <TimeSelector
+            salesData={salesData}
+            selectedReport={selectedReport}
+            setSelectedReport={setSelectedReport}
+          />
           <DashboardContent salesReport={selectedReport} />
         </>
       )}
@@ -46,11 +50,84 @@ const SalesDashboard = () => {
 
 const Header = () => (
   <div className={styles.header}>
-    <h3>E-Commerce Sales Report</h3>
+    <span className={styles.headerTitle}>E-Commerce Sales Report</span>
   </div>
 )
 
-const TimeSlider = () => <></>
+interface TimeSelectorProps {
+  salesData: SalesReadModel
+  selectedReport: SalesReport | null
+  setSelectedReport: (report: SalesReport | null) => void
+}
+
+const TimeSelector = ({
+  salesData,
+  selectedReport,
+  setSelectedReport,
+}: TimeSelectorProps) => (
+  <div className={styles.timeSelector}>
+    <ReportSelector
+      salesData={salesData}
+      selectedReport={selectedReport}
+      setSelectedReport={setSelectedReport}
+    />
+    {selectedReport && <TimeSlider selectedReport={selectedReport} />}
+  </div>
+)
+
+interface TimeSliderProps {
+  selectedReport: SalesReport
+}
+
+const lastDayOfMonth = (date: Date) => {
+  return new Date(date.getFullYear(), date.getMonth() + 1, 0)
+}
+
+const dateToString = (date: Date) => date.toLocaleDateString("en-CA")
+
+const TimeSlider = ({ selectedReport }: TimeSliderProps) => {
+  const firstDate = new Date(selectedReport.reportDate)
+  const lastDate = lastDayOfMonth(firstDate)
+
+  return (
+    <div className={styles.timeSliderContainer}>
+      <span className={styles.timeSliderLabel}>{dateToString(firstDate)}</span>
+      <input type="range" min={0} max={lastDate.getDay()} step={1} />
+      <span className={styles.timeSliderLabel}>{dateToString(lastDate)}</span>
+    </div>
+  )
+}
+
+interface ReportSelectorProps {
+  salesData: SalesReadModel
+  selectedReport: SalesReport | null
+  setSelectedReport: (report: SalesReport | null) => void
+}
+
+const ReportSelector = ({
+  salesData,
+  selectedReport,
+  setSelectedReport,
+}: ReportSelectorProps) => (
+  <div className={styles.reportSelector}>
+    <label className={styles.reportSelectorLabel} htmlFor="report-selector">
+      Select a report:{" "}
+    </label>
+    <select
+      name="report-selector"
+      id="report-selector"
+      onChange={(e) => {
+        setSelectedReport(salesData[e.target.value as any])
+      }}
+    >
+      {salesData.map((report, i) => (
+        <option key={i} value={i}>
+          {report.reportDate}
+        </option>
+      ))}
+    </select>
+  </div>
+)
 
 const DashboardContent = ({ salesReport }: { salesReport: SalesReport }) => (
   <div className={styles.dashboardContent}>
@@ -61,7 +138,7 @@ const DashboardContent = ({ salesReport }: { salesReport: SalesReport }) => (
 
 const SalesDataDashboard = ({ salesReport }: { salesReport: SalesReport }) => (
   <div className={styles.salesData}>
-    <h4>Sales Data</h4>
+    <span className={styles.sectionTitle}>Sales Data</span>
     <SalesTable salesReport={salesReport} />
   </div>
 )
@@ -81,15 +158,19 @@ const SalesTable = ({ salesReport }: { salesReport: SalesReport }) => {
       </thead>
       <tbody>
         {salesReport.salesData.map((salesEntry) => (
-          <SalesCategory salesEntry={salesEntry} />
+          <SalesCategory salesDataEntry={salesEntry} />
         ))}
       </tbody>
     </table>
   )
 }
 
-const SalesCategory = ({ salesEntry }: { salesEntry: SalesDataEntry }) => {
-  const { category, ...regionalReports } = salesEntry
+const SalesCategory = ({
+  salesDataEntry,
+}: {
+  salesDataEntry: SalesDataEntry
+}) => {
+  const { category, ...regionalReports } = salesDataEntry
   const regionPairs = Object.entries(regionalReports)
 
   return regionPairs.map(([region, regionalSalesData], i) => (
@@ -109,7 +190,7 @@ const SalesCategory = ({ salesEntry }: { salesEntry: SalesDataEntry }) => {
 
 const EventStream = ({ events }: { events: SalesEvent[] }) => (
   <div className={styles.eventStream}>
-    <h4>Event Stream</h4>
+    <span className={styles.sectionTitle}>Event Stream</span>
     {events.map((event) => (
       <EventCard key={event.eventId} event={event} />
     ))}
@@ -132,7 +213,9 @@ const EventCard = ({ event }: { event: SalesEvent }) => {
   return (
     <div className={styles.eventCard}>
       <span className={styles.eventType}>{event.eventType}</span>
-      <span className={styles.eventTimestamp}>{event.timestamp}</span>
+      <span className={styles.eventTimestamp}>
+        {new Date(event.timestamp).toLocaleString()}
+      </span>
       {eventDataPairs.map(([key, value]) => (
         <span className={styles.eventField}>
           {_.startCase(key)}: {value}
