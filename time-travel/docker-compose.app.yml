@@ -1,0 +1,10 @@
+services:
+  demoweb:
+    build:
+      context: ./DemoWeb
+    ports:
+      - 3000:3000
+    volumes:
+      - ./data.json:/workspace/DemoWeb/data.json
+    environment:
+      - SALES_DATA_FILEPATH=/workspace/DemoWeb/data.json
