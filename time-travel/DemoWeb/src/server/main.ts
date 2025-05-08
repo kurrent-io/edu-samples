@@ -7,10 +7,6 @@ const SALES_DATA_FILEPATH =
 
 const app = express()
 
-app.get("/hello", (_, res) => {
-  res.send("Hello Vite + React + TypeScript!")
-})
-
 app.get("/api/sales-data", (_, res) => {
   const salesData = JSON.parse(readFileSync(SALES_DATA_FILEPATH, "utf8"))
   res.send(JSON.stringify({ salesData }))

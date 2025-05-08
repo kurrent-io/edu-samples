@@ -9,7 +9,7 @@ export interface SalesReport {
 export interface RegionalSalesData {
   dailySales: number
   targetSales: number
-  totalSales: number
+  totalMonthlySales: number
   targetHitRate: number
 }
 
