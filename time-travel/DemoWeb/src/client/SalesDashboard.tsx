@@ -170,10 +170,37 @@ const SalesCategory = ({ salesDataEntry }: SalesCategoryProps) => {
         <td>{region}</td>
         <td>{dailySales}</td>
         <td>{targetSales}</td>
-        <td>{totalMonthlySales}</td>
+        <td>
+          <SalesProgressBar
+            totalMonthlySales={totalMonthlySales}
+            targetSales={targetSales}
+          />
+        </td>
       </tr>
     )
   })
+}
+
+interface SalesProgressBarProps {
+  totalMonthlySales: number
+  targetSales: number
+}
+
+const SalesProgressBar = ({
+  totalMonthlySales,
+  targetSales,
+}: SalesProgressBarProps) => {
+  const percentage = (totalMonthlySales / targetSales) * 100
+  const innerClassName =
+    percentage >= 100 ? styles.progressBarSuccess : styles.progressBarFailure
+
+  return (
+    <div className={styles.salesProgressBar}>
+      <div className={innerClassName} style={{ width: `${percentage}%` }}>
+        ${totalMonthlySales} ({percentage.toFixed(2)}%)
+      </div>
+    </div>
+  )
 }
 
 const EventStream = ({ events }: { events: SalesEvent[] }) => (
