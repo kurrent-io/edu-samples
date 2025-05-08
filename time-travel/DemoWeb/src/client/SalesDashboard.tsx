@@ -62,9 +62,15 @@ interface TimeSelectorProps {
 
 const TimeSliderSection = ({
   salesData,
+  selectedReport,
   setSelectedReport,
 }: TimeSelectorProps) => (
   <div className={styles.timeSliderSection}>
+    {selectedReport && (
+      <span className={styles.timeSliderSectionHeader}>
+        Viewing sales report from {selectedReport.reportDate}
+      </span>
+    )}
     <TimeSlider salesData={salesData} setSelectedReport={setSelectedReport} />
   </div>
 )
@@ -157,9 +163,9 @@ const SalesCategory = ({ salesDataEntry }: SalesCategoryProps) => {
     return (
       <tr key={region}>
         {i === 0 && (
-          <th scope="row" rowSpan={regionPairs.length}>
+          <td scope="row" rowSpan={regionPairs.length}>
             {category}
-          </th>
+          </td>
         )}
         <td>{region}</td>
         <td>{dailySales}</td>
