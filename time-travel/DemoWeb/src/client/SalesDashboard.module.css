@@ -87,6 +87,32 @@
       td {
         border: 1px solid #dddddd;
       }
+
+      .salesProgressBar {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        color: #fff;
+        background-color: #dddddd;
+        height: 1.5rem;
+        width: 80%;
+        border-radius: 2px;
+        font-weight: lighter;
+        margin: 0 auto;
+
+        .progressBarSuccess, .progressBarFailure {
+          height: 100%;
+          border-radius: 2px;
+        }
+
+        .progressBarSuccess {
+          background-color: #28a745;
+        }
+
+        .progressBarFailure {
+          background-color: #d34d5c;
+        }
+      }
     }
   }
 
