@@ -1,101 +1,137 @@
 .pageRoot {
   display: flex;
   flex-direction: column;
-}
 
-.header {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-
-  .headerTitle {
-    font-size: 1.5rem;
-    font-weight: bold;
-
-  }
-}
-
-.timeSliderSection {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1rem;
-
-  .timeSliderContainer {
+  .header {
     display: flex;
-    justify-content: center;
     align-items: center;
+    padding: 1rem;
+    color: var(--text-color-highlight);
+    background-color: var(--color-highlight);
 
-    .timeSliderLabel {
-      font-size: 0.8rem;
-      margin: 0 1rem;
-    }
-  }
-
-  .reportSelector {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 1rem;
-
-    label {
-      margin-right: 0.5rem;
-    }
-  }
-}
-
-.dashboardContent {
-  display: flex;
-  flex-direction: row;
-}
-
-.salesData {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 70%;
-}
-
-.salesTable {
-  border: 1px solid #666;
-}
-
-.salesData, .eventStream, .timeSelector {
-  padding: 1rem;
-  background-color: #fff;
-  border: 1px solid #fff;
-  border-radius: 4px;
-}
-
-.sectionTitle {
-  font-size: large;
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
-
-.eventStream {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 30%;
-  margin-left: 1rem;
-
-  .eventCard {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #d7d7d7;
-    border-radius: 4px;
-    padding: 0.5rem;
-    background-color: #fdfdfd;
-
-    &:not(:nth-child(2)) {
-      margin-top: 1rem;
-    }
-
-    .eventType {
+    .headerTitle {
+      font-size: 1.5rem;
       font-weight: bold;
     }
+  }
 
-    .eventTimestamp {
-      font-size: 0.8rem;
+  .timeSliderSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+    background-color: var(--background-color-highlight-faded);
+    padding: 1rem 0;
+
+    .timeSliderSectionHeader {
+      font-size: 1rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .timeSliderContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .timeSliderLabel {
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin: 0 1rem;
+        color: var(--color-highlight);
+      }
+    }
+
+    .reportSelector {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1rem;
+
+      label {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+
+  .dashboardContent {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .salesData {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 70%;
+    margin-left: 1rem;
+
+    .salesTable {
+      border-spacing: 0;
+      border: 1px solid #dddddd;
+
+      th {
+        background-color: var(--color-highlight);
+        color: var(--text-color-highlight);
+      }
+
+      td, th {
+        text-align: center;
+        padding: 0.5rem;
+        margin: 0;
+      }
+
+      th {
+        border: 1px solid var(--color-highlight-dark);
+      }
+
+      td {
+        border: 1px solid #dddddd;
+      }
+    }
+  }
+
+  .salesData, .eventStream {
+    padding: 1rem;
+    background-color: #fff;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .sectionTitle {
+    font-size: large;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  .eventStream {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 30%;
+    margin-left: 1rem;
+    margin-right: 1rem;
+
+    .eventCard {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #d7d7d7;
+      border-radius: 4px;
+      padding: 0.5rem;
+      background-color: var(--background-color-grey);
+
+      &:not(:nth-child(2)) {
+        margin-top: 1rem;
+      }
+
+      .eventType {
+        font-weight: bold;
+        margin-bottom: 0.25rem;
+      }
+
+      .eventTimestamp {
+        color: #666;
+        font-size: 0.8rem;
+      }
     }
   }
 }
