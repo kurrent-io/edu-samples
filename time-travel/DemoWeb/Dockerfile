@@ -1,4 +1,10 @@
-FROM ubuntu:latest
-LABEL authors="ronankumar"
+FROM node:22
 
-ENTRYPOINT ["top", "-b"]
+COPY . /workspace/DemoWeb
+
+WORKDIR ./workspace/DemoWeb
+
+RUN npm i
+RUN npm run build
+
+CMD ["npm", "run", "start"]
