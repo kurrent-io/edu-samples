@@ -92,6 +92,7 @@ const TimeSlider = ({ setSelectedReport, salesData }: TimeSliderProps) => {
         min={0}
         max={salesData.length - 1}
         step={1}
+        defaultValue={0}
         onChange={(e) => setSelectedReport(salesData[e.target.value as any])}
       />
       <span className={styles.timeSliderLabel}>{lastReportDate}</span>
