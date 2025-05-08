@@ -2,8 +2,7 @@ import express from "express"
 import ViteExpress from "vite-express"
 import { readFileSync } from "fs"
 
-const SALES_DATA_FILEPATH =
-  process.env["SALES_DATA_FILEPATH"] || "/opt/sales-dashboard/sales-data.json"
+const SALES_DATA_FILEPATH = process.env["SALES_DATA_FILEPATH"] || "data.json"
 
 const app = express()
 
