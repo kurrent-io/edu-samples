@@ -168,8 +168,8 @@ const SalesCategory = ({ salesDataEntry }: SalesCategoryProps) => {
           </td>
         )}
         <td>{region}</td>
-        <td>{dailySales}</td>
-        <td>{targetSales}</td>
+        <td>${dailySales}</td>
+        <td>${targetSales}</td>
         <td>
           <SalesProgressBar
             totalMonthlySales={totalMonthlySales}
