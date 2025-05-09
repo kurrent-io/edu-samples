@@ -91,8 +91,8 @@ await foreach (var message in subscription.Messages)                            
         // Warning: This is just one example of a transient error check; //
         //          You should to add more checks based on your needs    //
         // ------------------------------------------------------------- //
-        var exceptionIsTransient =                                              // Exception is transient if it mateches one of the following patterns:
-            ex is SocketException { SocketErrorCode: SocketError.TryAgain } ||  // Socket error indicating the name of the host could not be resolved (https://learn.microsoft.com/en-us/dotnet/api/system.net.sockets.socketerror?view=net-9.0)
+        var exceptionIsTransient =                                              // Exception is transient if it matches one of the following patterns:
+            ex is SocketException ||                                            // SocketException indicating a network error (https://learn.microsoft.com/en-us/dotnet/api/system.net.sockets.socketexception?view=dotnet-plat-ext-7.0)    
             ex is NpgsqlException { IsTransient: true };                        // Postgres exception indicating the error is transient (https://www.npgsql.org/doc/api/Npgsql.NpgsqlException.html#Npgsql_NpgsqlException_IsTransient)
 
         if (exceptionIsTransient)                                               // If exception is transient..
