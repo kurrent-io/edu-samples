@@ -1,5 +1,6 @@
 import styles from "./SalesDashboard.module.css"
 import {
+  SalesRegion,
   SalesDataEntry,
   SalesEvent,
   SalesReadModel,
@@ -12,7 +13,17 @@ const READ_MODEL_ENDPOINT = "/api/sales-data"
 
 const SalesDashboard = () => {
   const [salesData, setSalesData] = useState<SalesReadModel>([])
-  const [selectedReport, setSelectedReport] = useState<SalesReport | null>(null)
+  const [selectedReportIndex, setSelectedReportIndex] = useState<number | null>(
+    null,
+  )
+
+  const previousReport =
+    selectedReportIndex !== null && selectedReportIndex > 0
+      ? salesData[selectedReportIndex - 1]
+      : null
+
+  const selectedReport =
+    selectedReportIndex !== null ? salesData[selectedReportIndex] : null
 
   useEffect(() => {
     fetch(READ_MODEL_ENDPOINT, {
@@ -24,7 +35,7 @@ const SalesDashboard = () => {
       .then((response) => response.json())
       .then((data) => {
         setSalesData(data.salesData)
-        setSelectedReport(data.salesData[0])
+        setSelectedReportIndex(0)
       })
       .catch((error) =>
         console.error("Error fetching sales data from the server", error),
@@ -39,9 +50,12 @@ const SalesDashboard = () => {
           <TimeSliderSection
             salesData={salesData}
             selectedReport={selectedReport}
-            setSelectedReport={setSelectedReport}
+            setSelectedReportIndex={setSelectedReportIndex}
           />
-          <DashboardContent salesReport={selectedReport} />
+          <DashboardContent
+            previousReport={previousReport}
+            salesReport={selectedReport}
+          />
         </>
       )}
     </div>
@@ -57,13 +71,13 @@ const Header = () => (
 interface TimeSelectorProps {
   salesData: SalesReadModel
   selectedReport: SalesReport | null
-  setSelectedReport: (report: SalesReport | null) => void
+  setSelectedReportIndex: (index: number | null) => void
 }
 
 const TimeSliderSection = ({
   salesData,
   selectedReport,
-  setSelectedReport,
+  setSelectedReportIndex,
 }: TimeSelectorProps) => (
   <div className={styles.timeSliderSection}>
     {selectedReport && (
@@ -71,16 +85,19 @@ const TimeSliderSection = ({
         Viewing sales report from {selectedReport.reportDate}
       </span>
     )}
-    <TimeSlider salesData={salesData} setSelectedReport={setSelectedReport} />
+    <TimeSlider
+      salesData={salesData}
+      setSelectedReportIndex={setSelectedReportIndex}
+    />
   </div>
 )
 
 interface TimeSliderProps {
   salesData: SalesReadModel
-  setSelectedReport: (report: SalesReport | null) => void
+  setSelectedReportIndex: (index: number | null) => void
 }
 
-const TimeSlider = ({ setSelectedReport, salesData }: TimeSliderProps) => {
+const TimeSlider = ({ setSelectedReportIndex, salesData }: TimeSliderProps) => {
   const firstReportDate = salesData[0].reportDate
   const lastReportDate = salesData[salesData.length - 1].reportDate
 
@@ -93,7 +110,9 @@ const TimeSlider = ({ setSelectedReport, salesData }: TimeSliderProps) => {
         max={salesData.length - 1}
         step={1}
         defaultValue={0}
-        onChange={(e) => setSelectedReport(salesData[e.target.value as any])}
+        onChange={(e) =>
+          setSelectedReportIndex(Number.parseInt(e.target.value))
+        }
       />
       <span className={styles.timeSliderLabel}>{lastReportDate}</span>
     </div>
@@ -102,31 +121,47 @@ const TimeSlider = ({ setSelectedReport, salesData }: TimeSliderProps) => {
 
 interface DashboardContentProps {
   salesReport: SalesReport
+  previousReport: SalesReport | null
 }
 
-const DashboardContent = ({ salesReport }: DashboardContentProps) => (
+const DashboardContent = ({
+  salesReport,
+  previousReport,
+}: DashboardContentProps) => (
   <div className={styles.dashboardContent}>
-    <SalesDataDashboard salesReport={salesReport} />
+    <SalesDataDashboard
+      salesReport={salesReport}
+      previousReport={previousReport}
+    />
     <EventStream events={salesReport.events || []} />
   </div>
 )
 
 interface SalesDataDashboardProps {
   salesReport: SalesReport
+  previousReport: SalesReport | null
 }
 
-const SalesDataDashboard = ({ salesReport }: SalesDataDashboardProps) => (
+const SalesDataDashboard = ({
+  salesReport,
+  previousReport,
+}: SalesDataDashboardProps) => (
   <div className={styles.salesData}>
     <span className={styles.sectionTitle}>Sales Data</span>
-    <SalesTable salesReport={salesReport} />
+    <SalesTable salesReport={salesReport} previousReport={previousReport} />
   </div>
 )
 
 interface SalesTableProps {
   salesReport: SalesReport
+  previousReport: SalesReport | null
 }
 
-const SalesTable = ({ salesReport }: SalesTableProps) => {
+const SalesTable = ({ salesReport, previousReport }: SalesTableProps) => {
+  const previousReportDataByCategory = previousReport
+    ? _.keyBy(previousReport.salesData, (e) => e.category)
+    : {}
+
   return (
     <table className={styles.salesTable}>
       <thead>
@@ -143,6 +178,7 @@ const SalesTable = ({ salesReport }: SalesTableProps) => {
           <SalesCategory
             key={salesEntry.category}
             salesDataEntry={salesEntry}
+            previousEntry={previousReportDataByCategory[salesEntry.category]}
           />
         ))}
       </tbody>
@@ -152,14 +188,33 @@ const SalesTable = ({ salesReport }: SalesTableProps) => {
 
 interface SalesCategoryProps {
   salesDataEntry: SalesDataEntry
+  previousEntry?: SalesDataEntry
 }
 
-const SalesCategory = ({ salesDataEntry }: SalesCategoryProps) => {
+const SalesCategory = ({
+  salesDataEntry,
+  previousEntry,
+}: SalesCategoryProps) => {
   const { category, ...regionalReports } = salesDataEntry
   const regionPairs = Object.entries(regionalReports)
 
   return regionPairs.map(([region, regionalSalesData], i) => {
     const { dailySales, targetSales, totalMonthlySales } = regionalSalesData
+    const previousRegionalSales = previousEntry?.[region as SalesRegion]
+
+    const salesIncreased =
+      previousRegionalSales && dailySales > previousRegionalSales.dailySales
+
+    const salesDecreased =
+      previousRegionalSales && dailySales < previousRegionalSales.dailySales
+
+    const arrow = salesIncreased ? "↑" : salesDecreased ? "↓" : ""
+
+    const arrowClassName = salesIncreased
+      ? styles.arrowSalesIncreased
+      : salesDecreased
+        ? styles.arrowSalesDecreased
+        : undefined
 
     return (
       <tr key={region}>
@@ -169,7 +224,10 @@ const SalesCategory = ({ salesDataEntry }: SalesCategoryProps) => {
           </td>
         )}
         <td>{region}</td>
-        <td>${dailySales}</td>
+        <td>
+          <span>${dailySales}</span>
+          <span className={arrowClassName}>{arrow}</span>
+        </td>
         <td>${targetSales}</td>
         <td>
           <SalesProgressBar
