@@ -23,9 +23,9 @@ find "$root_path/tools/" -type f -name "edb-commerce*" -exec chmod +x {} \;
 # Ensure all scripts in the /scripts directory have executable permission
 chmod +x "$root_path/scripts"/*.sh
 
-"$root_path/scripts/start-kurrentdb.sh" # Start the database containers
-"$root_path/scripts/start-postgres.sh" # Start the database containers
-"$root_path/scripts/start-app.sh" # Start the application containers
+"$root_path/scripts/start-kurrentdb.sh" # Start the kurrentdb containers to cache the images
+"$root_path/scripts/start-postgres.sh" # Start the postgres containers to cache the images
+"$root_path/scripts/start-app.sh" # Start the application containers to cache the images
 
-
+docker compose --profile db -f "$root_path/docker-compose.yml" down # to make sure app logs are cleared
 docker compose --profile app -f "$root_path/docker-compose.yml" down # to make sure app logs are cleared
