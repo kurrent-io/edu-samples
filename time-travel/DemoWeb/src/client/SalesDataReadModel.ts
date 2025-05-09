@@ -26,10 +26,15 @@ export interface SalesEvent {
   quantity?: number
 }
 
-export interface SalesDataEntry {
+export enum SalesRegion {
+  Asia = "Asia",
+  Europe = "Europe",
+  "North America" = "North America",
+  "Middle East" = "Middle East",
+}
+
+export type SalesDataEntry = {
+  [region in SalesRegion]: RegionalSalesData
+} & {
   category: string
-  Asia: RegionalSalesData
-  Europe: RegionalSalesData
-  "North America": RegionalSalesData
-  "Middle East": RegionalSalesData
 }

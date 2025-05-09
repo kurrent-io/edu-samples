@@ -1,6 +1,7 @@
 .pageRoot {
   display: flex;
   flex-direction: column;
+  padding-bottom: 1rem;
 
   .header {
     display: flex;
@@ -68,6 +69,19 @@
     .salesTable {
       border-spacing: 0;
       border: 1px solid #dddddd;
+
+      .arrowSalesIncreased, .arrowSalesDecreased {
+        margin-left: 0.25rem;
+        font-weight: bold;
+      }
+
+      .arrowSalesIncreased {
+        color: #28a745;
+      }
+
+      .arrowSalesDecreased {
+        color: #d34d5c;
+      }
 
       th {
         background-color: var(--color-highlight);
