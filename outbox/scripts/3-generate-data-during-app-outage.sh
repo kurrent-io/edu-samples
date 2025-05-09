@@ -15,5 +15,3 @@ if [ ! -d "$root_path/data" ]; then
 fi
 
 "$root_path/scripts/seed-data.sh" "$root_path/data/data-two-orders-3.json" # Seed the data using the seed-data.sh script with the provided JSON file
-
-"$root_path/scripts/get-kurrentdb-ui-url.sh" # Write the KurrentDB URL
