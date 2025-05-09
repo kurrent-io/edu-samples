@@ -41,6 +41,10 @@
         margin: 0 1rem;
         color: var(--color-highlight);
       }
+
+      .timeSliderInput {
+        min-width: 400px;
+      }
     }
 
     .reportSelector {

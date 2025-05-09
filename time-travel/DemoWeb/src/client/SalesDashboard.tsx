@@ -105,6 +105,7 @@ const TimeSlider = ({ setSelectedReportIndex, salesData }: TimeSliderProps) => {
     <div className={styles.timeSliderContainer}>
       <span className={styles.timeSliderLabel}>{firstReportDate}</span>
       <input
+        className={styles.timeSliderInput}
         type="range"
         min={0}
         max={salesData.length - 1}
