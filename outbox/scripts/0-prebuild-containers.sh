@@ -26,3 +26,6 @@ chmod +x "$root_path/scripts"/*.sh
 "$root_path/scripts/start-kurrentdb.sh" # Start the database containers
 "$root_path/scripts/start-postgres.sh" # Start the database containers
 "$root_path/scripts/start-app.sh" # Start the application containers
+
+
+docker compose --profile app -f "$root_path/docker-compose.yml" down # to make sure app logs are cleared
