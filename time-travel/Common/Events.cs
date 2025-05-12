@@ -5,15 +5,24 @@ public record OrderPlaced
     public string? orderId { get; set; }
     public string? customerId { get; set; }
     public string? checkoutOfCart { get; set; }
+    public Store? store { get; set; }
     public List<LineItem>? lineItems { get; set; }
     public ShippingInfo? shipping { get; set; }
     public BillingInfo? billing { get; set; }
     public DateTimeOffset? at { get; set; }
 
+    public record Store
+    {
+        public string? url { get; set; }
+        public string? countryCode { get; set; }
+        public string? geographicRegion { get; set; }
+    }
+
     public record LineItem
     {
         public string? productId { get; set; }
         public string? productName { get; set; }
+        public string? category { get; set; }
         public int? quantity { get; set; }
         public string? currency { get; set; }
         public decimal? pricePerUnit { get; set; }
