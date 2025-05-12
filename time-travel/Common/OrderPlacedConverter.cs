@@ -40,6 +40,9 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
                 case "lineItems":
                     result.lineItems = ReadLineItems(ref reader);
                     break;
+                case "store":
+                    result.store = ReadStore(ref reader);
+                    break;
                 case "shipping":
                     result.shipping = ReadShippingInfo(ref reader);
                     break;
@@ -88,6 +91,9 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
                     case "productName":
                         lineItem.productName = reader.GetString() ?? throw new JsonException("productName cannot be null");
                         break;
+                    case "category":
+                        lineItem.category = reader.GetString();
+                        break;
                     case "quantity":
                         lineItem.quantity = reader.GetInt32();
                         break;
@@ -119,6 +125,41 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
         }
 
         return lineItems;
+    }
+
+    private OrderPlaced.Store ReadStore(ref Utf8JsonReader reader)
+    {
+        if (reader.TokenType != JsonTokenType.StartObject)
+            throw new JsonException("Expected start of object for store");
+
+        var store = new OrderPlaced.Store();
+
+        while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
+        {
+            if (reader.TokenType != JsonTokenType.PropertyName)
+                throw new JsonException("Expected property name in store");
+
+            var propertyName = reader.GetString();
+            reader.Read();
+
+            switch (propertyName)
+            {
+                case "url":
+                    store.url = reader.GetString() ?? throw new JsonException("store url cannot be null");
+                    break;
+                case "countryCode":
+                    store.countryCode = reader.GetString() ?? throw new JsonException("store countryCode cannot be null");
+                    break;
+                case "geographicRegion":
+                    store.geographicRegion = reader.GetString() ?? throw new JsonException("store geographicRegion cannot be null");
+                    break;
+                default:
+                    reader.Skip();
+                    break;
+            }
+        }
+
+        return store;
     }
 
     private OrderPlaced.ShippingInfo ReadShippingInfo(ref Utf8JsonReader reader)
@@ -296,6 +337,7 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
             writer.WriteStartObject();
             writer.WriteString("productId", item.productId);
             writer.WriteString("productName", item.productName);
+            writer.WriteString("category", item.category);
             writer.WriteNumber("quantity", item.quantity!.Value);
             
             // Combine currency and price for serialization
@@ -313,11 +355,24 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
         }
         writer.WriteEndArray();
 
+        WriteStore(writer, value.store!);
         WriteShippingInfo(writer, value.shipping!);
         WriteBillingInfo(writer, value.billing!);
 
         writer.WriteString("at", value.at!.Value);
 
+        writer.WriteEndObject();
+    }
+
+    private void WriteStore(Utf8JsonWriter writer, OrderPlaced.Store store)
+    {
+        writer.WritePropertyName("store");
+        writer.WriteStartObject();
+        
+        writer.WriteString("url", store.url);
+        writer.WriteString("countryCode", store.countryCode);
+        writer.WriteString("geographicRegion", store.geographicRegion);
+        
         writer.WriteEndObject();
     }
 
