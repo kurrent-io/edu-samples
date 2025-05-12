@@ -1,0 +1,33 @@
+services:
+  kurrentdb:
+    image: kurrentplatform/kurrentdb:25.0
+    container_name: kurrentdb
+    ports:
+      - "2113:2113"
+      - "1113:1113"
+    environment:
+      - KURRENTDB_RUN_PROJECTIONS=All
+      - KURRENTDB_START_STANDARD_PROJECTIONS=true
+      - KURRENTDB_INSECURE=true
+      - KURRENTDB_ENABLE_ATOM_PUB_OVER_HTTP=true
+    profiles: ["db"]
+  demoweb:
+    build:
+      context: ./DemoWeb
+    ports:
+      - 3000:3000
+    volumes:
+      - ./data.json:/workspace/DemoWeb/data.json
+    environment:
+      - SALES_DATA_FILEPATH=/workspace/DemoWeb/data.json
+    profiles: ["app"]
+  reportprojection:
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    container_name: reportprojection
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: ["dotnet", "run", "--project", "./ReportProjection"]
+    environment:
+      - KURRENTDB_HOST=kurrentdb
+    profiles: ["app"]
