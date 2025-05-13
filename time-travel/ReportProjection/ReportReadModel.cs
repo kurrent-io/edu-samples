@@ -2,36 +2,35 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
+using Region = string;
+using Category = string;
+using ReportDate = string;
+
 namespace ReportProjection
 {
+    // Root type for deserialization
+    public record ReportReadModel
+    {
+        [JsonPropertyName("checkpoint")]
+        public long Checkpoint { get; set; }
+
+        [JsonPropertyName("salesReports")]
+        public Dictionary<ReportDate, SalesReport> SalesReports { get; init; } = new();
+    }
+    
     public record SalesReport
     {
-        [JsonPropertyName("reportDate")]
-        public string ReportDate { get; init; }
-
-        [JsonPropertyName("salesData")]
-        public List<CategorySalesData> SalesData { get; init; }
+        [JsonPropertyName("categorySalesReports")]
+        public Dictionary<Category, CategorySalesReport> CategorySalesReports { get; init; } = new();
     }
-
-    public record CategorySalesData
+    
+    public record CategorySalesReport
     {
-        [JsonPropertyName("category")]
-        public string Category { get; init; }
-
-        [JsonPropertyName("Asia")]
-        public RegionSalesData Asia { get; init; }
-
-        [JsonPropertyName("Europe")]
-        public RegionSalesData Europe { get; init; }
-
-        [JsonPropertyName("North America")]
-        public RegionSalesData NorthAmerica { get; init; }
-
-        [JsonPropertyName("Middle East")]
-        public RegionSalesData MiddleEast { get; init; }
-    }
-
-    public record RegionSalesData
+        [JsonPropertyName("regionSalesReports")]
+        public Dictionary<Region, RegionSalesReport> RegionSalesReports { get; init; } = new();
+   }
+    
+    public record RegionSalesReport
     {
         [JsonPropertyName("dailySales")]
         public decimal DailySales { get; init; }
@@ -45,7 +44,4 @@ namespace ReportProjection
         [JsonPropertyName("targetHitRate")]
         public decimal TargetHitRate { get; init; }
     }
-
-    // Root list type for deserialization
-    public class ReportReadModel : List<SalesReport> { }
 }
