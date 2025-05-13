@@ -1,1 +1,1 @@
-# developer-bootcamp
+# edu-samples
