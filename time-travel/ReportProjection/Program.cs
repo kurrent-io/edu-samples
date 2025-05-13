@@ -79,24 +79,24 @@ await foreach (var message in subscription.Messages)                            
             is not OrderPlaced orderPlaced)                                                     // Skip this message if it is not an OrderPlaced event
             continue;
 
-    var orderDate = orderPlaced.at!.Value.Date.ToString("yyyy-MM-dd");
+    var orderDate = orderPlaced.at!.Value.Date.ToString("yyyy-MM-dd");                   // Get the date part of the "at" timestamp in the OrderPlaced event
 
-    var region = orderPlaced.store!.geographicRegion!;
+    var region = orderPlaced.store!.geographicRegion!;                                    // Get the region from the OrderPlaced event
     
     foreach (var lineItem in orderPlaced.lineItems!)
     {
         var category = lineItem.category!;
         
-        var salesReport = readModel.SalesReports.GetValueOrDefault(orderDate, new SalesReport());
-        var categorySalesData = salesReport.CategorySalesReports.GetValueOrDefault(category, new CategorySalesReport());
-        var regionSalesData = categorySalesData.RegionSalesReports.GetValueOrDefault(region, new RegionSalesReport());
+        var salesReport = readModel.SalesReports.GetValueOrDefault(orderDate, new SalesReport());                           // Get the sales report for the order date
+        var categorySalesData = salesReport.CategorySalesReports.GetValueOrDefault(category, new CategorySalesReport());    // Get the report for the category within the daily sales report
+        var regionSalesData = categorySalesData.RegionSalesReports.GetValueOrDefault(region, new RegionSalesReport());      // Get the report for the region within the category sales report
 
         var newSalesData = regionSalesData with
         {
-            DailySales = regionSalesData.DailySales + lineItem.pricePerUnit!.Value * lineItem.quantity!.Value,
+            DailySales = regionSalesData.DailySales + lineItem.pricePerUnit!.Value * lineItem.quantity!.Value,              // Add the revenue (price * quantity) to the daily sales total in the report
         };
         
-        categorySalesData.RegionSalesReports[region] = newSalesData;
+        categorySalesData.RegionSalesReports[region] = newSalesData;                                                        // Update the read model object with the new 
         salesReport.CategorySalesReports[category] = categorySalesData;
         readModel.SalesReports[orderDate] = salesReport;
     }
