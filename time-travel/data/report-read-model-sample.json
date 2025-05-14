@@ -1,285 +1,125 @@
 {
-	"checkpoint": 7,
-	"reports": [
-		{
-			"reportDate": "2024-01-01",
-			"salesData": [
-				{
-					"category": "Electronics",
-					"Asia": {
-						"dailySales": 54000,
-						"targetSales": 1000000,
-						"totalMonthlySales": 1080000,
-						"targetHitRate": 108.00
-					},
-					"Europe": {
-						"dailySales": 70000,
-						"targetSales": 1500000,
-						"totalMonthlySales": 1400000,
-						"targetHitRate": 93.33
-					},
-					"North America": {
-						"dailySales": 102500,
-						"targetSales": 2000000,
-						"totalMonthlySales": 2050000,
-						"targetHitRate": 102.50
-					},
-					"Middle East": {
-						"dailySales": 38000,
-						"targetSales": 800000,
-						"totalMonthlySales": 760000,
-						"targetHitRate": 95.00
-					}
-				},
-				{
-					"category": "Clothing",
-					"Asia": {
-						"dailySales": 41000,
-						"targetSales": 800000,
-						"totalMonthlySales": 820000,
-						"targetHitRate": 102.50
-					},
-					"Europe": {
-						"dailySales": 62500,
-						"targetSales": 1200000,
-						"totalMonthlySales": 1250000,
-						"targetHitRate": 104.17
-					},
-					"North America": {
-						"dailySales": 74000,
-						"targetSales": 1500000,
-						"totalMonthlySales": 1480000,
-						"targetHitRate": 98.67
-					},
-					"Middle East": {
-						"dailySales": 31000,
-						"targetSales": 600000,
-						"totalMonthlySales": 620000,
-						"targetHitRate": 103.33
-					}
-				},
-				{
-					"category": "Home Goods",
-					"Asia": {
-						"dailySales": 28500,
-						"targetSales": 600000,
-						"totalMonthlySales": 570000,
-						"targetHitRate": 95.00
-					},
-					"Europe": {
-						"dailySales": 44000,
-						"targetSales": 900000,
-						"totalMonthlySales": 880000,
-						"targetHitRate": 97.78
-					},
-					"North America": {
-						"dailySales": 52500,
-						"targetSales": 1100000,
-						"totalMonthlySales": 1050000,
-						"targetHitRate": 95.45
-					},
-					"Middle East": {
-						"dailySales": 21500,
-						"targetSales": 450000,
-						"totalMonthlySales": 430000,
-						"targetHitRate": 95.56
-					}
-				},
-				{
-					"category": "Beauty",
-					"Asia": {
-						"dailySales": 21000,
-						"targetSales": 400000,
-						"totalMonthlySales": 420000,
-						"targetHitRate": 105.00
-					},
-					"Europe": {
-						"dailySales": 34000,
-						"targetSales": 700000,
-						"totalMonthlySales": 680000,
-						"targetHitRate": 97.14
-					},
-					"North America": {
-						"dailySales": 39500,
-						"targetSales": 800000,
-						"totalMonthlySales": 790000,
-						"targetHitRate": 98.75
-					},
-					"Middle East": {
-						"dailySales": 18500,
-						"targetSales": 350000,
-						"totalMonthlySales": 370000,
-						"targetHitRate": 105.71
-					}
-				},
-				{
-					"category": "Groceries",
-					"Asia": {
-						"dailySales": 10500,
-						"targetSales": 200000,
-						"totalMonthlySales": 210000,
-						"targetHitRate": 105.00
-					},
-					"Europe": {
-						"dailySales": 12250,
-						"targetSales": 250000,
-						"totalMonthlySales": 245000,
-						"targetHitRate": 98.00
-					},
-					"North America": {
-						"dailySales": 14500,
-						"targetSales": 280000,
-						"totalMonthlySales": 290000,
-						"targetHitRate": 103.57
-					},
-					"Middle East": {
-						"dailySales": 8750,
-						"targetSales": 180000,
-						"totalMonthlySales": 175000,
-						"targetHitRate": 97.22
-					}
-				}
-			]
-		},
-		{
-			"reportDate": "2024-01-02",
-			"salesData": [
-				{
-					"category": "Electronics",
-					"Asia": {
-						"dailySales": 56000,
-						"targetSales": 1000000,
-						"totalMonthlySales": 1120000,
-						"targetHitRate": 112.00
-					},
-					"Europe": {
-						"dailySales": 73500,
-						"targetSales": 1500000,
-						"totalMonthlySales": 1470000,
-						"targetHitRate": 98.00
-					},
-					"North America": {
-						"dailySales": 106500,
-						"targetSales": 2000000,
-						"totalMonthlySales": 2130000,
-						"targetHitRate": 106.50
-					},
-					"Middle East": {
-						"dailySales": 39000,
-						"targetSales": 800000,
-						"totalMonthlySales": 780000,
-						"targetHitRate": 97.50
-					}
-				},
-				{
-					"category": "Clothing",
-					"Asia": {
-						"dailySales": 42000,
-						"targetSales": 800000,
-						"totalMonthlySales": 840000,
-						"targetHitRate": 105.00
-					},
-					"Europe": {
-						"dailySales": 64000,
-						"targetSales": 1200000,
-						"totalMonthlySales": 1280000,
-						"targetHitRate": 106.67
-					},
-					"North America": {
-						"dailySales": 73000,
-						"targetSales": 1500000,
-						"totalMonthlySales": 1460000,
-						"targetHitRate": 97.33
-					},
-					"Middle East": {
-						"dailySales": 32000,
-						"targetSales": 600000,
-						"totalMonthlySales": 640000,
-						"targetHitRate": 106.67
-					}
-				},
-				{
-					"category": "Home Goods",
-					"Asia": {
-						"dailySales": 29500,
-						"targetSales": 600000,
-						"totalMonthlySales": 590000,
-						"targetHitRate": 98.33
-					},
-					"Europe": {
-						"dailySales": 43000,
-						"targetSales": 900000,
-						"totalMonthlySales": 860000,
-						"targetHitRate": 95.56
-					},
-					"North America": {
-						"dailySales": 54000,
-						"targetSales": 1100000,
-						"totalMonthlySales": 1080000,
-						"targetHitRate": 98.18
-					},
-					"Middle East": {
-						"dailySales": 22250,
-						"targetSales": 450000,
-						"totalMonthlySales": 445000,
-						"targetHitRate": 98.89
-					}
-				},
-				{
-					"category": "Beauty",
-					"Asia": {
-						"dailySales": 21750,
-						"targetSales": 400000,
-						"totalMonthlySales": 435000,
-						"targetHitRate": 108.75
-					},
-					"Europe": {
-						"dailySales": 34750,
-						"targetSales": 700000,
-						"totalMonthlySales": 695000,
-						"targetHitRate": 99.29
-					},
-					"North America": {
-						"dailySales": 41000,
-						"targetSales": 800000,
-						"totalMonthlySales": 820000,
-						"targetHitRate": 102.50
-					},
-					"Middle East": {
-						"dailySales": 19250,
-						"targetSales": 350000,
-						"totalMonthlySales": 385000,
-						"targetHitRate": 110.00
-					}
-				},
-				{
-					"category": "Groceries",
-					"Asia": {
-						"dailySales": 10750,
-						"targetSales": 200000,
-						"totalMonthlySales": 215000,
-						"targetHitRate": 107.50
-					},
-					"Europe": {
-						"dailySales": 12750,
-						"targetSales": 250000,
-						"totalMonthlySales": 255000,
-						"targetHitRate": 102.00
-					},
-					"North America": {
-						"dailySales": 14750,
-						"targetSales": 280000,
-						"totalMonthlySales": 295000,
-						"targetHitRate": 105.36
-					},
-					"Middle East": {
-						"dailySales": 9100,
-						"targetSales": 180000,
-						"totalMonthlySales": 182000,
-						"targetHitRate": 101.11
-					}
-				}
-			]
-		}
-	]
+  "checkpoint": 42,
+  "salesReports": {
+    "2023-09-01": {
+      "categorySalesReports": {
+        "Electronics": {
+          "regionSalesReports": {
+            "Asia": {
+              "dailySales": 5000.50,
+              "targetSales": 6000.00,
+              "totalMonthlySales": 55000.75,
+              "targetHitRate": 83.34
+            },
+            "Europe": {
+              "dailySales": 4200.25,
+              "targetSales": 4500.00,
+              "totalMonthlySales": 48500.90,
+              "targetHitRate": 93.33
+            },
+            "North America": {
+              "dailySales": 6500.75,
+              "targetSales": 6000.00,
+              "totalMonthlySales": 72000.50,
+              "targetHitRate": 108.33
+            },
+            "Middle East": {
+              "dailySales": 2800.25,
+              "targetSales": 3000.00,
+              "totalMonthlySales": 31500.25,
+              "targetHitRate": 93.34
+            }
+          }
+        },
+        "Clothing": {
+          "regionSalesReports": {
+            "Asia": {
+              "dailySales": 3500.00,
+              "targetSales": 3000.00,
+              "totalMonthlySales": 38500.50,
+              "targetHitRate": 116.67
+            },
+            "Europe": {
+              "dailySales": 4800.25,
+              "targetSales": 5000.00,
+              "totalMonthlySales": 52800.75,
+              "targetHitRate": 96.01
+            },
+            "North America": {
+              "dailySales": 5200.50,
+              "targetSales": 5500.00,
+              "totalMonthlySales": 57250.25,
+              "targetHitRate": 94.55
+            },
+            "Middle East": {
+              "dailySales": 1900.75,
+              "targetSales": 2000.00,
+              "totalMonthlySales": 20950.50,
+              "targetHitRate": 95.04
+            }
+          }
+        }
+      }
+    },
+    "2023-09-02": {
+      "categorySalesReports": {
+        "Electronics": {
+          "regionSalesReports": {
+            "Asia": {
+              "dailySales": 5200.25,
+              "targetSales": 6000.00,
+              "totalMonthlySales": 60200.90,
+              "targetHitRate": 86.71
+            },
+            "Europe": {
+              "dailySales": 4350.75,
+              "targetSales": 4500.00,
+              "totalMonthlySales": 52850.50,
+              "targetHitRate": 96.68
+            },
+            "North America": {
+              "dailySales": 6750.50,
+              "targetSales": 6000.00,
+              "totalMonthlySales": 78750.75,
+              "targetHitRate": 112.51
+            },
+            "Middle East": {
+              "dailySales": 2950.00,
+              "targetSales": 3000.00,
+              "totalMonthlySales": 34450.25,
+              "targetHitRate": 98.33
+            }
+          }
+        },
+        "Food & Beverages": {
+          "regionSalesReports": {
+            "Asia": {
+              "dailySales": 2800.50,
+              "targetSales": 2500.00,
+              "totalMonthlySales": 30800.25,
+              "targetHitRate": 112.02
+            },
+            "Europe": {
+              "dailySales": 3100.75,
+              "targetSales": 3000.00,
+              "totalMonthlySales": 34100.50,
+              "targetHitRate": 103.36
+            },
+            "North America": {
+              "dailySales": 3400.25,
+              "targetSales": 3500.00,
+              "totalMonthlySales": 37400.75,
+              "targetHitRate": 97.15
+            },
+            "Middle East": {
+              "dailySales": 1600.00,
+              "targetSales": 1500.00,
+              "totalMonthlySales": 17600.25,
+              "targetHitRate": 106.67
+            }
+          }
+        }
+      }
+    }
+  }
 }
