@@ -26,4 +26,4 @@ app.UseStaticFiles();
 
 app.MapFallbackToFile("index.html"); // Serve wwwroot/index.html which is built by Vite
 
-app.Run($"http://localhost:{port}");
+app.Run($"http://0.0.0.0:{port}");
