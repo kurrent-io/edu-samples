@@ -4,27 +4,22 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "nodemon -w src/server -x tsx src/server/main.ts",
-    "start": "NODE_ENV=production tsx src/server/main.ts",
-    "build": "vite build"
+    "dev": "npx vite",
+    "build": "npx vite build"
   },
   "dependencies": {
-    "express": "^5.1.0",
     "lodash": "^4.17.21",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tsx": "^4.19.3",
-    "typescript": "^5.8.3",
-    "vite-express": "*"
+    "typescript": "^5.8.3"
   },
   "devDependencies": {
-    "@types/express": "^5.0.1",
     "@types/lodash": "^4.17.16",
     "@types/node": "^22.15.2",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
-    "nodemon": "^3.1.10",
     "prettier": "3.5.3",
     "vite": "^6.3.3"
   }

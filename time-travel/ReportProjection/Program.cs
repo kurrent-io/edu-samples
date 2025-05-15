@@ -16,13 +16,12 @@
 
 using System.Text.Json;
 using EventStore.Client;
-using ReportProjection;
 using Common;
 using StreamPosition = EventStore.Client.StreamPosition;
 
 Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
 
-var readModelPath = Environment.GetEnvironmentVariable("READ_MODEL_PATH") ?? "data/report.json"; // Get the path to the report read model from an environment variable
+var readModelPath = Environment.GetEnvironmentVariable("OUTPUT_FILEPATH") ?? "data/report.json"; // Get the path to the report read model from an environment variable
 
 // -------------------- //
 // Connect to KurrentDB //
