@@ -100,7 +100,7 @@ await foreach (var message in subscription.Messages)                            
         readModel.SalesReports[orderDate] = salesReport;
     }
 
-    readModel.Checkpoint = e.Event.EventNumber.ToInt64();                                       // Set the read model checkpoint to the event number of the event we just read
+    readModel.Checkpoint = e.OriginalEventNumber.ToInt64();                                       // Set the read model checkpoint to the event number of the event we just read
 
     Directory.CreateDirectory(Directory.GetParent(readModelPath)!.FullName);                    // Create the directory for the report read model if it doesn't exist
     File.WriteAllText(readModelPath, JsonSerializer.Serialize(readModel));              // Write the report read model to the JSON file
