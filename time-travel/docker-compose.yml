@@ -11,16 +11,18 @@ services:
       - KURRENTDB_INSECURE=true
       - KURRENTDB_ENABLE_ATOM_PUB_OVER_HTTP=true
     profiles: ["db"]
+
   demoweb:
     build:
-      context: ./DemoWeb
+      context: DemoWebExpress
     ports:
       - 3000:3000
     volumes:
-      - ./data.json:/workspace/DemoWeb/data.json
+      - ./data:/app/data
     environment:
-      - SALES_DATA_FILEPATH=/workspace/DemoWeb/data.json
+      - SALES_DATA_FILEPATH=/app/data/data.json
     profiles: ["app"]
+
   reportprojection:
     image: mcr.microsoft.com/dotnet/sdk:9.0
     container_name: reportprojection
@@ -30,4 +32,5 @@ services:
     command: ["dotnet", "run", "--project", "./ReportProjection"]
     environment:
       - KURRENTDB_HOST=kurrentdb
+      - OUTPUT_FILEPATH=/app/data/data.json
     profiles: ["app"]
