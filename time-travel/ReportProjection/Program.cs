@@ -91,7 +91,7 @@ await foreach (var message in subscription.Messages)                            
         var regionSalesData = categorySalesData.RegionSalesReports.GetValueOrDefault(region, new RegionSalesReport());      // Get the report for the region within the category sales report
         var previousDay = GetPreviousDayInMonth(orderDate);
 
-        var previousRegionalSalesData = readModel.SalesReports!
+        var previousRegionalSalesData = previousDay is null ? null : readModel.SalesReports!
             .GetValueOrDefault(previousDay)?.CategorySalesReports
             .GetValueOrDefault(category)?.RegionSalesReports
             .GetValueOrDefault(region);
