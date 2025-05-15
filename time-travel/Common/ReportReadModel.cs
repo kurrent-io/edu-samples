@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
-
 using Region = string;
 using Category = string;
 using ReportDate = string;
 
-namespace ReportProjection
+namespace Common
 {
     // Root type for deserialization
     public record ReportReadModel
