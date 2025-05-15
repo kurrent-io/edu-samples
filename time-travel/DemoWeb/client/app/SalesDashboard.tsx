@@ -1,29 +1,35 @@
 import styles from "./SalesDashboard.module.css"
 import {
+  Category,
+  CategorySalesReport,
+  ReportReadModel,
   SalesRegion,
-  SalesDataEntry,
-  SalesEvent,
-  SalesReadModel,
   SalesReport,
-} from "./SalesDataReadModel"
-import { useEffect, useState } from "react"
+} from "./ReportReadModel"
+import { useEffect, useMemo, useState } from "react"
 import _ from "lodash"
+import SalesEvent from "./SalesEvent"
 
 const READ_MODEL_ENDPOINT = "/api/sales-data"
 
 const SalesDashboard = () => {
-  const [salesData, setSalesData] = useState<SalesReadModel>([])
-  const [selectedReportIndex, setSelectedReportIndex] = useState<number | null>(
+  const [reportReadModel, setReportReadModel] = useState<ReportReadModel>([])
+  const [selectedReportDate, setSelectedReportDate] = useState<string | null>(
     null,
   )
 
-  const previousReport =
-    selectedReportIndex !== null && selectedReportIndex > 0
-      ? salesData[selectedReportIndex - 1]
-      : null
+  const previousReportDate = selectedReportDate
+    ? getPreviousDay(selectedReportDate)
+    : null
+
+  const previousReport = previousReportDate
+    ? reportReadModel.salesReports[previousReportDate]
+    : null
 
   const selectedReport =
-    selectedReportIndex !== null ? salesData[selectedReportIndex] : null
+    selectedReportDate !== null
+      ? reportReadModel.salesReports[selectedReportDate]
+      : null
 
   useEffect(() => {
     fetch(READ_MODEL_ENDPOINT, {
@@ -33,9 +39,10 @@ const SalesDashboard = () => {
       },
     })
       .then((response) => response.json())
-      .then((data) => {
-        setSalesData(data.salesData)
-        setSelectedReportIndex(0)
+      .then((data: ReportReadModel) => {
+        setReportReadModel(data)
+
+        setSelectedReportDate(getEarliestReportDate(data))
       })
       .catch((error) =>
         console.error("Error fetching sales data from the server", error),
@@ -45,12 +52,12 @@ const SalesDashboard = () => {
   return (
     <div className={styles.pageRoot}>
       <Header />
-      {!!selectedReport && !!salesData && (
+      {!!selectedReport && !!reportReadModel && (
         <>
           <TimeSliderSection
-            salesData={salesData}
-            selectedReport={selectedReport}
-            setSelectedReportIndex={setSelectedReportIndex}
+            selectedReportDate={selectedReportDate}
+            reportReadModel={reportReadModel}
+            setSelectedReportDate={setSelectedReportDate}
           />
           <DashboardContent
             previousReport={previousReport}
@@ -62,6 +69,22 @@ const SalesDashboard = () => {
   )
 }
 
+const toDateString = (date: Date) => date.toISOString().split("T")[0]
+
+const getPreviousDay = (dateString: string): string => {
+  const date = new Date(dateString)
+  date.setDate(date.getDate() - 1)
+  return toDateString(date)
+}
+
+const getEarliestReportDate = (readModel: ReportReadModel): string => {
+  const dates = Object.keys(readModel.salesReports)
+
+  const earliestDate = _.minBy(dates, (date) => new Date(date).getTime())
+
+  return earliestDate
+}
+
 const Header = () => (
   <div className={styles.header}>
     <span className={styles.headerTitle}>E-Commerce Sales Report</span>
@@ -69,37 +92,50 @@ const Header = () => (
 )
 
 interface TimeSelectorProps {
-  salesData: SalesReadModel
-  selectedReport: SalesReport | null
-  setSelectedReportIndex: (index: number | null) => void
+  reportReadModel: ReportReadModel
+  selectedReportDate: string | null
+  setSelectedReportDate: (dateString: string | null) => void
 }
 
 const TimeSliderSection = ({
-  salesData,
-  selectedReport,
-  setSelectedReportIndex,
-}: TimeSelectorProps) => (
-  <div className={styles.timeSliderSection}>
-    {selectedReport && (
-      <span className={styles.timeSliderSectionHeader}>
-        Viewing sales report from {selectedReport.reportDate}
-      </span>
-    )}
-    <TimeSlider
-      salesData={salesData}
-      setSelectedReportIndex={setSelectedReportIndex}
-    />
-  </div>
-)
+  reportReadModel,
+  setSelectedReportDate,
+  selectedReportDate,
+}: TimeSelectorProps) => {
+  const selectedReport = reportReadModel.salesReports[selectedReportDate]
 
-interface TimeSliderProps {
-  salesData: SalesReadModel
-  setSelectedReportIndex: (index: number | null) => void
+  return (
+    <div className={styles.timeSliderSection}>
+      {selectedReport && selectedReportDate && (
+        <span className={styles.timeSliderSectionHeader}>
+          Viewing sales report from {selectedReportDate}
+        </span>
+      )}
+      <TimeSlider
+        reportReadModel={reportReadModel}
+        setSelectedReportDate={setSelectedReportDate}
+      />
+    </div>
+  )
 }
 
-const TimeSlider = ({ setSelectedReportIndex, salesData }: TimeSliderProps) => {
-  const firstReportDate = salesData[0].reportDate
-  const lastReportDate = salesData[salesData.length - 1].reportDate
+interface TimeSliderProps {
+  reportReadModel: ReportReadModel
+  setSelectedReportDate: (dateString: string | null) => void
+}
+
+const TimeSlider = ({
+  setSelectedReportDate,
+  reportReadModel,
+}: TimeSliderProps) => {
+  const { orderedDates } = useMemo(() => {
+    const dates = Object.keys(reportReadModel.salesReports)
+    const orderedDates = _.orderBy(dates, (date) => new Date(date).getTime())
+    return { orderedDates }
+  }, [reportReadModel])
+
+  const firstReportDate = orderedDates[0]
+  const lastReportDate = orderedDates[orderedDates.length - 1]
 
   return (
     <div className={styles.timeSliderContainer}>
@@ -108,11 +144,11 @@ const TimeSlider = ({ setSelectedReportIndex, salesData }: TimeSliderProps) => {
         className={styles.timeSliderInput}
         type="range"
         min={0}
-        max={salesData.length - 1}
+        max={orderedDates.length - 1}
         step={1}
         defaultValue={0}
         onChange={(e) =>
-          setSelectedReportIndex(Number.parseInt(e.target.value))
+          setSelectedReportDate(orderedDates[Number.parseInt(e.target.value)])
         }
       />
       <span className={styles.timeSliderLabel}>{lastReportDate}</span>
@@ -134,7 +170,7 @@ const DashboardContent = ({
       salesReport={salesReport}
       previousReport={previousReport}
     />
-    <EventStream events={salesReport.events || []} />
+    <EventStream />
   </div>
 )
 
@@ -159,10 +195,6 @@ interface SalesTableProps {
 }
 
 const SalesTable = ({ salesReport, previousReport }: SalesTableProps) => {
-  const previousReportDataByCategory = previousReport
-    ? _.keyBy(previousReport.salesData, (e) => e.category)
-    : {}
-
   return (
     <table className={styles.salesTable}>
       <thead>
@@ -175,33 +207,42 @@ const SalesTable = ({ salesReport, previousReport }: SalesTableProps) => {
         </tr>
       </thead>
       <tbody>
-        {salesReport.salesData.map((salesEntry) => (
-          <SalesCategory
-            key={salesEntry.category}
-            salesDataEntry={salesEntry}
-            previousEntry={previousReportDataByCategory[salesEntry.category]}
-          />
-        ))}
+        {_.map(
+          salesReport.categorySalesReports,
+          (categorySalesReport: CategorySalesReport, category: Category) => (
+            <SalesCategory
+              key={category}
+              category={category}
+              categorySalesReport={categorySalesReport}
+              previousCategorySalesReport={
+                previousReport.categorySalesReports[category]
+              }
+            />
+          ),
+        )}
       </tbody>
     </table>
   )
 }
 
 interface SalesCategoryProps {
-  salesDataEntry: SalesDataEntry
-  previousEntry?: SalesDataEntry
+  category: Category
+  categorySalesReport: CategorySalesReport
+  previousCategorySalesReport?: CategorySalesReport
 }
 
 const SalesCategory = ({
-  salesDataEntry,
-  previousEntry,
+  category,
+  categorySalesReport,
+  previousCategorySalesReport,
 }: SalesCategoryProps) => {
-  const { category, ...regionalReports } = salesDataEntry
-  const regionPairs = Object.entries(regionalReports)
+  const { regionSalesReports } = categorySalesReport
+  const regionPairs = Object.entries(regionSalesReports)
 
   return regionPairs.map(([region, regionalSalesData], i) => {
     const { dailySales, targetSales, totalMonthlySales } = regionalSalesData
-    const previousRegionalSales = previousEntry?.[region as SalesRegion]
+    const previousRegionalSales =
+      previousCategorySalesReport?.[region as SalesRegion]
 
     const salesIncreased =
       previousRegionalSales && dailySales > previousRegionalSales.dailySales
@@ -263,14 +304,19 @@ const SalesProgressBar = ({
   )
 }
 
-const EventStream = ({ events }: { events: SalesEvent[] }) => (
-  <div className={styles.eventStream}>
-    <span className={styles.sectionTitle}>Event Stream</span>
-    {events.map((event) => (
-      <EventCard key={event.eventId} event={event} />
-    ))}
-  </div>
-)
+const EventStream = () => {
+  // TODO: Fetch events from API
+  const events = []
+
+  return (
+    <div className={styles.eventStream}>
+      <span className={styles.sectionTitle}>Event Stream</span>
+      {events.map((event) => (
+        <EventCard key={event.eventId} event={event} />
+      ))}
+    </div>
+  )
+}
 
 const EventCard = ({ event }: { event: SalesEvent }) => {
   const {
