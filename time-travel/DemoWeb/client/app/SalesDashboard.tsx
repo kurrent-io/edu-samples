@@ -80,9 +80,7 @@ const getPreviousDay = (dateString: string): string => {
 const getEarliestReportDate = (readModel: ReportReadModel): string => {
   const dates = Object.keys(readModel.salesReports)
 
-  const earliestDate = _.minBy(dates, (date) => new Date(date).getTime())
-
-  return earliestDate
+  return _.minBy(dates, (date) => new Date(date).getTime())
 }
 
 const Header = () => (
@@ -215,7 +213,7 @@ const SalesTable = ({ salesReport, previousReport }: SalesTableProps) => {
               category={category}
               categorySalesReport={categorySalesReport}
               previousCategorySalesReport={
-                previousReport.categorySalesReports[category]
+                previousReport?.categorySalesReports[category]
               }
             />
           ),
@@ -291,7 +289,7 @@ const SalesProgressBar = ({
   totalMonthlySales,
   targetSales,
 }: SalesProgressBarProps) => {
-  const percentage = (totalMonthlySales / targetSales) * 100
+  const percentage = targetSales === 0 ? 100 : (totalMonthlySales / targetSales) * 100
   const innerClassName =
     percentage >= 100 ? styles.progressBarSuccess : styles.progressBarFailure
 
