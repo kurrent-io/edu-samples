@@ -89,10 +89,19 @@ await foreach (var message in subscription.Messages)                            
         var salesReport = readModel.SalesReports.GetValueOrDefault(orderDate, new SalesReport());                           // Get the sales report for the order date
         var categorySalesData = salesReport.CategorySalesReports.GetValueOrDefault(category, new CategorySalesReport());    // Get the report for the category within the daily sales report
         var regionSalesData = categorySalesData.RegionSalesReports.GetValueOrDefault(region, new RegionSalesReport());      // Get the report for the region within the category sales report
+        var previousDay = GetPreviousDayInMonth(orderDate);
+
+        var previousRegionalSalesData = readModel.SalesReports!
+            .GetValueOrDefault(previousDay)?.CategorySalesReports
+            .GetValueOrDefault(category)?.RegionSalesReports
+            .GetValueOrDefault(region);
+        
+        var currentDailySales = regionSalesData.DailySales + lineItem.pricePerUnit!.Value * lineItem.quantity!.Value;              // Add the revenue (price * quantity) to the daily sales total in the report
 
         var newSalesData = regionSalesData with
         {
-            DailySales = regionSalesData.DailySales + lineItem.pricePerUnit!.Value * lineItem.quantity!.Value,              // Add the revenue (price * quantity) to the daily sales total in the report
+            DailySales = currentDailySales,
+            TotalMonthlySales = previousRegionalSalesData is null ? currentDailySales : previousRegionalSalesData.TotalMonthlySales + currentDailySales
         };
         
         categorySalesData.RegionSalesReports[region] = newSalesData;                                                        // Update the read model object with the new 
@@ -108,4 +117,11 @@ await foreach (var message in subscription.Messages)                            
     Console.WriteLine($"Projected event " +
                       $"#{e.OriginalEventNumber.ToInt64()} " +
                       $"{e.Event.EventType}");
+}
+
+string? GetPreviousDayInMonth(string dateString)
+{
+    var date = DateTime.Parse(dateString);
+    
+    return date.Day == 1 ? null : date.AddDays(-1).ToString("yyyy-MM-dd");
 }
