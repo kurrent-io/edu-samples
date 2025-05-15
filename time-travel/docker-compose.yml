@@ -13,10 +13,10 @@ services:
     profiles: ["db"]
 
   demoweb:
-    image: mcr.microsoft.com/dotnet/sdk:9.0
+    build:
+      context: .
+      dockerfile: DemoWeb/Dockerfile
     container_name: demoweb
-    working_dir: /app
-    command: ["dotnet", "run", "--project", "./DemoWeb"]
     ports:
       - 3000:3000
     volumes:
