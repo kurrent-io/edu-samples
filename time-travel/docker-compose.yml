@@ -13,8 +13,10 @@ services:
     profiles: ["db"]
 
   demoweb:
-    build:
-      context: DemoWebExpress
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    container_name: demoweb
+    working_dir: /app
+    command: ["dotnet", "run", "--project", "./DemoWeb"]
     ports:
       - 3000:3000
     volumes:
