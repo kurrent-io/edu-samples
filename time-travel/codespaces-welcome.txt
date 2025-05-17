@@ -1,0 +1,5 @@
+Hello!👋 Welcome to the KurrentDB Time Traveling Use Case Tutorial
+
+To continue, please follow instructions found in https://docs.kurrent.io/getting-started/use-cases/time-travel/tutorial-intro.html
+
+Enjoy!
