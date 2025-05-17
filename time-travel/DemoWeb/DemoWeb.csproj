@@ -18,4 +18,8 @@
       <Folder Include="wwwroot\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="EventStore.Client.Grpc.Streams" Version="23.3.8" />
+    </ItemGroup>
+
 </Project>

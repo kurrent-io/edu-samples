@@ -1,5 +1,17 @@
 using System.Text.Json;
+using EventStore.Client;
 using Common;
+
+// -------------------- //
+// Connect to KurrentDB //
+// -------------------- //
+
+var kurrentDbHost = Environment.GetEnvironmentVariable("KURRENTDB_HOST")   // Get the KurrentDB host from environment variable
+                    ?? "localhost";                                             // Default to localhost if not set
+
+var kurrentdb = new EventStoreClient(                                           // Create a connection to KurrentDB
+                EventStoreClientSettings.Create(
+                  $"esdb://{kurrentDbHost}:2113?tls=false"));
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "3000";
 
@@ -22,8 +34,76 @@ app.MapGet("/api/sales-data", () =>
     return salesData;
 });
 
+app.MapGet("/api/events", async (long checkpoint, DateTimeOffset date, string region, string category, SalesFigureType salesFigureType) =>
+{
+    var orderEventSummaryList = new List<OrderEventSummaryForSalesReport>(); // Create a list to store OrderPlaced events
+    await foreach (var resolvedEvent in kurrentdb.ReadStreamAsync(Direction.Forwards, "$et-order-placed",
+                       StreamPosition.Start, resolveLinkTos:true))
+    {
+        var eventNumber = resolvedEvent.OriginalEventNumber.ToInt64();
+        if (eventNumber > checkpoint) break;                    // Stop reading if we reach an event with a number less than or equal to the checkpoint
+        
+        if (EventEncoder.Decode(resolvedEvent.Event.Data, "order-placed")           // Try to deserialize the event to an OrderPlaced event
+            is not OrderPlaced orderPlaced)                                         // Skip this message if it is not an OrderPlaced event
+            continue;
+        
+        if ((salesFigureType == SalesFigureType.DailySales && orderPlaced.at!.Value.Date == date.Date || 
+             salesFigureType == SalesFigureType.TotalMonthlySales && orderPlaced.at!.Value.Date <= date.Date && orderPlaced.at!.Value.Year == date.Year &&
+             orderPlaced.at!.Value.Month == date.Month) && 
+            orderPlaced.store!.geographicRegion!.Equals(region, StringComparison.InvariantCultureIgnoreCase) &&
+            orderPlaced.lineItems!.Exists(item => item.category.Equals(category, StringComparison.InvariantCultureIgnoreCase)))
+        {
+            orderEventSummaryList.Add(orderPlaced.MapToSummary(eventNumber, category));                                     // Add the event to the list if it matches the date, region, and category
+        }
+    }
+
+    return orderEventSummaryList;
+});
+
 app.UseStaticFiles();
 
 app.MapFallbackToFile("index.html"); // Serve wwwroot/index.html which is built by Vite
 
 app.Run($"http://0.0.0.0:{port}");
+
+public enum SalesFigureType
+{
+    DailySales,
+    TotalMonthlySales
+}
+
+public class OrderEventSummaryForSalesReport
+{
+    public long EventNumber { get; set; }
+    public string OrderId { get; set; } = default!;
+    public DateTimeOffset At { get; set; }
+    public string Region { get; set; } = default!;
+    public string Category { get; set; } = default!;
+    public string TotalSalesForCategory { get; set; } = default!;
+}
+
+public static class Helper
+{
+    public static OrderEventSummaryForSalesReport MapToSummary(this OrderPlaced orderPlaced, long eventNumber, string category)
+    {
+        // Find all line items for the given category
+        var categoryLineItems = orderPlaced.lineItems!
+            .Where(item => item.category.Equals(category, StringComparison.InvariantCultureIgnoreCase));
+
+        // Sum their totals
+        var total = categoryLineItems.Sum(item => item.pricePerUnit * item.quantity);
+
+        return new OrderEventSummaryForSalesReport
+        {
+            EventNumber = eventNumber,
+            OrderId = orderPlaced.orderId!,
+            At = orderPlaced.at!.Value,
+            Region = orderPlaced.store!.geographicRegion!,
+            Category = category,
+            TotalSalesForCategory = $"USD{total:0.00}"
+        };
+    }
+}
+
+
+
