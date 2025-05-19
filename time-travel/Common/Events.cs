@@ -27,6 +27,8 @@ public record OrderPlaced
         public string? currency { get; set; }
         public decimal? pricePerUnit { get; set; }
         public decimal? taxRate { get; set; }
+
+        public decimal total => (pricePerUnit ?? 0) * (quantity ?? 0); // Calculate the total price for the line item
     }
 
     public record ShippingInfo
