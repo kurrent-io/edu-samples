@@ -1,12 +1,8 @@
 export default interface SalesEvent {
-  eventType: string
-  eventId: string
-  timestamp: string
+  eventNumber: string
+  orderId: string
+  at: string
   region: string
   category: string
-  aggregateId: string
-  version: number
-  orderAmount?: number
-  reason?: string
-  quantity?: number
+  totalSalesForCategory: number
 }

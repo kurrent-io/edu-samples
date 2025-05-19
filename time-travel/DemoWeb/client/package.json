@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npx vite",
+    "watch": "npx vite build --watch",
     "build": "npx vite build"
   },
   "dependencies": {
