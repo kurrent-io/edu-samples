@@ -10,81 +10,83 @@ namespace Common
 
         [JsonPropertyName("salesReports")]
         [JsonInclude]
-        private Dictionary<DateOnly, MonthlyReport> SalesReports { get; init; } = new();
+        private Dictionary<DateOnly, MonthEndReport> MonthEndReportsBySnapshotDate { get; init; } = new();
         
-        public MonthlyReport? GetReport(DateOnly asOfDate)
+        public MonthEndReport? GetReport(DateOnly snapshotDate)
         {
-            return SalesReports.TryGetValue(asOfDate, out var salesReport) ? salesReport : null;
+            return MonthEndReportsBySnapshotDate.TryGetValue(snapshotDate, out var salesReport) ? salesReport : null;
         }
 
-        public void AddOrUpdateReport(DateOnly asOfDate, MonthlyReport report)
+        public void AddOrUpdateReport(DateOnly snapshotDate, MonthEndReport report)
         {
-            if (SalesReports.ContainsKey(asOfDate))
-                SalesReports[asOfDate] = report;
+            if (MonthEndReportsBySnapshotDate.ContainsKey(snapshotDate))
+                MonthEndReportsBySnapshotDate[snapshotDate] = report;
             else
-                SalesReports.Add(asOfDate, report);
+                MonthEndReportsBySnapshotDate.Add(snapshotDate, report);
         }
     }
 
-    public class MonthlyReport
+    public class MonthEndReport
     {
-        [JsonPropertyName("categorySalesReports")]
-        public Dictionary<string, CategorySalesReport> CategorySalesReports { get; set; } = new();
+        [JsonPropertyName("categories")]
+        public Dictionary<string, Category> Categories { get; set; } = new();
 
-        public MonthlyReport(List<string> reportedCategories, List<string> reportedRegions, TargetMonthlySales? targetMonthlySales)
+        public MonthEndReport() { } // Parameter-less constructor for deserialization
+
+        public MonthEndReport(List<string> reportedCategories, List<string> reportedRegions, MonthEndSalesTarget? monthEndSalesTarget)
         {
-            foreach (var category in reportedCategories)
+            foreach (var categoryToReport in reportedCategories)
             {
-                var categorySalesReport = new CategorySalesReport();
+                var category = new Category();
 
-                foreach (var region in reportedRegions)
+                foreach (var regionToReport in reportedRegions)
                 {
-                    categorySalesReport.RegionSalesReports[region] = new RegionSalesReport
+                    category.Regions[regionToReport] = new Region
                     {
-                        TargetSales = targetMonthlySales?.GetTargetSales(category, region) ?? 0
+                        MonthEndSalesTarget = monthEndSalesTarget?.GetSalesTargetBy(categoryToReport, regionToReport) ?? 0
                     };
                 }
 
-                CategorySalesReports[category] = categorySalesReport;
+                Categories[categoryToReport] = category;
             }
         }
 
         public void IncrementDailySales(string category, string region, decimal amount)
         {
-            if (!CategorySalesReports.TryGetValue(category, out var categorySalesReport) ||
-                !categorySalesReport.RegionSalesReports.TryGetValue(region, out var regionSalesReport)) return;
+            if (!Categories.TryGetValue(category, out var salesByCategory) ||
+                !salesByCategory.Regions.TryGetValue(region, out var salesByCategoryAndRegion)) return;
 
-            regionSalesReport.DailySales += amount;
+            salesByCategoryAndRegion.DailySales += amount;
         }
 
         public void IncrementMonthlySales(string? category, string region, decimal amount)
         {
             if (string.IsNullOrEmpty(category)) return;
 
-            if (!CategorySalesReports.TryGetValue(category, out var categorySalesReport) ||
-                !categorySalesReport.RegionSalesReports.TryGetValue(region, out var regionSalesReport)) return;
+            if (!Categories.TryGetValue(category, out var salesByCategory) ||
+                !salesByCategory.Regions.TryGetValue(region, out var salesByCategoryAndRegion)) return;
 
-            regionSalesReport.TotalMonthlySales += amount;
-            regionSalesReport.TargetHitRate = regionSalesReport.TargetSales == 0
+            salesByCategoryAndRegion.TotalMonthlySales += amount;
+            salesByCategoryAndRegion.TargetHitRate = salesByCategoryAndRegion.MonthEndSalesTarget == 0
                 ? 0
-                : Math.Round(regionSalesReport.TotalMonthlySales / regionSalesReport.TargetSales, 2);
+                : Math.Round(salesByCategoryAndRegion.TotalMonthlySales / salesByCategoryAndRegion.MonthEndSalesTarget, 2);
         }
 
     }
 
-    public record CategorySalesReport
+    public record Category
     {
-        [JsonPropertyName("regionSalesReports")]
-        public Dictionary<string, RegionSalesReport> RegionSalesReports { get; set; } = new();
+        [JsonPropertyName("regions")]
+        public Dictionary<string, Region> Regions { get; set; } = new();
     }
     
-    public record RegionSalesReport
+    public record Region
     {
         [JsonPropertyName("dailySales")]
         public decimal DailySales { get; set; }
 
-        [JsonPropertyName("targetSales")]
-        public decimal TargetSales { get; set; }
+        [JsonPropertyName("monthEndSalesTarget")]
+        public decimal MonthEndSalesTarget { get; set; }
 
         [JsonPropertyName("totalMonthlySales")]
         public decimal TotalMonthlySales { get; set; }
@@ -93,41 +95,34 @@ namespace Common
         public decimal TargetHitRate { get; set; }
     }
 
-    public class TargetSales
+    public class MonthEndSalesTargets
     {
-        [JsonPropertyName("TargetMonthlySales")]
-        private readonly Dictionary<(int year, int month), TargetMonthlySales> _sales;
+        [JsonPropertyName("MonthEndSalesTarget")]
+        private readonly Dictionary<(int year, int month), MonthEndSalesTarget> _sales;
 
-        public TargetSales(Dictionary<(int year, int month), TargetMonthlySales> sales)
+        public MonthEndSalesTargets(Dictionary<(int year, int month), MonthEndSalesTarget> sales)
         {
-            _sales = sales ?? new();
+            _sales = sales;
         }
 
-        /// <summary>
-        /// Gets the TargetMonthlySales for a specific year and month, or null if not found.
-        /// </summary>
-        public TargetMonthlySales? GetMonthlySalesTargetFor(int year, int month)
+        public MonthEndSalesTarget? GetMonthEndSalesTargetFor(int year, int month)
         {
             return _sales.TryGetValue(new (year, month), out var monthlySales) ? monthlySales : null;
         }
     }
 
-    public class TargetMonthlySales
+    public class MonthEndSalesTarget
     {
-        private readonly Dictionary<string, Dictionary<string, int>> _targetSales;
+        private readonly Dictionary<string, Dictionary<string, int>> _salesTargets;
 
-        public TargetMonthlySales(Dictionary<string, Dictionary<string, int>> targetSales)
+        public MonthEndSalesTarget(Dictionary<string, Dictionary<string, int>> salesTargets)
         {
-            _targetSales = targetSales ?? new Dictionary<string, Dictionary<string, int>>();
+            _salesTargets = salesTargets;
         }
-
-        /// <summary>
-        /// Gets the target sales for a given category and region.
-        /// Returns null if the category or region does not exist.
-        /// </summary>
-        public decimal? GetTargetSales(string category, string region)
+        
+        public decimal? GetSalesTargetBy(string category, string region)
         {
-            if (_targetSales.TryGetValue(category, out var regions) &&
+            if (_salesTargets.TryGetValue(category, out var regions) &&
                 regions.TryGetValue(region, out var target))
             {
                 return target;
