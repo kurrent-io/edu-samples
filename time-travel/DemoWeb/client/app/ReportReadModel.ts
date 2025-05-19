@@ -9,23 +9,16 @@ export interface ReportReadModel {
 }
 
 export interface SalesReport {
-  categorySalesReports: Record<Category, CategorySalesReport>;
+  categories: Record<Category, CategorySalesReport>;
 }
 
 export interface CategorySalesReport {
-  regionSalesReports: Record<Region, RegionSalesReport>;
+  regions: Record<Region, RegionSalesReport>;
 }
 
 export interface RegionSalesReport {
   dailySales: number;
-  targetSales: number;
+  monthEndSalesTarget: number;
   totalMonthlySales: number;
   targetHitRate: number;
-}
-
-export enum SalesRegion {
-  Asia = "Asia",
-  Europe = "Europe",
-  NorthAmerica = "North America",
-  MiddleEast = "Middle East",
 }
