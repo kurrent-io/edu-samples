@@ -17,12 +17,9 @@
 using System.Text.Json;
 using EventStore.Client;
 using Common;
-using ReportProjection;
 using StreamPosition = EventStore.Client.StreamPosition;
 
 Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
-
-var readModelPath = Environment.GetEnvironmentVariable("OUTPUT_FILEPATH") ?? "data/report.json"; // Get the path to the report read model from an environment variable
 
 // -------------------- //
 // Connect to KurrentDB //
@@ -39,6 +36,7 @@ var kurrentdb = new EventStoreClient(                                           
 // --------------------------------- //
 // Deserialize JSON to report object //
 // --------------------------------- //
+var readModelPath = Environment.GetEnvironmentVariable("OUTPUT_FILEPATH") ?? "data/report.json"; // Get the path to the report read model from an environment variable
 
 var hasExistingReadModel = File.Exists(readModelPath);
 
@@ -50,10 +48,8 @@ var readModel = hasExistingReadModel                                            
 // Retrieve the last checkpoint position from JSON Read Model //
 // ---------------------------------------------------------- //
 
-var checkpointValue = readModel.Checkpoint;                                     // Get the checkpoint value from the report read model object
-    
 var streamPosition = hasExistingReadModel
-    ? FromStream.After(StreamPosition.FromInt64(checkpointValue))
+    ? FromStream.After(StreamPosition.FromInt64(readModel.Checkpoint))
     : FromStream.Start;
 
 // ---------------------------------------------- //
@@ -79,43 +75,7 @@ await foreach (var message in subscription.Messages)                            
             is not OrderPlaced orderPlaced)                                                     // Skip this message if it is not an OrderPlaced event
             continue;
 
-    var d = orderPlaced.at!.Value;
-    var lastDayInMonth = DateTime.DaysInMonth(d.Year, d.Month);
-    //var reportDate = new DateTimeOffset(d.Year, d.Month, lastDayInMonth, 0, 0, 0, d.Offset);
-    var reportDateInString = d.ToString("yyyy-MM-dd");
-
-    var region = orderPlaced.store!.geographicRegion!;                                    // Get the region from the OrderPlaced event
-
-    if (!readModel.SalesReports.ContainsKey(reportDateInString))                // Check if the report for the order date already exists
-        readModel.SalesReports[reportDateInString] = Helper.Create(d.Year, d.Month, Config.GetCategories(), Config.GetRegions(), Config.GetTargetMonthlySales(d.Year, d.Month));         // If not, create a new sales report for the order date
-
-    var salesReport = readModel.SalesReports[reportDateInString];
-
-    foreach (var lineItem in orderPlaced.lineItems!)
-    {
-        var category = lineItem.category!;
-
-        var regionSalesReport = salesReport.CategorySalesReports[category].RegionSalesReports[region];
-        var currentDailySales = lineItem.pricePerUnit!.Value * lineItem.quantity!.Value;              // Add the revenue (price * quantity) to the daily sales total in the report
-
-        regionSalesReport.DailySales += currentDailySales; // Update the daily sales for the region in the category sales report
-        
-        for (var i = d.Day; i <= lastDayInMonth; i++) // For each day in the month so far
-        {
-            var dateInThePast = new DateTimeOffset(d.Year, d.Month, i, 0, 0, 0, d.Offset);
-            var dateInStringInThePast = dateInThePast.ToString("yyyy-MM-dd");
-
-            if (!readModel.SalesReports.ContainsKey(dateInStringInThePast))                // Check if the report for the order date already exists
-                readModel.SalesReports[dateInStringInThePast] = Helper.Create(d.Year, d.Month, Config.GetCategories(), Config.GetRegions(), Config.GetTargetMonthlySales(d.Year, d.Month));         // If not, create a new sales report for the order date
-
-            var salesReportInThePast = readModel.SalesReports[dateInStringInThePast];
-            
-            var regionSalesReportInThePast = salesReportInThePast.CategorySalesReports[category].RegionSalesReports[region];
-
-            regionSalesReportInThePast.TotalMonthlySales += currentDailySales; // Update the daily sales for the region in the category sales report
-            regionSalesReportInThePast.TargetHitRate = regionSalesReportInThePast.TargetSales == 0 ? 0 : Math.Round(regionSalesReportInThePast.TotalMonthlySales / regionSalesReportInThePast.TargetSales, 2); // Update the target hit rate for the region in the category sales report
-        }
-    }
+    ReportProjection.ReportProjection.ProjectOrderToReadModel(orderPlaced, readModel);
 
     readModel.Checkpoint = e.OriginalEventNumber.ToInt64();                                       // Set the read model checkpoint to the event number of the event we just read
 

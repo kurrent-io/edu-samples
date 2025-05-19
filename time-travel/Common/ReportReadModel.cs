@@ -1,72 +1,81 @@
 using System.Text.Json.Serialization;
-using Region = string;
-using Category = string;
-using ReportDate = string;
-using System.Globalization;
 
 namespace Common
 {
     // Root type for deserialization
-    public record ReportReadModel
+    public class ReportReadModel
     {
         [JsonPropertyName("checkpoint")]
         public long Checkpoint { get; set; }
 
         [JsonPropertyName("salesReports")]
-        public Dictionary<ReportDate, SalesReport> SalesReports { get; set; } = new();
+        [JsonInclude]
+        private Dictionary<DateOnly, MonthlyReport> SalesReports { get; init; } = new();
+        
+        public MonthlyReport? GetReport(DateOnly asOfDate)
+        {
+            return SalesReports.TryGetValue(asOfDate, out var salesReport) ? salesReport : null;
+        }
+
+        public void AddOrUpdateReport(DateOnly asOfDate, MonthlyReport report)
+        {
+            if (SalesReports.ContainsKey(asOfDate))
+                SalesReports[asOfDate] = report;
+            else
+                SalesReports.Add(asOfDate, report);
+        }
     }
-    
-    public record SalesReport
+
+    public class MonthlyReport
     {
         [JsonPropertyName("categorySalesReports")]
-        public Dictionary<Category, CategorySalesReport> CategorySalesReports { get; set; } = new();
-    }
+        public Dictionary<string, CategorySalesReport> CategorySalesReports { get; set; } = new();
 
-    public class Helper
-    {
-        public static SalesReport Create(int year, int month, IEnumerable<string> categories, IEnumerable<string> regions,
-            TargetMonthlySales target)
+        public MonthlyReport(List<string> reportedCategories, List<string> reportedRegions, TargetMonthlySales? targetMonthlySales)
         {
-            var salesReport = new SalesReport();
-            int daysInMonth = DateTime.DaysInMonth(year, month);
-
-            for (int day = 1; day <= daysInMonth; day++)
+            foreach (var category in reportedCategories)
             {
-                var date = new DateTime(year, month, day);
-                var isoDate = date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+                var categorySalesReport = new CategorySalesReport();
 
-                salesReport.CategorySalesReports = new Dictionary<Category, CategorySalesReport>();
-
-                foreach (var category in categories)
+                foreach (var region in reportedRegions)
                 {
-                    var categorySalesReport = new CategorySalesReport
+                    categorySalesReport.RegionSalesReports[region] = new RegionSalesReport
                     {
-                        RegionSalesReports = new Dictionary<Region, RegionSalesReport>()
+                        TargetSales = targetMonthlySales?.GetTargetSales(category, region) ?? 0
                     };
-
-                    foreach (var region in regions)
-                    {
-                        categorySalesReport.RegionSalesReports[region] = new RegionSalesReport
-                        {
-                            DailySales = 0,
-                            TargetSales = target.GetTargetSales(category, region) ?? 0,
-                            TotalMonthlySales = 0,
-                            TargetHitRate = 0
-                        };
-                    }
-
-                    salesReport.CategorySalesReports[category] = categorySalesReport;
                 }
-            }
 
-            return salesReport;
+                CategorySalesReports[category] = categorySalesReport;
+            }
         }
+
+        public void IncrementDailySales(string category, string region, decimal amount)
+        {
+            if (!CategorySalesReports.TryGetValue(category, out var categorySalesReport) ||
+                !categorySalesReport.RegionSalesReports.TryGetValue(region, out var regionSalesReport)) return;
+
+            regionSalesReport.DailySales += amount;
+        }
+
+        public void IncrementMonthlySales(string? category, string region, decimal amount)
+        {
+            if (string.IsNullOrEmpty(category)) return;
+
+            if (!CategorySalesReports.TryGetValue(category, out var categorySalesReport) ||
+                !categorySalesReport.RegionSalesReports.TryGetValue(region, out var regionSalesReport)) return;
+
+            regionSalesReport.TotalMonthlySales += amount;
+            regionSalesReport.TargetHitRate = regionSalesReport.TargetSales == 0
+                ? 0
+                : Math.Round(regionSalesReport.TotalMonthlySales / regionSalesReport.TargetSales, 2);
+        }
+
     }
 
     public record CategorySalesReport
     {
         [JsonPropertyName("regionSalesReports")]
-        public Dictionary<Region, RegionSalesReport> RegionSalesReports { get; set; } = new();
+        public Dictionary<string, RegionSalesReport> RegionSalesReports { get; set; } = new();
     }
     
     public record RegionSalesReport
@@ -82,6 +91,25 @@ namespace Common
 
         [JsonPropertyName("targetHitRate")]
         public decimal TargetHitRate { get; set; }
+    }
+
+    public class TargetSales
+    {
+        [JsonPropertyName("TargetMonthlySales")]
+        private readonly Dictionary<(int year, int month), TargetMonthlySales> _sales;
+
+        public TargetSales(Dictionary<(int year, int month), TargetMonthlySales> sales)
+        {
+            _sales = sales ?? new();
+        }
+
+        /// <summary>
+        /// Gets the TargetMonthlySales for a specific year and month, or null if not found.
+        /// </summary>
+        public TargetMonthlySales? GetMonthlySalesTargetFor(int year, int month)
+        {
+            return _sales.TryGetValue(new (year, month), out var monthlySales) ? monthlySales : null;
+        }
     }
 
     public class TargetMonthlySales
@@ -107,5 +135,4 @@ namespace Common
             return null;
         }
     }
-
 }
