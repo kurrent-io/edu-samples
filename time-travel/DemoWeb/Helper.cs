@@ -11,7 +11,7 @@ public static class Helper
             item.category != null && item.category.Equals(category, StringComparison.InvariantCultureIgnoreCase));
 
         // Sum their totals
-        var total = categoryLineItems.Sum(item => item.pricePerUnit * item.quantity);
+        var total = categoryLineItems.Sum(item => item.total);
 
         return new OrderEventSummaryForSalesReport
         {
@@ -20,7 +20,7 @@ public static class Helper
             At = orderPlaced.at!.Value,
             Region = orderPlaced.store!.geographicRegion!,
             Category = category,
-            TotalSalesForCategory = total ?? 0
+            TotalSalesForCategory = total
         };
     }
 }
