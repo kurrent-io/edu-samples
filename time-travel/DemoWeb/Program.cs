@@ -1,6 +1,7 @@
 using System.Text.Json;
 using EventStore.Client;
 using Common;
+using DemoWeb;
 
 // -------------------- //
 // Connect to KurrentDB //
@@ -13,11 +14,6 @@ var kurrentdb = new EventStoreClient(                                           
                 EventStoreClientSettings.Create(
                   $"esdb://{kurrentDbHost}:2113?tls=false"));
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "3000";
-
-var salesDataFilepath = Environment.GetEnvironmentVariable("SALES_DATA_FILEPATH") ?? "data/report.json";
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
@@ -26,6 +22,8 @@ app.UseHttpsRedirection();
 
 app.MapGet("/api/sales-data", () =>
 {
+    var salesDataFilepath = Environment.GetEnvironmentVariable("SALES_DATA_FILEPATH") ?? "data/report.json";
+
     if (!File.Exists(salesDataFilepath))
         throw new FileNotFoundException("Sales read model data not found", salesDataFilepath);
     
@@ -80,46 +78,6 @@ app.UseStaticFiles();
 
 app.MapFallbackToFile("index.html"); // Serve wwwroot/index.html which is built by Vite
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "3000";
+
 app.Run($"http://0.0.0.0:{port}");
-
-public enum SalesFigureType
-{
-    DailySales,
-    TotalMonthlySales
-}
-
-public class OrderEventSummaryForSalesReport
-{
-    public long EventNumber { get; set; }
-    public string OrderId { get; set; } = default!;
-    public DateTimeOffset At { get; set; }
-    public string Region { get; set; } = default!;
-    public string Category { get; set; } = default!;
-    public string TotalSalesForCategory { get; set; } = default!;
-}
-
-public static class Helper
-{
-    public static OrderEventSummaryForSalesReport MapToSummary(this OrderPlaced orderPlaced, long eventNumber, string category)
-    {
-        // Find all line items for the given category
-        var categoryLineItems = orderPlaced.lineItems!
-            .Where(item => item.category.Equals(category, StringComparison.InvariantCultureIgnoreCase));
-
-        // Sum their totals
-        var total = categoryLineItems.Sum(item => item.pricePerUnit * item.quantity);
-
-        return new OrderEventSummaryForSalesReport
-        {
-            EventNumber = eventNumber,
-            OrderId = orderPlaced.orderId!,
-            At = orderPlaced.at!.Value,
-            Region = orderPlaced.store!.geographicRegion!,
-            Category = category,
-            TotalSalesForCategory = $"USD{total:0.00}"
-        };
-    }
-}
-
-
-
