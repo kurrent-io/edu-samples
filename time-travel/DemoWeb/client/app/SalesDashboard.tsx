@@ -13,7 +13,7 @@ import SalesEvent from "./SalesEvent"
 const READ_MODEL_ENDPOINT = "/api/sales-data"
 
 const SalesDashboard = () => {
-  const [reportReadModel, setReportReadModel] = useState<ReportReadModel>([])
+  const [reportReadModel, setReportReadModel] = useState<ReportReadModel | null>(null)
   const [selectedReportDate, setSelectedReportDate] = useState<string | null>(
     null,
   )
@@ -199,21 +199,21 @@ const SalesTable = ({ salesReport, previousReport }: SalesTableProps) => {
         <tr>
           <th scope="col">Category</th>
           <th scope="col">Region</th>
-          <th scope="col">Daily Sales</th>
-          <th scope="col">Target Sales</th>
+          <th className={styles.dailySalesCol} scope="col">Daily Sales</th>
+          <th className={styles.targetSalesCol} scope="col">Target Sales</th>
           <th scope="col">Total Monthly Sales</th>
         </tr>
       </thead>
       <tbody>
         {_.map(
-          salesReport.categorySalesReports,
+          salesReport.categories,
           (categorySalesReport: CategorySalesReport, category: Category) => (
             <SalesCategory
               key={category}
               category={category}
               categorySalesReport={categorySalesReport}
               previousCategorySalesReport={
-                previousReport?.categorySalesReports[category]
+                previousReport?.categories[category]
               }
             />
           ),
@@ -234,11 +234,11 @@ const SalesCategory = ({
   categorySalesReport,
   previousCategorySalesReport,
 }: SalesCategoryProps) => {
-  const { regionSalesReports } = categorySalesReport
-  const regionPairs = Object.entries(regionSalesReports)
+  const { regions } = categorySalesReport
+  const regionPairs = Object.entries(regions)
 
   return regionPairs.map(([region, regionalSalesData], i) => {
-    const { dailySales, targetSales, totalMonthlySales } = regionalSalesData
+    const { dailySales, monthEndSalesTarget, totalMonthlySales } = regionalSalesData
     const previousRegionalSales =
       previousCategorySalesReport?.[region as SalesRegion]
 
@@ -264,15 +264,15 @@ const SalesCategory = ({
           </td>
         )}
         <td>{region}</td>
-        <td>
+        <td className={styles.dailySalesCol}>
           <span>${dailySales}</span>
           <span className={arrowClassName}>{arrow}</span>
         </td>
-        <td>${targetSales}</td>
+        <td className={styles.targetSalesCol}>${monthEndSalesTarget}</td>
         <td>
           <SalesProgressBar
             totalMonthlySales={totalMonthlySales}
-            targetSales={targetSales}
+            targetSales={monthEndSalesTarget}
           />
         </td>
       </tr>
@@ -295,9 +295,8 @@ const SalesProgressBar = ({
 
   return (
     <div className={styles.salesProgressBar}>
-      <div className={innerClassName} style={{ width: `${percentage}%` }}>
-        ${totalMonthlySales} ({percentage.toFixed(2)}%)
-      </div>
+      <div className={innerClassName} style={{ width: `${percentage}%` }}/>
+      <span className={styles.progressBarLabel}>${totalMonthlySales} ({percentage.toFixed(2)}%)</span>
     </div>
   )
 }

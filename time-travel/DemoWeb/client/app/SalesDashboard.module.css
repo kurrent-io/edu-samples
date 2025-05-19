@@ -106,21 +106,34 @@
         border: 1px solid var(--light-grey);
       }
 
+      .dailySalesCol, .targetSalesCol {
+        width: 10%;
+      }
+
       .salesProgressBar {
         display: flex;
         align-items: center;
         justify-content: start;
         color: #fff;
-        background-color: var(--light-grey);
+        background-color: #9d9d9d;
         height: 1.5rem;
         width: 80%;
         border-radius: 2px;
         font-weight: lighter;
         margin: 0 auto;
+        position: relative;
 
         .progressBarSuccess, .progressBarFailure {
           height: 100%;
           border-radius: 2px;
+        }
+
+        .progressBarLabel {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 100%;
         }
 
         .progressBarSuccess {
