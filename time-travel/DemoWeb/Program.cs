@@ -7,76 +7,104 @@ using DemoWeb;
 // Connect to KurrentDB //
 // -------------------- //
 
-var kurrentDbHost = Environment.GetEnvironmentVariable("KURRENTDB_HOST")   // Get the KurrentDB host from environment variable
-                    ?? "localhost";                                             // Default to localhost if not set
+var kurrentDbHost = Environment.GetEnvironmentVariable("KURRENTDB_HOST")    // Get the KurrentDB host from environment variable
+                    ?? "localhost";                                         // Default to localhost if not set
 
-var kurrentdb = new EventStoreClient(                                           // Create a connection to KurrentDB
+var kurrentdb = new EventStoreClient(                                       // Create a connection to KurrentDB
                 EventStoreClientSettings.Create(
                   $"esdb://{kurrentDbHost}:2113?tls=false"));
 
-var builder = WebApplication.CreateBuilder(args);
+// -------------------- //
+// Setup the web server //
+// -------------------- //
 
+var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.UseHttpsRedirection();
+// ----------------------------------- //
+// Define the sales-data API endpoints //
+// ----------------------------------- //
 
 app.MapGet("/api/sales-data", () =>
 {
-    var salesDataFilepath = Environment.GetEnvironmentVariable("SALES_DATA_FILEPATH") ?? "data/report.json";
+    var salesDataFilepath =                                                 // Get the path to the sales data file 
+        Environment.GetEnvironmentVariable("SALES_DATA_FILEPATH") ??        // from an environment variable
+        "data/report.json";                                                 // or default to "data/report.json"
 
-    if (!File.Exists(salesDataFilepath))
-        throw new FileNotFoundException("Sales read model data not found", salesDataFilepath);
+    if (!File.Exists(salesDataFilepath))                                    // If the file does not exist
+        throw new FileNotFoundException("Sales read model data not found",  // throw an exception
+            salesDataFilepath);
     
     var salesDataJson = File.ReadAllText(salesDataFilepath);                // Read the sales report JSON file
-    var salesData = JsonSerializer.Deserialize<ReportReadModel>(salesDataJson);   // Deserialize the JSON into a ReportReadModel object
+    var salesData = JsonSerializer.                                         // Deserialize the JSON into a ReportReadModel object
+        Deserialize<ReportReadModel>(salesDataJson);   
     
     return salesData;
 });
 
-app.MapGet("/api/events", async (long checkpoint, DateTimeOffset date, string region, string category, SalesFigureType salesFigureType) =>
+// ------------------------------ //
+// Define the event API endpoints //
+// ------------------------------ //
+
+app.MapGet("/api/events", async (long checkpoint, DateTimeOffset date, 
+    string region, string category, SalesFigureType salesFigureType) =>
 {
-    var orderEventSummaryList = new List<OrderEventSummaryForSalesReport>(); // Create a list to store OrderPlaced events
-    await foreach (var resolvedEvent in kurrentdb.ReadStreamAsync(Direction.Forwards, "$et-order-placed",
-                       StreamPosition.Start, resolveLinkTos:true))
+    var orderEventSummaryList = new List<OrderEventSummary>();              // Create a list to hold filtered order events
+
+    var readResults = kurrentdb.ReadStreamAsync(Direction.Forwards,         // Read the stream in the forward direction
+        "$et-order-placed", StreamPosition.Start, resolveLinkTos:true);     // from the start of the $et-order-placed stream
+
+    await foreach (var resolvedEvent in readResults)                        // For each event in the stream
     {
-        var eventNumber = resolvedEvent.OriginalEventNumber.ToInt64();
-        if (eventNumber > checkpoint) break;                    // Stop reading if we reach an event with a number less than or equal to the checkpoint
-        
-        if (EventEncoder.Decode(resolvedEvent.Event.Data, "order-placed")           // Try to deserialize the event to an OrderPlaced event
-            is not OrderPlaced orderPlaced)                                         // Skip this message if it is not an OrderPlaced event
+        var eventNumber = resolvedEvent.OriginalEventNumber.ToInt64();      // Get its event number from the stream
+        if (eventNumber > checkpoint) break;                                // Stop reading if the event number is greater than the checkpoint
+
+        if (EventEncoder.Decode(resolvedEvent.Event.Data, "order-placed")   // Try to deserialize the event to an OrderPlaced event
+            is not OrderPlaced orderPlaced)                                 // Skip this message if it is not an OrderPlaced event
             continue;
 
-        if (!OrderMatchesFilter(orderPlaced)) continue; // Skip this message if it does not match the region or category
+        if (!OrderMatchesFilter(orderPlaced)) continue;                     // Skip this message if it does not filter from the request
 
-        orderEventSummaryList.Add(orderPlaced.MapToSummary(eventNumber, category));                                     // Add the event to the list if it matches the date, region, and category
+        orderEventSummaryList.Add(                                          // Otherwise, add the order event to the list
+            orderPlaced.MapToSummary(eventNumber, category));               // after mapping it to a summary object
     }
 
     return orderEventSummaryList;
 
     bool OrderMatchesFilter(OrderPlaced orderPlaced)
     {
-        var orderMatchesRequestedRegion =
-            orderPlaced.store!.geographicRegion!.Equals(region, StringComparison.InvariantCultureIgnoreCase);
+        var matchRegion =                                                   // Check if the order matches the requested region
+            orderPlaced.store!.geographicRegion!.
+                Equals(region, 
+                    StringComparison.InvariantCultureIgnoreCase);           // Ignore case for region comparison
 
-        var orderMatchesRequestedCategory = orderPlaced.lineItems!.Exists(item =>
-            item.category.Equals(category, StringComparison.InvariantCultureIgnoreCase));
+        var matchCategory = orderPlaced.lineItems!.Exists(item =>           // Check if any line item matches the requested category
+            item.category.Equals(category, 
+                StringComparison.InvariantCultureIgnoreCase));              // Ignore case for category comparison
 
-        if (!orderMatchesRequestedRegion || !orderMatchesRequestedCategory) return false; // Skip this message if it does not match the region or category
+        if (!matchRegion || !matchCategory) return false;                   // Skip this event if it does not match the region or category
 
-        var orderMatchesRequestedDate = orderPlaced.at!.Value.Date == date.Date;
+        var matchDate = orderPlaced.at!.Value.Date == date.Date;            // Check if the order date matches the requested date
 
-        var orderIsBeforeRequestedDate = orderPlaced.at!.Value.Date <= date.Date &&
-                                         orderPlaced.at!.Value.Year == date.Year &&
-                                         orderPlaced.at!.Value.Month == date.Month;
+        var orderIsBeforeRequestedDate =                                    // Check if the order date is before the requested date
+            orderPlaced.at!.Value.Date <= date.Date &&
+            orderPlaced.at!.Value.Year == date.Year &&
+            orderPlaced.at!.Value.Month == date.Month;
 
-        return (salesFigureType == SalesFigureType.DailySales && orderMatchesRequestedDate) ||
-               (salesFigureType == SalesFigureType.TotalMonthlySales && orderIsBeforeRequestedDate);
+        if (salesFigureType == SalesFigureType.DailySales)                  // If the sales figure type is daily sales
+            return matchDate;                                               // return true if the order date matches the requested date
+
+        if (salesFigureType == SalesFigureType.TotalMonthlySales)           // If the sales figure type is total monthly sales
+            return orderIsBeforeRequestedDate;                              // return true if the order date is before the requested date
+
+        throw new ArgumentOutOfRangeException(                              // Otherwise, throw an exception
+            nameof(salesFigureType), salesFigureType, null);
     }
 });
 
-app.UseStaticFiles();
-
-app.MapFallbackToFile("index.html"); // Serve wwwroot/index.html which is built by Vite
+// -------------------- //
+// Start the web server //
+// -------------------- //
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "3000";
 

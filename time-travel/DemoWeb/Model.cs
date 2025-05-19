@@ -6,7 +6,7 @@ public enum SalesFigureType
     TotalMonthlySales
 }
 
-public class OrderEventSummaryForSalesReport
+public class OrderEventSummary
 {
     public long EventNumber { get; set; }
     public string OrderId { get; set; } = default!;

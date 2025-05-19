@@ -4,7 +4,7 @@ namespace DemoWeb;
 
 public static class Helper
 {
-    public static OrderEventSummaryForSalesReport MapToSummary(this OrderPlaced orderPlaced, long eventNumber, string category)
+    public static OrderEventSummary MapToSummary(this OrderPlaced orderPlaced, long eventNumber, string category)
     {
         // Find all line items for the given category
         var categoryLineItems = orderPlaced.lineItems!.Where(item =>
@@ -13,7 +13,7 @@ public static class Helper
         // Sum their totals
         var total = categoryLineItems.Sum(item => item.total);
 
-        return new OrderEventSummaryForSalesReport
+        return new OrderEventSummary
         {
             EventNumber = eventNumber,
             OrderId = orderPlaced.orderId!,
