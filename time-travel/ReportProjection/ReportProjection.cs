@@ -44,14 +44,14 @@ public class ReportProjection
             }
         }
 
-        MonthlyReport GetReportAsOf(DateOnly asOfDate)
+        MonthEndReport GetReportAsOf(DateOnly asOfDate)
         {
             var report = readModel.GetReport(asOfDate);
 
             if (report != null) return report;
                 
-            report = new MonthlyReport(Config.GetReportedCategories(), Config.GetReportedRegions(),
-                Config.GetSalesTarget().GetMonthlySalesTargetFor(asOfDate.Year, asOfDate.Month));
+            report = new MonthEndReport(Config.GetCategoriesToReport(), Config.GetRegionsToReport(),
+                Config.GetSalesTarget().GetMonthEndSalesTargetFor(asOfDate.Year, asOfDate.Month));
 
             readModel.AddOrUpdateReport(asOfDate, report);
 

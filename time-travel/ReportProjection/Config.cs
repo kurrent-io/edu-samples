@@ -15,22 +15,22 @@ namespace ReportProjection
                 .Build();
         }
 
-        public static List<string> GetReportedCategories()
+        public static List<string> GetCategoriesToReport()
         {
-            return Configuration.GetSection("Categories").Get<List<string>>() ?? new List<string>();
+            return Configuration.GetSection("CategoriesToReport").Get<List<string>>() ?? new List<string>();
         }
 
-        public static List<string> GetReportedRegions()
+        public static List<string> GetRegionsToReport()
         {
-            return Configuration.GetSection("Regions").Get<List<string>>() ?? new List<string>();
+            return Configuration.GetSection("RegionsToReport").Get<List<string>>() ?? new List<string>();
         }
 
-        public static TargetSales GetSalesTarget()
+        public static MonthEndSalesTargets GetSalesTarget()
         {
-            var result = new Dictionary<(int year, int month), TargetMonthlySales>();
-            var section = Configuration.GetSection("TargetMonthlySales");
+            var result = new Dictionary<(int year, int month), MonthEndSalesTarget>();
+            var section = Configuration.GetSection("MonthEndSalesTarget");
             if (!section.Exists())
-                return new TargetSales(result);
+                return new MonthEndSalesTargets(result);
 
             foreach (var periodSection in section.GetChildren())
             {
@@ -46,11 +46,11 @@ namespace ReportProjection
                         targetSales[categorySection.Key] = regions;
                     }
 
-                    result[(dt.Year, dt.Month)] = new TargetMonthlySales(targetSales);
+                    result[(dt.Year, dt.Month)] = new MonthEndSalesTarget(targetSales);
                 }
             }
 
-            return new TargetSales(result);
+            return new MonthEndSalesTargets(result);
         }
     }
 }
