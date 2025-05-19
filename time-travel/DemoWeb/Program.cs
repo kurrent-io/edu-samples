@@ -47,18 +47,33 @@ app.MapGet("/api/events", async (long checkpoint, DateTimeOffset date, string re
         if (EventEncoder.Decode(resolvedEvent.Event.Data, "order-placed")           // Try to deserialize the event to an OrderPlaced event
             is not OrderPlaced orderPlaced)                                         // Skip this message if it is not an OrderPlaced event
             continue;
-        
-        if ((salesFigureType == SalesFigureType.DailySales && orderPlaced.at!.Value.Date == date.Date || 
-             salesFigureType == SalesFigureType.TotalMonthlySales && orderPlaced.at!.Value.Date <= date.Date && orderPlaced.at!.Value.Year == date.Year &&
-             orderPlaced.at!.Value.Month == date.Month) && 
-            orderPlaced.store!.geographicRegion!.Equals(region, StringComparison.InvariantCultureIgnoreCase) &&
-            orderPlaced.lineItems!.Exists(item => item.category.Equals(category, StringComparison.InvariantCultureIgnoreCase)))
-        {
-            orderEventSummaryList.Add(orderPlaced.MapToSummary(eventNumber, category));                                     // Add the event to the list if it matches the date, region, and category
-        }
+
+        if (!OrderMatchesFilter(orderPlaced)) continue; // Skip this message if it does not match the region or category
+
+        orderEventSummaryList.Add(orderPlaced.MapToSummary(eventNumber, category));                                     // Add the event to the list if it matches the date, region, and category
     }
 
     return orderEventSummaryList;
+
+    bool OrderMatchesFilter(OrderPlaced orderPlaced)
+    {
+        var orderMatchesRequestedRegion =
+            orderPlaced.store!.geographicRegion!.Equals(region, StringComparison.InvariantCultureIgnoreCase);
+
+        var orderMatchesRequestedCategory = orderPlaced.lineItems!.Exists(item =>
+            item.category.Equals(category, StringComparison.InvariantCultureIgnoreCase));
+
+        if (!orderMatchesRequestedRegion || !orderMatchesRequestedCategory) return false; // Skip this message if it does not match the region or category
+
+        var orderMatchesRequestedDate = orderPlaced.at!.Value.Date == date.Date;
+
+        var orderIsBeforeRequestedDate = orderPlaced.at!.Value.Date <= date.Date &&
+                                         orderPlaced.at!.Value.Year == date.Year &&
+                                         orderPlaced.at!.Value.Month == date.Month;
+
+        return (salesFigureType == SalesFigureType.DailySales && orderMatchesRequestedDate) ||
+               (salesFigureType == SalesFigureType.TotalMonthlySales && orderIsBeforeRequestedDate);
+    }
 });
 
 app.UseStaticFiles();
