@@ -80,7 +80,8 @@ await foreach (var message in subscription.Messages)                            
     readModel.Checkpoint = e.OriginalEventNumber.ToInt64();                                       // Set the read model checkpoint to the event number of the event we just read
 
     Directory.CreateDirectory(Directory.GetParent(readModelPath)!.FullName);                    // Create the directory for the report read model if it doesn't exist
-    File.WriteAllText(readModelPath, JsonSerializer.Serialize(readModel));              // Write the report read model to the JSON file
+    File.WriteAllText(readModelPath,
+        JsonSerializer.Serialize(readModel, new JsonSerializerOptions { WriteIndented = true }));              // Write the report read model to the JSON file
     
     Console.WriteLine($"Projected event " +
                       $"#{e.OriginalEventNumber.ToInt64()} " +
