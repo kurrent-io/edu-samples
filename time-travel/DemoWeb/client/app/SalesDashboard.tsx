@@ -3,7 +3,6 @@ import {
   Category,
   CategorySalesReport,
   ReportReadModel,
-  SalesRegion,
   SalesReport,
 } from "./ReportReadModel"
 import { useEffect, useMemo, useState } from "react"
@@ -11,12 +10,21 @@ import _ from "lodash"
 import SalesEvent from "./SalesEvent"
 
 const READ_MODEL_ENDPOINT = "/api/sales-data"
+const EVENTS_ENDPOINT = "/api/events"
+
+enum SalesFigureType {
+  DailySales = 0,
+  TotalMonthlySales = 1,
+}
 
 const SalesDashboard = () => {
-  const [reportReadModel, setReportReadModel] = useState<ReportReadModel | null>(null)
+  const [reportReadModel, setReportReadModel] =
+    useState<ReportReadModel | null>(null)
   const [selectedReportDate, setSelectedReportDate] = useState<string | null>(
     null,
   )
+  const [eventQueryParams, setEventQueryParams] =
+    useState<EventQueryParams | null>(null)
 
   const previousReportDate = selectedReportDate
     ? getPreviousDay(selectedReportDate)
@@ -62,6 +70,10 @@ const SalesDashboard = () => {
           <DashboardContent
             previousReport={previousReport}
             salesReport={selectedReport}
+            eventQueryParams={eventQueryParams}
+            setEventQueryParams={setEventQueryParams}
+            selectedDate={selectedReportDate}
+            checkpoint={reportReadModel.checkpoint}
           />
         </>
       )}
@@ -157,50 +169,92 @@ const TimeSlider = ({
 interface DashboardContentProps {
   salesReport: SalesReport
   previousReport: SalesReport | null
+  eventQueryParams: EventQueryParams | null
+  setEventQueryParams: (eventQueryParams: EventQueryParams | null) => void
+  checkpoint: number
+  selectedDate: string | null
 }
 
 const DashboardContent = ({
   salesReport,
   previousReport,
+  eventQueryParams,
+  setEventQueryParams,
+  checkpoint,
+  selectedDate,
 }: DashboardContentProps) => (
   <div className={styles.dashboardContent}>
     <SalesDataDashboard
       salesReport={salesReport}
       previousReport={previousReport}
+      eventQueryParams={eventQueryParams}
+      setEventQueryParams={setEventQueryParams}
+      checkpoint={checkpoint}
+      selectedDate={selectedDate}
     />
-    <EventStream />
+    <EventStream eventQueryParams={eventQueryParams} />
   </div>
 )
 
 interface SalesDataDashboardProps {
   salesReport: SalesReport
   previousReport: SalesReport | null
+  eventQueryParams: EventQueryParams | null
+  setEventQueryParams: (eventQueryParams: EventQueryParams | null) => void
+  checkpoint: number
+  selectedDate: string | null
 }
 
 const SalesDataDashboard = ({
   salesReport,
   previousReport,
+  eventQueryParams,
+  setEventQueryParams,
+  checkpoint,
+  selectedDate,
 }: SalesDataDashboardProps) => (
   <div className={styles.salesData}>
     <span className={styles.sectionTitle}>Sales Data</span>
-    <SalesTable salesReport={salesReport} previousReport={previousReport} />
+    <SalesTable
+      salesReport={salesReport}
+      previousReport={previousReport}
+      eventQueryParams={eventQueryParams}
+      setEventQueryParams={setEventQueryParams}
+      checkpoint={checkpoint}
+      selectedDate={selectedDate}
+    />
   </div>
 )
 
 interface SalesTableProps {
   salesReport: SalesReport
   previousReport: SalesReport | null
+  eventQueryParams: EventQueryParams | null
+  setEventQueryParams: (eventQueryParams: EventQueryParams | null) => void
+  checkpoint: number
+  selectedDate: string | null
 }
 
-const SalesTable = ({ salesReport, previousReport }: SalesTableProps) => {
+const SalesTable = ({
+  salesReport,
+  previousReport,
+  eventQueryParams,
+  setEventQueryParams,
+  checkpoint,
+  selectedDate,
+}: SalesTableProps) => {
   return (
     <table className={styles.salesTable}>
       <thead>
         <tr>
           <th scope="col">Category</th>
           <th scope="col">Region</th>
-          <th className={styles.dailySalesCol} scope="col">Daily Sales</th>
-          <th className={styles.targetSalesCol} scope="col">Target Sales</th>
+          <th className={styles.dailySalesCol} scope="col">
+            Daily Sales
+          </th>
+          <th className={styles.targetSalesCol} scope="col">
+            Target Sales
+          </th>
           <th scope="col">Total Monthly Sales</th>
         </tr>
       </thead>
@@ -212,9 +266,11 @@ const SalesTable = ({ salesReport, previousReport }: SalesTableProps) => {
               key={category}
               category={category}
               categorySalesReport={categorySalesReport}
-              previousCategorySalesReport={
-                previousReport?.categories[category]
-              }
+              previousCategorySalesReport={previousReport?.categories[category]}
+              eventQueryParams={eventQueryParams}
+              setEventQueryParams={setEventQueryParams}
+              checkpoint={checkpoint}
+              selectedDate={selectedDate}
             />
           ),
         )}
@@ -227,20 +283,28 @@ interface SalesCategoryProps {
   category: Category
   categorySalesReport: CategorySalesReport
   previousCategorySalesReport?: CategorySalesReport
+  eventQueryParams: EventQueryParams | null
+  setEventQueryParams: (eventQueryParams: EventQueryParams | null) => void
+  checkpoint: number
+  selectedDate: string
 }
 
 const SalesCategory = ({
   category,
   categorySalesReport,
   previousCategorySalesReport,
+  eventQueryParams,
+  setEventQueryParams,
+  checkpoint,
+  selectedDate,
 }: SalesCategoryProps) => {
   const { regions } = categorySalesReport
   const regionPairs = Object.entries(regions)
 
   return regionPairs.map(([region, regionalSalesData], i) => {
-    const { dailySales, monthEndSalesTarget, totalMonthlySales } = regionalSalesData
-    const previousRegionalSales =
-      previousCategorySalesReport?.[region as SalesRegion]
+    const { dailySales, monthEndSalesTarget, totalMonthlySales } =
+      regionalSalesData
+    const previousRegionalSales = previousCategorySalesReport?.[region]
 
     const salesIncreased =
       previousRegionalSales && dailySales > previousRegionalSales.dailySales
@@ -256,19 +320,43 @@ const SalesCategory = ({
         ? styles.arrowSalesDecreased
         : undefined
 
+    const rowClassName =
+      eventQueryParams?.category === category &&
+      eventQueryParams?.region === region
+        ? styles.selectedRow
+        : undefined
+
+    const getOnSalesFigureClick = (salesFigureType: SalesFigureType) => () => {
+      setEventQueryParams({
+        category,
+        region,
+        salesFigureType,
+        checkpoint,
+        date: selectedDate,
+      })
+    }
+
     return (
-      <tr key={region}>
+      <tr key={region} className={rowClassName}>
         {i === 0 && (
           <td scope="row" rowSpan={regionPairs.length}>
             {category}
           </td>
         )}
         <td>{region}</td>
-        <td className={styles.dailySalesCol}>
-          <span>${dailySales}</span>
+        <td
+          className={styles.dailySalesCol}
+          onClick={getOnSalesFigureClick(SalesFigureType.DailySales)}
+        >
+          <span className={styles.dailySalesText}>${dailySales}</span>
           <span className={arrowClassName}>{arrow}</span>
         </td>
-        <td className={styles.targetSalesCol}>${monthEndSalesTarget}</td>
+        <td
+          className={styles.targetSalesCol}
+          onClick={getOnSalesFigureClick(SalesFigureType.TotalMonthlySales)}
+        >
+          ${monthEndSalesTarget}
+        </td>
         <td>
           <SalesProgressBar
             totalMonthlySales={totalMonthlySales}
@@ -289,58 +377,84 @@ const SalesProgressBar = ({
   totalMonthlySales,
   targetSales,
 }: SalesProgressBarProps) => {
-  const percentage = targetSales === 0 ? 100 : (totalMonthlySales / targetSales) * 100
+  const percentage =
+    targetSales === 0 ? 100 : (totalMonthlySales / targetSales) * 100
   const innerClassName =
     percentage >= 100 ? styles.progressBarSuccess : styles.progressBarFailure
 
   return (
     <div className={styles.salesProgressBar}>
-      <div className={innerClassName} style={{ width: `${percentage}%` }}/>
-      <span className={styles.progressBarLabel}>${totalMonthlySales} ({percentage.toFixed(2)}%)</span>
+      <div className={innerClassName} style={{ width: `${percentage}%` }} />
+      <span className={styles.progressBarLabel}>
+        ${totalMonthlySales} ({percentage.toFixed(2)}%)
+      </span>
     </div>
   )
 }
 
-const EventStream = () => {
-  // TODO: Fetch events from API
-  const events = []
+interface EventStreamProps {
+  eventQueryParams: EventQueryParams | null
+}
+
+const EventStream = ({ eventQueryParams }: EventStreamProps) => {
+  const [events, setEvents] = useState<SalesEvent[]>([])
+
+  useEffect(() => {
+    if (!eventQueryParams) return
+
+    const queryString = Object.entries(eventQueryParams)
+      .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+      .join("&")
+
+    fetch(`${EVENTS_ENDPOINT}?${queryString}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data: SalesEvent[]) => {
+        setEvents(data)
+      })
+      .catch((error) =>
+        console.error("Error fetching events from the server", error),
+      )
+  }, [eventQueryParams])
 
   return (
     <div className={styles.eventStream}>
       <span className={styles.sectionTitle}>Event Stream</span>
       {events.map((event) => (
-        <EventCard key={event.eventId} event={event} />
+        <EventCard key={event.eventNumber} event={event} />
       ))}
     </div>
   )
 }
 
 const EventCard = ({ event }: { event: SalesEvent }) => {
-  const {
-    eventType,
-    timestamp,
-    aggregateId,
-    eventId,
-    version,
-    category,
-    ...eventData
-  } = event
-
-  const eventDataPairs = Object.entries(eventData)
+  const { category, region, eventNumber, at } = event
 
   return (
     <div className={styles.eventCard}>
-      <span className={styles.eventType}>{event.eventType}</span>
+      <span className={styles.eventType}>{eventNumber}</span>
       <span className={styles.eventTimestamp}>
-        {new Date(event.timestamp).toLocaleString()}
+        {new Date(at).toLocaleString()}
       </span>
-      {eventDataPairs.map(([key, value]) => (
-        <span className={styles.eventField}>
-          {_.startCase(key)}: {value}
-        </span>
-      ))}
+      {/*{eventDataPairs.map(([key, value]) => (*/}
+      {/*  <span className={styles.eventField}>*/}
+      {/*    {_.startCase(key)}: {value}*/}
+      {/*  </span>*/}
+      {/*))}*/}
     </div>
   )
+}
+
+interface EventQueryParams {
+  checkpoint: number
+  category: string
+  region: string
+  date: string
+  salesFigureType: 0 | 1
 }
 
 export default SalesDashboard
