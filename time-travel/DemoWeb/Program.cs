@@ -23,6 +23,9 @@ var kurrentdb = new EventStoreClient(                                       // C
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
+app.UseStaticFiles();
+app.MapFallbackToFile("index.html");
+
 // ----------------------------------- //
 // Define the sales-data API endpoints //
 // ----------------------------------- //
@@ -117,10 +120,6 @@ app.MapGet("/api/events", async (long checkpoint, DateTimeOffset date,
 // -------------------- //
 // Start the web server //
 // -------------------- //
-
-app.UseStaticFiles();
-
-app.MapFallbackToFile("index.html"); // Serve wwwroot/index.html which is built by Vite
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "3000";
 
