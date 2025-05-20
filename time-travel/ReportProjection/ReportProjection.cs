@@ -12,8 +12,7 @@ public class ReportProjection
     // - Creating daily and monthly sales snapshots for each day from the order date up to the end of the month.
     // - Ensuring the read model contains up-to-date reports for all relevant dates, categories, and regions.
     // ---------------------------------------------------------------------------------------------------------
-    public static void ProjectOrderToReadModel(OrderPlaced orderPlaced, 
-        ReportReadModel readModel)
+    public static void ProjectOrderToReadModel(OrderPlaced orderPlaced, ReportReadModel readModel)
     {
         var orderDate = DateOnly.FromDateTime(orderPlaced.at!.Value.DateTime);  // Convert the order date to DateOnly without time 
 
