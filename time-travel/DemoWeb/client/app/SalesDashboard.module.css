@@ -199,6 +199,15 @@
   }
 }
 
+.errorAlert {
+  background-color: #ffebed;
+  color: #bd2d3d;
+  margin: 3rem auto;
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px #bd2d3d solid;
+}
+
 .buttonLink {
   color: var(--color-highlight-dark);
   text-decoration: underline;
