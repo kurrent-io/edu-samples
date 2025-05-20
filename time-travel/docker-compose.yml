@@ -23,7 +23,7 @@ services:
       - ./data:/app/data
     environment:
       - KURRENTDB_HOST=kurrentdb
-      - SALES_DATA_FILEPATH=/app/data/data.json
+      - SALES_DATA_FILEPATH=/app/data/report-read-model.json
     profiles: ["app"]
 
   reportprojection:
@@ -35,5 +35,5 @@ services:
     command: ["dotnet", "run", "--project", "./ReportProjection"]
     environment:
       - KURRENTDB_HOST=kurrentdb
-      - OUTPUT_FILEPATH=/app/data/data.json
+      - OUTPUT_FILEPATH=/app/data/report-read-model.json
     profiles: ["app"]

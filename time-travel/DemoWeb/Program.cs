@@ -31,7 +31,7 @@ app.MapGet("/api/sales-data", () =>
 {
     var salesDataFilepath =                                                 // Get the path to the sales data file 
         Environment.GetEnvironmentVariable("SALES_DATA_FILEPATH") ??        // from an environment variable
-        "data/report.json";                                                 // or default to "data/report.json"
+        "data/report-read-model.json";                                      // or default to "data/report-read-model.json"
 
     if (!File.Exists(salesDataFilepath))                                    // If the file does not exist
         throw new FileNotFoundException("Sales read model data not found",  // throw an exception

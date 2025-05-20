@@ -37,7 +37,7 @@ var kurrentdb = new EventStoreClient(                                    // Crea
 // --------------------------------- //
 var readModelPath =                                                      // Get the path to the report read model from an environment variable
     Environment.GetEnvironmentVariable("OUTPUT_FILEPATH") ?? 
-    "data/report.json"; 
+    "data/report-read-model.json"; 
 
 var hasExistingReadModel = File.Exists(readModelPath);
 
