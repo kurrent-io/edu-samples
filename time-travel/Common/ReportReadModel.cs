@@ -5,7 +5,6 @@ namespace Common
     // Root type for deserialization
     public class ReportReadModel
     {
-        [JsonPropertyName("checkpoint")]
         public long Checkpoint { get; set; }
 
         [JsonPropertyName("salesReports")]
@@ -28,7 +27,6 @@ namespace Common
 
     public class MonthEndReport
     {
-        [JsonPropertyName("categories")]
         public Dictionary<string, Category> Categories { get; set; } = new();
 
         public MonthEndReport() { } // Parameter-less constructor for deserialization
@@ -78,22 +76,14 @@ namespace Common
 
     public record Category
     {
-        [JsonPropertyName("regions")]
         public Dictionary<string, Region> Regions { get; set; } = new();
     }
     
     public record Region
     {
-        [JsonPropertyName("dailySales")]
         public decimal DailySales { get; set; }
-
-        [JsonPropertyName("monthEndSalesTarget")]
         public decimal MonthEndSalesTarget { get; set; }
-
-        [JsonPropertyName("totalMonthlySales")]
         public decimal TotalMonthlySales { get; set; }
-
-        [JsonPropertyName("targetHitRate")]
         public decimal TargetHitRate { get; set; }
     }
 

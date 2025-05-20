@@ -91,12 +91,12 @@ app.MapGet("/api/events", async (long checkpoint, DateTimeOffset date,
     bool OrderDoesNotMatchRegionOrCategory(OrderPlaced orderPlaced)
     {
         var matchRegion =                                                   // Check if the order matches the requested region
-            orderPlaced.store!.geographicRegion!.
+            orderPlaced.Store!.GeographicRegion!.
                 Equals(region,
                     StringComparison.InvariantCultureIgnoreCase);           // Ignore case for region comparison
 
-        var matchCategory = orderPlaced.lineItems!.Exists(item =>           // Check if any line item matches the requested category
-            item != null && item.category.Equals(category,
+        var matchCategory = orderPlaced.LineItems!.Exists(item =>           // Check if any line item matches the requested category
+            item != null && item.Category.Equals(category,
                 StringComparison.InvariantCultureIgnoreCase));              // Ignore case for category comparison
 
         return !(matchRegion && matchCategory);                             // Check if order matches both region and category
@@ -104,15 +104,15 @@ app.MapGet("/api/events", async (long checkpoint, DateTimeOffset date,
 
     bool OrderDoesNotMatchRequestDate(OrderPlaced orderPlaced)
     {
-        return orderPlaced.at!.Value.Date != date.Date;                     // Check if the order date matches the requested date
+        return orderPlaced.At!.Value.Date != date.Date;                     // Check if the order date matches the requested date
         
     }
 
     bool OrderIsPlacedAfterRequestDate(OrderPlaced orderPlaced)
     {
-        return orderPlaced.at!.Value.Date > date.Date ||                    // Check if the order is placed after the requested date
-               orderPlaced.at!.Value.Year != date.Year ||
-               orderPlaced.at!.Value.Month != date.Month;
+        return orderPlaced.At!.Value.Date > date.Date ||                    // Check if the order is placed after the requested date
+               orderPlaced.At!.Value.Year != date.Year ||
+               orderPlaced.At!.Value.Month != date.Month;
         
     }
 

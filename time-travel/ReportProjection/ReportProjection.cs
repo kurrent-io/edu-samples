@@ -14,9 +14,9 @@ public class ReportProjection
     // ---------------------------------------------------------------------------------------------------------
     public static void ProjectOrderToReadModel(OrderPlaced orderPlaced, ReportReadModel readModel)
     {
-        var orderDate = DateOnly.FromDateTime(orderPlaced.at!.Value.DateTime);  // Convert the order date to DateOnly without time 
+        var orderDate = DateOnly.FromDateTime(orderPlaced.At!.Value.DateTime);  // Convert the order date to DateOnly without time 
 
-        var orderRegion = orderPlaced.store!.geographicRegion!;                 // Get the order region from the store object
+        var orderRegion = orderPlaced.Store!.GeographicRegion!;                 // Get the order region from the store object
 
         var finalDayOfTheMonth =                                                // Get the last day of the month for the order date
             new DateOnly(orderDate.Year, orderDate.Month, 
@@ -38,10 +38,10 @@ public class ReportProjection
         void ProjectToMonthlySales(DateOnly reportDate)
         {
             var report = GetReportAsOf(readModel, reportDate);                  // Get the report as of the requested date
-            foreach (var lineItem in orderPlaced.lineItems!)                    // Iterate through each line item in the order
+            foreach (var lineItem in orderPlaced.LineItems!)                    // Iterate through each line item in the order
             {
-                report.IncrementMonthlySales(lineItem.category, orderRegion,    // Increment the monthly sales by line item's total
-                    lineItem.total);                                             
+                report.IncrementMonthlySales(lineItem.Category, orderRegion,    // Increment the monthly sales by line item's total
+                    lineItem.Total);                                             
             }
         }
 
@@ -49,10 +49,10 @@ public class ReportProjection
         void ProjectToDailySales(DateOnly reportDate)
         {
             var report = GetReportAsOf(readModel, reportDate);                  // Get the report as of the requested date
-            foreach (var lineItem in orderPlaced.lineItems!)                    // Iterate through each line item in the order
+            foreach (var lineItem in orderPlaced.LineItems!)                    // Iterate through each line item in the order
             {
-                report.IncrementDailySales(lineItem.category, orderRegion,      // Increment the daily sales by line item's total
-                    lineItem.total); 
+                report.IncrementDailySales(lineItem.Category, orderRegion,      // Increment the daily sales by line item's total
+                    lineItem.Total); 
             }
         }
 
