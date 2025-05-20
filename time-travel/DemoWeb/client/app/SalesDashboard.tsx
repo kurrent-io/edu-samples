@@ -2,6 +2,7 @@ import styles from "./SalesDashboard.module.css"
 import {
   Category,
   CategorySalesReport,
+  Region,
   ReportReadModel,
   SalesReport,
 } from "./ReportReadModel"
@@ -24,8 +25,8 @@ const SalesDashboard = () => {
   const [selectedReportDate, setSelectedReportDate] = useState<string | null>(
     null,
   )
-  const [eventQueryParams, setEventQueryParams] =
-    useState<EventQueryParams | null>(null)
+  const [selectedTableCell, setSelectedTableCell] =
+    useState<SelectedTableCell | null>(null)
 
   const previousReportDate = selectedReportDate
     ? getPreviousDay(selectedReportDate)
@@ -71,8 +72,8 @@ const SalesDashboard = () => {
           <DashboardContent
             previousReport={previousReport}
             salesReport={selectedReport}
-            eventQueryParams={eventQueryParams}
-            setEventQueryParams={setEventQueryParams}
+            selectedTableCell={selectedTableCell}
+            setSelectedTableCell={setSelectedTableCell}
             selectedDate={selectedReportDate}
             checkpoint={reportReadModel.checkpoint}
           />
@@ -170,8 +171,8 @@ const TimeSlider = ({
 interface DashboardContentProps {
   salesReport: SalesReport
   previousReport: SalesReport | null
-  eventQueryParams: EventQueryParams | null
-  setEventQueryParams: (eventQueryParams: EventQueryParams | null) => void
+  selectedTableCell: SelectedTableCell | null
+  setSelectedTableCell: (selectedTableCell: SelectedTableCell | null) => void
   checkpoint: number
   selectedDate: string | null
 }
@@ -179,8 +180,8 @@ interface DashboardContentProps {
 const DashboardContent = ({
   salesReport,
   previousReport,
-  eventQueryParams,
-  setEventQueryParams,
+  selectedTableCell,
+  setSelectedTableCell,
   checkpoint,
   selectedDate,
 }: DashboardContentProps) => (
@@ -188,41 +189,37 @@ const DashboardContent = ({
     <SalesDataDashboard
       salesReport={salesReport}
       previousReport={previousReport}
-      eventQueryParams={eventQueryParams}
-      setEventQueryParams={setEventQueryParams}
+      selectedTableCell={selectedTableCell}
+      setSelectedTableCell={setSelectedTableCell}
+    />
+    <EventStream
+      selectedTableCell={selectedTableCell}
       checkpoint={checkpoint}
       selectedDate={selectedDate}
     />
-    <EventStream eventQueryParams={eventQueryParams} />
   </div>
 )
 
 interface SalesDataDashboardProps {
   salesReport: SalesReport
   previousReport: SalesReport | null
-  eventQueryParams: EventQueryParams | null
-  setEventQueryParams: (eventQueryParams: EventQueryParams | null) => void
-  checkpoint: number
-  selectedDate: string | null
+  selectedTableCell: SelectedTableCell | null
+  setSelectedTableCell: (selectedTableCell: SelectedTableCell | null) => void
 }
 
 const SalesDataDashboard = ({
   salesReport,
   previousReport,
-  eventQueryParams,
-  setEventQueryParams,
-  checkpoint,
-  selectedDate,
+  selectedTableCell,
+  setSelectedTableCell,
 }: SalesDataDashboardProps) => (
   <div className={styles.salesData}>
     <span className={styles.sectionTitle}>Sales Data</span>
     <SalesTable
       salesReport={salesReport}
       previousReport={previousReport}
-      eventQueryParams={eventQueryParams}
-      setEventQueryParams={setEventQueryParams}
-      checkpoint={checkpoint}
-      selectedDate={selectedDate}
+      selectedTableCell={selectedTableCell}
+      setSelectedTableCell={setSelectedTableCell}
     />
   </div>
 )
@@ -230,19 +227,15 @@ const SalesDataDashboard = ({
 interface SalesTableProps {
   salesReport: SalesReport
   previousReport: SalesReport | null
-  eventQueryParams: EventQueryParams | null
-  setEventQueryParams: (eventQueryParams: EventQueryParams | null) => void
-  checkpoint: number
-  selectedDate: string | null
+  selectedTableCell: SelectedTableCell | null
+  setSelectedTableCell: (selectedTableCell: SelectedTableCell | null) => void
 }
 
 const SalesTable = ({
   salesReport,
   previousReport,
-  eventQueryParams,
-  setEventQueryParams,
-  checkpoint,
-  selectedDate,
+  selectedTableCell,
+  setSelectedTableCell,
 }: SalesTableProps) => {
   return (
     <table className={styles.salesTable}>
@@ -268,10 +261,8 @@ const SalesTable = ({
               category={category}
               categorySalesReport={categorySalesReport}
               previousCategorySalesReport={previousReport?.categories[category]}
-              eventQueryParams={eventQueryParams}
-              setEventQueryParams={setEventQueryParams}
-              checkpoint={checkpoint}
-              selectedDate={selectedDate}
+              selectedTableCell={selectedTableCell}
+              setSelectedTableCell={setSelectedTableCell}
             />
           ),
         )}
@@ -284,20 +275,16 @@ interface SalesCategoryProps {
   category: Category
   categorySalesReport: CategorySalesReport
   previousCategorySalesReport?: CategorySalesReport
-  eventQueryParams: EventQueryParams | null
-  setEventQueryParams: (eventQueryParams: EventQueryParams | null) => void
-  checkpoint: number
-  selectedDate: string
+  selectedTableCell: SelectedTableCell | null
+  setSelectedTableCell: (selectedTableCell: SelectedTableCell | null) => void
 }
 
 const SalesCategory = ({
   category,
   categorySalesReport,
   previousCategorySalesReport,
-  eventQueryParams,
-  setEventQueryParams,
-  checkpoint,
-  selectedDate,
+  selectedTableCell,
+  setSelectedTableCell,
 }: SalesCategoryProps) => {
   const { regions } = categorySalesReport
   const regionPairs = Object.entries(regions)
@@ -322,18 +309,16 @@ const SalesCategory = ({
         : undefined
 
     const rowClassName =
-      eventQueryParams?.category === category &&
-      eventQueryParams?.region === region
+      selectedTableCell?.category === category &&
+      selectedTableCell?.region === region
         ? styles.selectedRow
         : undefined
 
     const getOnSalesFigureClick = (salesFigureType: SalesFigureType) => () => {
-      setEventQueryParams({
+      setSelectedTableCell({
         category,
         region,
         salesFigureType,
-        checkpoint,
-        date: selectedDate,
       })
     }
 
@@ -394,16 +379,28 @@ const SalesProgressBar = ({
 }
 
 interface EventStreamProps {
-  eventQueryParams: EventQueryParams | null
+  selectedTableCell: SelectedTableCell | null
+  checkpoint: number
+  selectedDate: string | null
 }
 
-const EventStream = ({ eventQueryParams }: EventStreamProps) => {
+const EventStream = ({
+  selectedTableCell,
+  selectedDate,
+  checkpoint,
+}: EventStreamProps) => {
   const [events, setEvents] = useState<SalesEvent[]>([])
 
   useEffect(() => {
-    if (!eventQueryParams) return
+    if (!selectedTableCell || !selectedDate) return
 
-    const queryString = Object.entries(eventQueryParams)
+    const params: EventQueryParams = {
+      ...selectedTableCell,
+      checkpoint,
+      date: selectedDate,
+    }
+
+    const queryString = Object.entries(params)
       .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
       .join("&")
 
@@ -420,7 +417,7 @@ const EventStream = ({ eventQueryParams }: EventStreamProps) => {
       .catch((error) =>
         console.error("Error fetching events from the server", error),
       )
-  }, [eventQueryParams])
+  }, [selectedTableCell, selectedDate, checkpoint])
 
   return (
     <div className={styles.eventStream}>
@@ -443,7 +440,7 @@ const EventCard = ({ event }: { event: SalesEvent }) => {
         Event #{eventNumber} in $et-order-placed
       </a>
       <span>
-        <EventCardPair label="Date" value={new Date(at).toLocaleString()} />
+        <EventCardPair label="Date" value={new Date(at).toISOString()} />
         &nbsp;|&nbsp;
         <EventCardPair label="Region" value={region} />
       </span>
@@ -475,7 +472,13 @@ interface EventQueryParams {
   category: string
   region: string
   date: string
-  salesFigureType: 0 | 1
+  salesFigureType: SalesFigureType
+}
+
+interface SelectedTableCell {
+  category: Category
+  region: Region
+  salesFigureType: SalesFigureType
 }
 
 export default SalesDashboard
