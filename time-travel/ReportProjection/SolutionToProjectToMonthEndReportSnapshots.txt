@@ -1,15 +1,15 @@
-﻿void ProjectToMonthEndReportSnapshots()
-{
-    for (var i = orderDate.Day; i <= finalDayOfTheMonth.Day - 1; i++)    For each subsequent day in the month after the order date
-    {
-        var snapShotDate = new DateOnly(orderDate.Year,
-            orderDate.Month, i);
+﻿        void ProjectToMonthEndReportSnapshots()
+        {
+            for (var i = orderDate.Day; i <= finalDayOfTheMonth.Day - 1; i++)    // For each subsequent day in the month after the order date
+            {
+                var snapShotDate = new DateOnly(orderDate.Year,
+                    orderDate.Month, i);
 
-        ProjectToMonthlySales(snapShotDate);                             Project the monthly sales to a snapshot of the report
-    }
+                ProjectToMonthlySales(snapShotDate);                             // Project the monthly sales to a snapshot of the report
+            }
 
-    if (orderDate != finalDayOfTheMonth)                                 Don't project daily sales if the order date
-    {                                                                    is the final day of the month
-        ProjectToDailySales(orderDate);                                  since it is already projected
-    }                                                                    by ProjectToMonthEndReport
-}
+            if (orderDate != finalDayOfTheMonth)                                 // Don't project daily sales if the order date
+            {                                                                    // is the final day of the month
+                ProjectToDailySales(orderDate);                                  // since it is already projected
+            }                                                                    // by ProjectToMonthEndReport
+        }
