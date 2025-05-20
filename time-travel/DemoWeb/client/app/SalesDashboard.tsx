@@ -11,6 +11,7 @@ import SalesEvent from "./SalesEvent"
 
 const READ_MODEL_ENDPOINT = "/api/sales-data"
 const EVENTS_ENDPOINT = "/api/events"
+const EVENT_STREAM = "$et-order-placed"
 
 enum SalesFigureType {
   DailySales = 0,
@@ -432,20 +433,40 @@ const EventStream = ({ eventQueryParams }: EventStreamProps) => {
 }
 
 const EventCard = ({ event }: { event: SalesEvent }) => {
-  const { category, region, eventNumber, at } = event
+  const { category, region, eventNumber, at, totalSalesForCategory } = event
+
+  const eventLink = `http://${window.location.hostname}:2113/web/index.html#/streams/$et-order-placed/${eventNumber}`
 
   return (
     <div className={styles.eventCard}>
-      <span className={styles.eventType}>{eventNumber}</span>
-      <span className={styles.eventTimestamp}>
-        {new Date(at).toLocaleString()}
+      <a className={styles.eventCardHeader} href={eventLink} target="_blank">
+        Event #{eventNumber} in $et-order-placed
+      </a>
+      <span>
+        <EventCardPair label="Date" value={new Date(at).toLocaleString()} />
+        &nbsp;|&nbsp;
+        <EventCardPair label="Region" value={region} />
       </span>
-      {/*{eventDataPairs.map(([key, value]) => (*/}
-      {/*  <span className={styles.eventField}>*/}
-      {/*    {_.startCase(key)}: {value}*/}
-      {/*  </span>*/}
-      {/*))}*/}
+      <EventCardPair label="Category" value={category} />
+      <EventCardPair
+        label="Total Sales"
+        value={`USD ${totalSalesForCategory}`}
+      />
     </div>
+  )
+}
+
+interface EventCardPairProps {
+  label: string
+  value: string
+}
+
+const EventCardPair = ({ label, value }: EventCardPairProps) => {
+  return (
+    <span className={styles.eventCardPair}>
+      <span className={styles.eventCardPairLabel}>{label}: </span>
+      <span className={styles.eventCardPairValue}>{value}</span>
+    </span>
   )
 }
 
