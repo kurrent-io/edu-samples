@@ -15,7 +15,7 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
 
         var result = new OrderPlaced
         {
-            lineItems = new List<OrderPlaced.LineItem>()
+            LineItems = new List<OrderPlaced.LineItem>()
         };
 
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
@@ -29,28 +29,28 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
             switch (propertyName)
             {
                 case "orderId":
-                    result.orderId = reader.GetString() ?? throw new JsonException("orderId cannot be null");
+                    result.OrderId = reader.GetString() ?? throw new JsonException("orderId cannot be null");
                     break;
                 case "customerId":
-                    result.customerId = reader.GetString() ?? throw new JsonException("customerId cannot be null");
+                    result.CustomerId = reader.GetString() ?? throw new JsonException("customerId cannot be null");
                     break;
                 case "checkoutOfCart":
-                    result.checkoutOfCart = reader.GetString() ?? throw new JsonException("checkoutOfCart cannot be null");
+                    result.CheckoutOfCart = reader.GetString() ?? throw new JsonException("checkoutOfCart cannot be null");
                     break;
                 case "lineItems":
-                    result.lineItems = ReadLineItems(ref reader);
+                    result.LineItems = ReadLineItems(ref reader);
                     break;
                 case "store":
-                    result.store = ReadStore(ref reader);
+                    result.Store = ReadStore(ref reader);
                     break;
                 case "shipping":
-                    result.shipping = ReadShippingInfo(ref reader);
+                    result.Shipping = ReadShippingInfo(ref reader);
                     break;
                 case "billing":
-                    result.billing = ReadBillingInfo(ref reader);
+                    result.Billing = ReadBillingInfo(ref reader);
                     break;
                 case "at":
-                    result.at = reader.GetDateTimeOffset();
+                    result.At = reader.GetDateTimeOffset();
                     break;
                 default:
                     reader.Skip();
@@ -86,16 +86,16 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
                 switch (propertyName)
                 {
                     case "productId":
-                        lineItem.productId = reader.GetString() ?? throw new JsonException("productId cannot be null");
+                        lineItem.ProductId = reader.GetString() ?? throw new JsonException("productId cannot be null");
                         break;
                     case "productName":
-                        lineItem.productName = reader.GetString() ?? throw new JsonException("productName cannot be null");
+                        lineItem.ProductName = reader.GetString() ?? throw new JsonException("productName cannot be null");
                         break;
                     case "category":
-                        lineItem.category = reader.GetString();
+                        lineItem.Category = reader.GetString();
                         break;
                     case "quantity":
-                        lineItem.quantity = reader.GetInt32();
+                        lineItem.Quantity = reader.GetInt32();
                         break;
                     case "pricePerUnit":
                         var priceString = reader.GetString();
@@ -104,16 +104,16 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
                             var match = PricePattern.Match(priceString);
                             if (match.Success)
                             {
-                                lineItem.currency = match.Groups[1].Value;
+                                lineItem.Currency = match.Groups[1].Value;
                                 if (decimal.TryParse(match.Groups[2].Value, out var price))
                                 {
-                                    lineItem.pricePerUnit = price;
+                                    lineItem.PricePerUnit = price;
                                 }
                             }
                         }
                         break;
                     case "taxRate":
-                        lineItem.taxRate = reader.GetDecimal();
+                        lineItem.TaxRate = reader.GetDecimal();
                         break;
                     default:
                         reader.Skip();
@@ -127,12 +127,12 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
         return lineItems;
     }
 
-    private OrderPlaced.Store ReadStore(ref Utf8JsonReader reader)
+    private OrderPlaced.StoreInfo ReadStore(ref Utf8JsonReader reader)
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("Expected start of object for store");
 
-        var store = new OrderPlaced.Store();
+        var store = new OrderPlaced.StoreInfo();
 
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
         {
@@ -145,13 +145,13 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
             switch (propertyName)
             {
                 case "url":
-                    store.url = reader.GetString() ?? throw new JsonException("store url cannot be null");
+                    store.Url = reader.GetString() ?? throw new JsonException("store url cannot be null");
                     break;
                 case "countryCode":
-                    store.countryCode = reader.GetString() ?? throw new JsonException("store countryCode cannot be null");
+                    store.CountryCode = reader.GetString() ?? throw new JsonException("store countryCode cannot be null");
                     break;
                 case "geographicRegion":
-                    store.geographicRegion = reader.GetString() ?? throw new JsonException("store geographicRegion cannot be null");
+                    store.GeographicRegion = reader.GetString() ?? throw new JsonException("store geographicRegion cannot be null");
                     break;
                 default:
                     reader.Skip();
@@ -169,8 +169,8 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
 
         var shipping = new OrderPlaced.ShippingInfo
         {
-            recipient = new OrderPlaced.RecipientInfo(),
-            address = new OrderPlaced.AddressInfo { lines = new List<string>() }
+            Recipient = new OrderPlaced.RecipientInfo(),
+            Address = new OrderPlaced.AddressInfo { Lines = new List<string>() }
         };
 
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
@@ -184,16 +184,16 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
             switch (propertyName)
             {
                 case "recipient":
-                    shipping.recipient = ReadRecipientInfo(ref reader);
+                    shipping.Recipient = ReadRecipientInfo(ref reader);
                     break;
                 case "address":
-                    shipping.address = ReadAddressInfo(ref reader);
+                    shipping.Address = ReadAddressInfo(ref reader);
                     break;
                 case "instructions":
-                    shipping.instructions = reader.GetString() ?? "";
+                    shipping.Instructions = reader.GetString() ?? "";
                     break;
                 case "method":
-                    shipping.method = reader.GetString() ?? throw new JsonException("shipping method cannot be null");
+                    shipping.Method = reader.GetString() ?? throw new JsonException("shipping method cannot be null");
                     break;
                 default:
                     reader.Skip();
@@ -211,8 +211,8 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
 
         var billing = new OrderPlaced.BillingInfo
         {
-            recipient = new OrderPlaced.RecipientInfo(),
-            address = new OrderPlaced.AddressInfo { lines = new List<string>() }
+            Recipient = new OrderPlaced.RecipientInfo(),
+            Address = new OrderPlaced.AddressInfo { Lines = new List<string>() }
         };
 
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
@@ -226,13 +226,13 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
             switch (propertyName)
             {
                 case "recipient":
-                    billing.recipient = ReadRecipientInfo(ref reader);
+                    billing.Recipient = ReadRecipientInfo(ref reader);
                     break;
                 case "address":
-                    billing.address = ReadAddressInfo(ref reader);
+                    billing.Address = ReadAddressInfo(ref reader);
                     break;
                 case "paymentMethod":
-                    billing.paymentMethod = reader.GetString() ?? throw new JsonException("payment method cannot be null");
+                    billing.PaymentMethod = reader.GetString() ?? throw new JsonException("payment method cannot be null");
                     break;
                 default:
                     reader.Skip();
@@ -261,16 +261,16 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
             switch (propertyName)
             {
                 case "title":
-                    recipient.title = reader.GetString() ?? throw new JsonException("title cannot be null");
+                    recipient.Title = reader.GetString() ?? throw new JsonException("title cannot be null");
                     break;
                 case "fullName":
-                    recipient.fullName = reader.GetString() ?? throw new JsonException("fullName cannot be null");
+                    recipient.FullName = reader.GetString() ?? throw new JsonException("fullName cannot be null");
                     break;
                 case "emailAddress":
-                    recipient.emailAddress = reader.GetString() ?? throw new JsonException("emailAddress cannot be null");
+                    recipient.EmailAddress = reader.GetString() ?? throw new JsonException("emailAddress cannot be null");
                     break;
                 case "phoneNumber":
-                    recipient.phoneNumber = reader.GetString() ?? throw new JsonException("phoneNumber cannot be null");
+                    recipient.PhoneNumber = reader.GetString() ?? throw new JsonException("phoneNumber cannot be null");
                     break;
                 default:
                     reader.Skip();
@@ -288,7 +288,7 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
 
         var address = new OrderPlaced.AddressInfo
         {
-            lines = new List<string>()
+            Lines = new List<string>()
         };
 
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
@@ -302,7 +302,7 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
             switch (propertyName)
             {
                 case "country":
-                    address.country = reader.GetString() ?? throw new JsonException("country cannot be null");
+                    address.Country = reader.GetString() ?? throw new JsonException("country cannot be null");
                     break;
                 case "lines":
                     if (reader.TokenType != JsonTokenType.StartArray)
@@ -310,7 +310,7 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
 
                     while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
                     {
-                        address.lines.Add(reader.GetString() ?? "");
+                        address.Lines.Add(reader.GetString() ?? "");
                     }
                     break;
                 default:
@@ -326,52 +326,52 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
     {
         writer.WriteStartObject();
 
-        writer.WriteString("orderId", value.orderId);
-        writer.WriteString("customerId", value.customerId);
-        writer.WriteString("checkoutOfCart", value.checkoutOfCart);
+        writer.WriteString("orderId", value.OrderId);
+        writer.WriteString("customerId", value.CustomerId);
+        writer.WriteString("checkoutOfCart", value.CheckoutOfCart);
 
         writer.WritePropertyName("lineItems");
         writer.WriteStartArray();
-        foreach (var item in value.lineItems!)
+        foreach (var item in value.LineItems!)
         {
             writer.WriteStartObject();
-            writer.WriteString("productId", item.productId);
-            writer.WriteString("productName", item.productName);
-            writer.WriteString("category", item.category);
-            writer.WriteNumber("quantity", item.quantity!.Value);
+            writer.WriteString("productId", item.ProductId);
+            writer.WriteString("productName", item.ProductName);
+            writer.WriteString("category", item.Category);
+            writer.WriteNumber("quantity", item.Quantity!.Value);
             
             // Combine currency and price for serialization
-            if (!string.IsNullOrEmpty(item.currency))
+            if (!string.IsNullOrEmpty(item.Currency))
             {
-                writer.WriteString("pricePerUnit", $"{item.currency}{item.pricePerUnit}");
+                writer.WriteString("pricePerUnit", $"{item.Currency}{item.PricePerUnit}");
             }
             else
             {
-                writer.WriteNumber("pricePerUnit", item.pricePerUnit!.Value);
+                writer.WriteNumber("pricePerUnit", item.PricePerUnit!.Value);
             }
             
-            writer.WriteNumber("taxRate", item.taxRate!.Value);
+            writer.WriteNumber("taxRate", item.TaxRate!.Value);
             writer.WriteEndObject();
         }
         writer.WriteEndArray();
 
-        WriteStore(writer, value.store!);
-        WriteShippingInfo(writer, value.shipping!);
-        WriteBillingInfo(writer, value.billing!);
+        WriteStore(writer, value.Store!);
+        WriteShippingInfo(writer, value.Shipping!);
+        WriteBillingInfo(writer, value.Billing!);
 
-        writer.WriteString("at", value.at!.Value);
+        writer.WriteString("at", value.At!.Value);
 
         writer.WriteEndObject();
     }
 
-    private void WriteStore(Utf8JsonWriter writer, OrderPlaced.Store store)
+    private void WriteStore(Utf8JsonWriter writer, OrderPlaced.StoreInfo store)
     {
         writer.WritePropertyName("store");
         writer.WriteStartObject();
         
-        writer.WriteString("url", store.url);
-        writer.WriteString("countryCode", store.countryCode);
-        writer.WriteString("geographicRegion", store.geographicRegion);
+        writer.WriteString("url", store.Url);
+        writer.WriteString("countryCode", store.CountryCode);
+        writer.WriteString("geographicRegion", store.GeographicRegion);
         
         writer.WriteEndObject();
     }
@@ -381,11 +381,11 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
         writer.WritePropertyName("shipping");
         writer.WriteStartObject();
         
-        WriteRecipientInfo(writer, shipping.recipient!);
-        WriteAddressInfo(writer, shipping.address!);
+        WriteRecipientInfo(writer, shipping.Recipient!);
+        WriteAddressInfo(writer, shipping.Address!);
         
-        writer.WriteString("instructions", shipping.instructions);
-        writer.WriteString("method", shipping.method);
+        writer.WriteString("instructions", shipping.Instructions);
+        writer.WriteString("method", shipping.Method);
         
         writer.WriteEndObject();
     }
@@ -395,10 +395,10 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
         writer.WritePropertyName("billing");
         writer.WriteStartObject();
         
-        WriteRecipientInfo(writer, billing.recipient!);
-        WriteAddressInfo(writer, billing.address!);
+        WriteRecipientInfo(writer, billing.Recipient!);
+        WriteAddressInfo(writer, billing.Address!);
         
-        writer.WriteString("paymentMethod", billing.paymentMethod);
+        writer.WriteString("paymentMethod", billing.PaymentMethod);
         
         writer.WriteEndObject();
     }
@@ -408,10 +408,10 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
         writer.WritePropertyName("recipient");
         writer.WriteStartObject();
         
-        writer.WriteString("title", recipient.title);
-        writer.WriteString("fullName", recipient.fullName);
-        writer.WriteString("emailAddress", recipient.emailAddress);
-        writer.WriteString("phoneNumber", recipient.phoneNumber);
+        writer.WriteString("title", recipient.Title);
+        writer.WriteString("fullName", recipient.FullName);
+        writer.WriteString("emailAddress", recipient.EmailAddress);
+        writer.WriteString("phoneNumber", recipient.PhoneNumber);
         
         writer.WriteEndObject();
     }
@@ -421,11 +421,11 @@ public class OrderPlacedConverter : JsonConverter<OrderPlaced>
         writer.WritePropertyName("address");
         writer.WriteStartObject();
         
-        writer.WriteString("country", address.country);
+        writer.WriteString("country", address.Country);
         
         writer.WritePropertyName("lines");
         writer.WriteStartArray();
-        foreach (var line in address.lines!)
+        foreach (var line in address.Lines!)
         {
             writer.WriteStringValue(line);
         }
