@@ -85,7 +85,8 @@ app.MapGet("/api/events", async (long checkpoint, DateTimeOffset date,
             orderPlaced.MapToSummary(eventNumber, category));               // after mapping it to a summary object
     }
 
-    return orderEventSummaryList;
+    return orderEventSummaryList.OrderByDescending(x => x.EventNumber)      // Order the list by event number in descending order
+        .ToList();                                                          // and convert it to a list
 
     bool OrderDoesNotMatchRegionOrCategory(OrderPlaced orderPlaced)
     {
