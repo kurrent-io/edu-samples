@@ -23,11 +23,15 @@ enum SalesFigureType {
 const SalesDashboard = () => {
   const [reportReadModel, setReportReadModel] =
     useState<ReportReadModel | null>(null)
+
   const [selectedReportDate, setSelectedReportDate] = useState<string | null>(
     null,
   )
+
   const [selectedTableCell, setSelectedTableCell] =
     useState<SelectedTableCell | null>(null)
+
+  const [error, setError] = useState<string | null>(null)
 
   const previousReportDate = selectedReportDate
     ? getPreviousDay(selectedReportDate)
@@ -44,6 +48,7 @@ const SalesDashboard = () => {
       : null
 
   useEffect(() => {
+    setError(null)
     fetch(READ_MODEL_ENDPOINT, {
       method: "GET",
       headers: {
@@ -56,14 +61,17 @@ const SalesDashboard = () => {
         const earliestReportDate = getEarliestReportDate(data)
         if (earliestReportDate) setSelectedReportDate(earliestReportDate)
       })
-      .catch((error) =>
-        console.error("Error fetching sales data from the server", error),
-      )
+      .catch((e) => {
+        const errorMessage = "Error fetching sales data from the server"
+        console.error(errorMessage, e)
+        setError(`${errorMessage}: ${e.message}`)
+      })
   }, [])
 
   return (
     <div className={styles.pageRoot}>
       <Header />
+      {error && <ErrorAlert error={error} />}
       {!!selectedReport && !!reportReadModel && (
         <>
           <TimeSliderSection
@@ -84,6 +92,10 @@ const SalesDashboard = () => {
     </div>
   )
 }
+
+const ErrorAlert = ({ error }: { error: string }) => (
+  <div className={styles.errorAlert}>{error}</div>
+)
 
 const toDateString = (date: Date) => date.toISOString().split("T")[0]
 
