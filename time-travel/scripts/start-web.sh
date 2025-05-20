@@ -16,22 +16,25 @@ fi
 
 docker_compose_file="$root_path/docker-compose.yml"
 
-docker compose --profile app -f "$docker_compose_file" up reportprojection -d
+docker compose --profile app -f "$docker_compose_file" build
+docker compose --profile app -f "$docker_compose_file" up demoweb -d
 
 # Wait for the required messages to be detected
 max_attempts=60
 attempt=0
 while true; do
     logs=$(docker compose --profile app -f "$docker_compose_file" logs 2>&1)
-    if echo "$logs" | grep -q "ReportProjection started"; then
+    if echo "$logs" | grep -q "DemoWeb started"; then
         echo "All apps are running."
         break
     fi
     attempt=$((attempt+1))
     if [ $attempt -ge $max_attempts ]; then
-        echo "Required apps did not start after $max_attempts attempts. Exiting."
+        echo "Required apps did not start after $max_attedmpts attempts. Exiting."
         exit 1
     fi
     echo "Waiting apps to start... (attempt $attempt)"
     sleep 2
 done
+
+"$root_path/scripts/get-demoweb-url.sh"  # Call the script to get the URL of the demo web application

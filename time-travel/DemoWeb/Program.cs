@@ -3,6 +3,8 @@ using EventStore.Client;
 using Common;
 using DemoWeb;
 
+Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} started");
+
 // -------------------- //
 // Connect to KurrentDB //
 // -------------------- //
@@ -52,18 +54,29 @@ app.MapGet("/api/events", async (long checkpoint, DateTimeOffset date,
     var orderEventSummaryList = new List<OrderEventSummary>();              // Create a list to hold filtered order events
 
     var readResults = kurrentdb.ReadStreamAsync(Direction.Forwards,         // Read the stream in the forward direction
-        "$et-order-placed", StreamPosition.Start, resolveLinkTos:true);     // from the start of the $et-order-placed stream
+        "$et-order-placed", StreamPosition.Start, resolveLinkTos:true,      // from the start of the $et-order-placed stream
+        maxCount: checkpoint + 1);                                          // up to the checkpoint + 1 (note: checkpoint is zero-based)
 
     await foreach (var resolvedEvent in readResults)                        // For each event in the stream
     {
-        var eventNumber = resolvedEvent.OriginalEventNumber.ToInt64();      // Get its event number from the stream
-        if (eventNumber > checkpoint) break;                                // Stop reading if the event number is greater than the checkpoint
-
         if (EventEncoder.Decode(resolvedEvent.Event.Data, "order-placed")   // Try to deserialize the event to an OrderPlaced event
-            is not OrderPlaced orderPlaced)                                 // Skip this message if it is not an OrderPlaced event
-            continue;
+            is not OrderPlaced orderPlaced) continue;                       // Skip this message if it is not an OrderPlaced event
 
-        if (!OrderMatchesFilter(orderPlaced)) continue;                     // Skip this message if it does not filter from the request
+        if (OrderDoesNotMatchRegionOrCategory(orderPlaced)) continue;       // Skip if the order does not match the requested region and category
+
+        switch (salesFigureType)
+        {
+            case SalesFigureType.DailySales:                                // If the sales figure type is daily sales
+                if (OrderDoesNotMatchRequestDate(orderPlaced)) continue;    // Skip if the order was not placed on the report date
+                break;
+            case SalesFigureType.TotalMonthlySales:                         // If the sales figure type is total monthly sales
+                if (OrderIsPlacedAfterRequestDate(orderPlaced)) continue;   // Skip if the order was placed after the report date
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();                    // If the sales figure type is not recognized, throw an exception
+        }
+
+        var eventNumber = resolvedEvent.OriginalEventNumber.ToInt64();      // Get its event number from the stream
 
         orderEventSummaryList.Add(                                          // Otherwise, add the order event to the list
             orderPlaced.MapToSummary(eventNumber, category));               // after mapping it to a summary object
@@ -71,35 +84,34 @@ app.MapGet("/api/events", async (long checkpoint, DateTimeOffset date,
 
     return orderEventSummaryList;
 
-    bool OrderMatchesFilter(OrderPlaced orderPlaced)
+    bool OrderDoesNotMatchRegionOrCategory(OrderPlaced orderPlaced)
     {
         var matchRegion =                                                   // Check if the order matches the requested region
             orderPlaced.store!.geographicRegion!.
-                Equals(region, 
+                Equals(region,
                     StringComparison.InvariantCultureIgnoreCase);           // Ignore case for region comparison
 
         var matchCategory = orderPlaced.lineItems!.Exists(item =>           // Check if any line item matches the requested category
-            item.category.Equals(category, 
+            item != null && item.category.Equals(category,
                 StringComparison.InvariantCultureIgnoreCase));              // Ignore case for category comparison
 
-        if (!matchRegion || !matchCategory) return false;                   // Skip this event if it does not match the region or category
-
-        var matchDate = orderPlaced.at!.Value.Date == date.Date;            // Check if the order date matches the requested date
-
-        var orderIsBeforeRequestedDate =                                    // Check if the order date is before the requested date
-            orderPlaced.at!.Value.Date <= date.Date &&
-            orderPlaced.at!.Value.Year == date.Year &&
-            orderPlaced.at!.Value.Month == date.Month;
-
-        if (salesFigureType == SalesFigureType.DailySales)                  // If the sales figure type is daily sales
-            return matchDate;                                               // return true if the order date matches the requested date
-
-        if (salesFigureType == SalesFigureType.TotalMonthlySales)           // If the sales figure type is total monthly sales
-            return orderIsBeforeRequestedDate;                              // return true if the order date is before the requested date
-
-        throw new ArgumentOutOfRangeException(                              // Otherwise, throw an exception
-            nameof(salesFigureType), salesFigureType, null);
+        return !(matchRegion && matchCategory);                             // Check if order matches both region and category
     }
+
+    bool OrderDoesNotMatchRequestDate(OrderPlaced orderPlaced)
+    {
+        return orderPlaced.at!.Value.Date != date.Date;                     // Check if the order date matches the requested date
+        
+    }
+
+    bool OrderIsPlacedAfterRequestDate(OrderPlaced orderPlaced)
+    {
+        return orderPlaced.at!.Value.Date > date.Date ||                    // Check if the order is placed after the requested date
+               orderPlaced.at!.Value.Year != date.Year ||
+               orderPlaced.at!.Value.Month != date.Month;
+        
+    }
+
 });
 
 // -------------------- //
