@@ -51,8 +51,10 @@ namespace Common
             }
         }
 
-        public void IncrementDailySales(string category, string region, decimal amount)
+        public void IncrementDailySales(string? category, string region, decimal amount)
         {
+            if (string.IsNullOrEmpty(category)) return;
+
             if (!Categories.TryGetValue(category, out var salesByCategory) ||
                 !salesByCategory.Regions.TryGetValue(region, out var salesByCategoryAndRegion)) return;
 
