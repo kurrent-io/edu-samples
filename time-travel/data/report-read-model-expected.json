@@ -1,5 +1,5 @@
 {
-  "checkpoint": 535,
+  "checkpoint": 534,
   "salesReports": {
     "2025-01-31": {
       "categories": {
@@ -294,8 +294,8 @@
             "Europe": {
               "dailySales": 4950.05,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10093059.94,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 93060.94,
+              "targetHitRate": 0.01
             },
             "Middle-East": {
               "dailySales": 4950.05,
@@ -736,10 +736,10 @@
               "targetHitRate": 0.07
             },
             "Europe": {
-              "dailySales": 9999999.00,
+              "dailySales": 0,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 9999999.00,
-              "targetHitRate": 0.98
+              "totalMonthlySales": 0,
+              "targetHitRate": 0
             },
             "Middle-East": {
               "dailySales": 0,
@@ -1182,8 +1182,8 @@
             "Europe": {
               "dailySales": 0,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 9999999.00,
-              "targetHitRate": 0.98
+              "totalMonthlySales": 0,
+              "targetHitRate": 0
             },
             "Middle-East": {
               "dailySales": 0,
@@ -1626,8 +1626,8 @@
             "Europe": {
               "dailySales": 0,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 9999999.00,
-              "targetHitRate": 0.98
+              "totalMonthlySales": 0,
+              "targetHitRate": 0
             },
             "Middle-East": {
               "dailySales": 0,
@@ -2070,8 +2070,8 @@
             "Europe": {
               "dailySales": 2970.03,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10002969.03,
-              "targetHitRate": 0.98
+              "totalMonthlySales": 2970.03,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 0,
@@ -2514,8 +2514,8 @@
             "Europe": {
               "dailySales": 2970.03,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10005939.06,
-              "targetHitRate": 0.98
+              "totalMonthlySales": 5940.06,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 1980.02,
@@ -2958,8 +2958,8 @@
             "Europe": {
               "dailySales": 0,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10005939.06,
-              "targetHitRate": 0.98
+              "totalMonthlySales": 5940.06,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 0,
@@ -3402,8 +3402,8 @@
             "Europe": {
               "dailySales": 5940.06,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10011879.12,
-              "targetHitRate": 0.98
+              "totalMonthlySales": 11880.12,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 0,
@@ -3846,8 +3846,8 @@
             "Europe": {
               "dailySales": 0,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10011879.12,
-              "targetHitRate": 0.98
+              "totalMonthlySales": 11880.12,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 1980.02,
@@ -4290,8 +4290,8 @@
             "Europe": {
               "dailySales": 0,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10011879.12,
-              "targetHitRate": 0.98
+              "totalMonthlySales": 11880.12,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 2970.03,
@@ -4734,8 +4734,8 @@
             "Europe": {
               "dailySales": 4950.05,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10016829.17,
-              "targetHitRate": 0.98
+              "totalMonthlySales": 16830.17,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 0,
@@ -5178,8 +5178,8 @@
             "Europe": {
               "dailySales": 0,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10016829.17,
-              "targetHitRate": 0.98
+              "totalMonthlySales": 16830.17,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 2970.03,
@@ -5622,8 +5622,8 @@
             "Europe": {
               "dailySales": 990.01,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10017819.18,
-              "targetHitRate": 0.98
+              "totalMonthlySales": 17820.18,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 0,
@@ -6066,8 +6066,8 @@
             "Europe": {
               "dailySales": 5940.06,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10023759.24,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 23760.24,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 0,
@@ -6510,8 +6510,8 @@
             "Europe": {
               "dailySales": 4950.05,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10028709.29,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 28710.29,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 0,
@@ -6954,8 +6954,8 @@
             "Europe": {
               "dailySales": 6930.07,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10035639.36,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 35640.36,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 8910.09,
@@ -7398,8 +7398,8 @@
             "Europe": {
               "dailySales": 3960.04,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10039599.40,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 39600.40,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 2970.03,
@@ -7842,8 +7842,8 @@
             "Europe": {
               "dailySales": 1980.02,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10041579.42,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 41580.42,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 5940.06,
@@ -8286,8 +8286,8 @@
             "Europe": {
               "dailySales": 3960.04,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10045539.46,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 45540.46,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 0,
@@ -8730,8 +8730,8 @@
             "Europe": {
               "dailySales": 0,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10045539.46,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 45540.46,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 4950.05,
@@ -9174,8 +9174,8 @@
             "Europe": {
               "dailySales": 990.01,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10046529.47,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 46530.47,
+              "targetHitRate": 0.00
             },
             "Middle-East": {
               "dailySales": 0,
@@ -9618,8 +9618,8 @@
             "Europe": {
               "dailySales": 8910.09,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10055439.56,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 55440.56,
+              "targetHitRate": 0.01
             },
             "Middle-East": {
               "dailySales": 0,
@@ -10062,8 +10062,8 @@
             "Europe": {
               "dailySales": 2970.03,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10058409.59,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 58410.59,
+              "targetHitRate": 0.01
             },
             "Middle-East": {
               "dailySales": 3960.04,
@@ -10506,8 +10506,8 @@
             "Europe": {
               "dailySales": 3960.04,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10062369.63,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 62370.63,
+              "targetHitRate": 0.01
             },
             "Middle-East": {
               "dailySales": 0,
@@ -10950,8 +10950,8 @@
             "Europe": {
               "dailySales": 1980.02,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10064349.65,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 64350.65,
+              "targetHitRate": 0.01
             },
             "Middle-East": {
               "dailySales": 2970.03,
@@ -11394,8 +11394,8 @@
             "Europe": {
               "dailySales": 0,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10064349.65,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 64350.65,
+              "targetHitRate": 0.01
             },
             "Middle-East": {
               "dailySales": 0,
@@ -11838,8 +11838,8 @@
             "Europe": {
               "dailySales": 4950.05,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10069299.70,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 69300.70,
+              "targetHitRate": 0.01
             },
             "Middle-East": {
               "dailySales": 0,
@@ -12282,8 +12282,8 @@
             "Europe": {
               "dailySales": 7920.08,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10077219.78,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 77220.78,
+              "targetHitRate": 0.01
             },
             "Middle-East": {
               "dailySales": 3960.04,
@@ -12726,8 +12726,8 @@
             "Europe": {
               "dailySales": 3960.04,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10081179.82,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 81180.82,
+              "targetHitRate": 0.01
             },
             "Middle-East": {
               "dailySales": 5940.06,
@@ -13170,8 +13170,8 @@
             "Europe": {
               "dailySales": 6930.07,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10088109.89,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 88110.89,
+              "targetHitRate": 0.01
             },
             "Middle-East": {
               "dailySales": 990.01,
@@ -13614,8 +13614,8 @@
             "Europe": {
               "dailySales": 0,
               "monthEndSalesTarget": 10173800,
-              "totalMonthlySales": 10088109.89,
-              "targetHitRate": 0.99
+              "totalMonthlySales": 88110.89,
+              "targetHitRate": 0.01
             },
             "Middle-East": {
               "dailySales": 0,
