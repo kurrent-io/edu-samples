@@ -116,7 +116,7 @@ const getLatestReportDate = (
 
 const Header = () => (
   <div className={styles.header}>
-    <span className={styles.headerTitle}>E-Commerce Sales Report</span>
+    <span className={styles.headerTitle}>E-Commerce Month End Sales Report</span>
   </div>
 )
 
@@ -264,7 +264,7 @@ const SalesTable = ({
             Daily Sales
           </th>
           <th className={styles.targetSalesCol} scope="col">
-            Target Sales
+            Month End Sales Target
           </th>
           <th scope="col">Total Monthly Sales</th>
         </tr>
@@ -475,7 +475,7 @@ const EventStream = ({
 }
 
 const EventCard = ({ event }: { event: SalesEvent }) => {
-  const { category, region, eventNumber, at, totalSalesForCategory } = event
+  const { orderId, category, region, eventNumber, at, totalSalesForCategory } = event
 
   const eventLink = `http://${window.location.hostname}:2113/web/index.html#/streams/$et-order-placed/${eventNumber}`
 
@@ -488,6 +488,7 @@ const EventCard = ({ event }: { event: SalesEvent }) => {
       >
         Event #{eventNumber} in {EVENT_STREAM}
       </a>
+      <EventCardPair label="Order Id" value={orderId} />
       <span>
         <EventCardPair label="Date" value={new Date(at).toISOString()} />
         &nbsp;|&nbsp;
