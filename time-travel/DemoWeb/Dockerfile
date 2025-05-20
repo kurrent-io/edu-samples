@@ -13,7 +13,7 @@ COPY . .
 COPY --from=client-build /app/ClientApp/wwwroot ./DemoWeb/wwwroot
 
 ENV ASPNETCORE_URLS=http://0.0.0.0:3000
-ENV SALES_DATA_FILEPATH=/app/data/data.json
+ENV SALES_DATA_FILEPATH=/app/data/report-read-model.json
 
 EXPOSE 3000
 WORKDIR /app/DemoWeb
