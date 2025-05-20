@@ -74,7 +74,8 @@
       border-spacing: 0;
       border: 1px solid var(--light-grey);
 
-      .arrowSalesIncreased, .arrowSalesDecreased {
+      .arrowSalesIncreased,
+      .arrowSalesDecreased {
         margin-left: 0.25rem;
         font-weight: bold;
       }
@@ -92,7 +93,8 @@
         color: var(--text-color-highlight);
       }
 
-      td, th {
+      td,
+      th {
         text-align: center;
         padding: 0.5rem;
         margin: 0;
@@ -106,7 +108,8 @@
         border: 1px solid var(--light-grey);
       }
 
-      .dailySalesCol, .targetSalesCol {
+      .dailySalesCol,
+      .targetSalesCol {
         width: 10%;
       }
 
@@ -114,44 +117,50 @@
         background-color: #e6f1ff;
       }
 
-      .salesProgressBar {
-        display: flex;
-        align-items: center;
-        justify-content: start;
-        color: #fff;
-        background-color: #9d9d9d;
-        height: 1.5rem;
-        width: 80%;
-        border-radius: 2px;
-        font-weight: lighter;
-        margin: 0 auto;
-        position: relative;
+      .salesProgressBarCell {
+        cursor: pointer;
 
-        .progressBarSuccess, .progressBarFailure {
-          height: 100%;
+        .salesProgressBar {
+          display: flex;
+          align-items: center;
+          justify-content: start;
+          color: #fff;
+          background-color: #9d9d9d;
+          height: 1.5rem;
+          width: 80%;
           border-radius: 2px;
-        }
+          font-weight: lighter;
+          margin: 0 auto;
+          position: relative;
 
-        .progressBarLabel {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 100%;
-        }
+          .progressBarSuccess,
+          .progressBarFailure {
+            height: 100%;
+            border-radius: 2px;
+          }
 
-        .progressBarSuccess {
-          background-color: #28a745;
-        }
+          .progressBarLabel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+          }
 
-        .progressBarFailure {
-          background-color: #d34d5c;
+          .progressBarSuccess {
+            background-color: #28a745;
+          }
+
+          .progressBarFailure {
+            background-color: #d34d5c;
+          }
         }
       }
     }
   }
 
-  .salesData, .eventStream {
+  .salesData,
+  .eventStream {
     padding: 1rem;
     background-color: #fff;
     border: 1px solid #fff;

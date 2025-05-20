@@ -373,22 +373,16 @@ const SalesCategory = ({
           </span>
           <span className={arrowClassName}>{arrow}</span>
         </td>
+        <td className={styles.targetSalesCol}>${monthEndSalesTarget}</td>
         <td
-          className={classNames(styles.targetSalesCol, {
+          className={classNames(styles.salesProgressBarCell, {
             [styles.selectedCell]:
               categoryAndRegionSelected &&
               selectedTableCell?.salesFigureType ===
                 SalesFigureType.TotalMonthlySales,
           })}
+          onClick={getOnSalesFigureClick(SalesFigureType.TotalMonthlySales)}
         >
-          <span
-            className={styles.buttonLink}
-            onClick={getOnSalesFigureClick(SalesFigureType.TotalMonthlySales)}
-          >
-            ${monthEndSalesTarget}
-          </span>
-        </td>
-        <td>
           <SalesProgressBar
             totalMonthlySales={totalMonthlySales}
             targetSales={monthEndSalesTarget}
