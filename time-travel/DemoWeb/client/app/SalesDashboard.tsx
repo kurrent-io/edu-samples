@@ -58,8 +58,9 @@ const SalesDashboard = () => {
       .then((response) => response.json())
       .then((data: ReportReadModel) => {
         setReportReadModel(data)
-        const earliestReportDate = getEarliestReportDate(data)
-        if (earliestReportDate) setSelectedReportDate(earliestReportDate)
+        const latestReportDate = getLatestReportDate(data)
+
+        if (latestReportDate) setSelectedReportDate(latestReportDate)
       })
       .catch((e) => {
         const errorMessage = "Error fetching sales data from the server"
@@ -105,12 +106,12 @@ const getPreviousDay = (dateString: string): string => {
   return toDateString(date)
 }
 
-const getEarliestReportDate = (
+const getLatestReportDate = (
   readModel: ReportReadModel,
 ): string | undefined => {
   const dates = Object.keys(readModel.salesReports)
 
-  return _.minBy(dates, (date) => new Date(date).getTime())
+  return _.maxBy(dates, (date) => new Date(date).getTime())
 }
 
 const Header = () => (
@@ -163,6 +164,8 @@ const TimeSlider = ({
   const firstReportDate = orderedDates[0]
   const lastReportDate = orderedDates[orderedDates.length - 1]
 
+  const maxValue = orderedDates.length - 1
+
   return (
     <div className={styles.timeSliderContainer}>
       <span className={styles.timeSliderLabel}>{firstReportDate}</span>
@@ -170,9 +173,9 @@ const TimeSlider = ({
         className={styles.timeSliderInput}
         type="range"
         min={0}
-        max={orderedDates.length - 1}
+        max={maxValue}
         step={1}
-        defaultValue={0}
+        defaultValue={maxValue}
         onChange={(e) =>
           setSelectedReportDate(orderedDates[Number.parseInt(e.target.value)])
         }
