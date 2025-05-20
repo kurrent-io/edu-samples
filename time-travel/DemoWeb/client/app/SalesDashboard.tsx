@@ -135,7 +135,7 @@ const TimeSliderSection = ({
     <div className={styles.timeSliderSection}>
       {selectedReportDate && (
         <span className={styles.timeSliderSectionHeader}>
-          Viewing sales report from {selectedReportDate}
+          Viewing sales report snapshot as of {selectedReportDate}
         </span>
       )}
       <TimeSlider
