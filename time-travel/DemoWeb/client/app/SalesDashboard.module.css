@@ -110,6 +110,10 @@
         width: 10%;
       }
 
+      .selectedCell {
+        background-color: #e6f1ff;
+      }
+
       .salesProgressBar {
         display: flex;
         align-items: center;
@@ -192,5 +196,15 @@
         }
       }
     }
+  }
+}
+
+.buttonLink {
+  color: var(--color-highlight-dark);
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:active {
+    color: #0000ff;
   }
 }

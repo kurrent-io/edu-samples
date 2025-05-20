@@ -9,6 +9,7 @@ import {
 import { useEffect, useMemo, useState } from "react"
 import _ from "lodash"
 import SalesEvent from "./SalesEvent"
+import classNames from "classnames"
 
 const READ_MODEL_ENDPOINT = "/api/sales-data"
 const EVENTS_ENDPOINT = "/api/events"
@@ -32,12 +33,13 @@ const SalesDashboard = () => {
     ? getPreviousDay(selectedReportDate)
     : null
 
-  const previousReport = previousReportDate
-    ? reportReadModel.salesReports[previousReportDate]
-    : null
+  const previousReport =
+    previousReportDate && reportReadModel
+      ? reportReadModel.salesReports[previousReportDate]
+      : null
 
   const selectedReport =
-    selectedReportDate !== null
+    selectedReportDate !== null && reportReadModel
       ? reportReadModel.salesReports[selectedReportDate]
       : null
 
@@ -51,8 +53,8 @@ const SalesDashboard = () => {
       .then((response) => response.json())
       .then((data: ReportReadModel) => {
         setReportReadModel(data)
-
-        setSelectedReportDate(getEarliestReportDate(data))
+        const earliestReportDate = getEarliestReportDate(data)
+        if (earliestReportDate) setSelectedReportDate(earliestReportDate)
       })
       .catch((error) =>
         console.error("Error fetching sales data from the server", error),
@@ -91,7 +93,9 @@ const getPreviousDay = (dateString: string): string => {
   return toDateString(date)
 }
 
-const getEarliestReportDate = (readModel: ReportReadModel): string => {
+const getEarliestReportDate = (
+  readModel: ReportReadModel,
+): string | undefined => {
   const dates = Object.keys(readModel.salesReports)
 
   return _.minBy(dates, (date) => new Date(date).getTime())
@@ -114,11 +118,9 @@ const TimeSliderSection = ({
   setSelectedReportDate,
   selectedReportDate,
 }: TimeSelectorProps) => {
-  const selectedReport = reportReadModel.salesReports[selectedReportDate]
-
   return (
     <div className={styles.timeSliderSection}>
-      {selectedReport && selectedReportDate && (
+      {selectedReportDate && (
         <span className={styles.timeSliderSectionHeader}>
           Viewing sales report from {selectedReportDate}
         </span>
@@ -292,7 +294,7 @@ const SalesCategory = ({
   return regionPairs.map(([region, regionalSalesData], i) => {
     const { dailySales, monthEndSalesTarget, totalMonthlySales } =
       regionalSalesData
-    const previousRegionalSales = previousCategorySalesReport?.[region]
+    const previousRegionalSales = previousCategorySalesReport?.regions[region]
 
     const salesIncreased =
       previousRegionalSales && dailySales > previousRegionalSales.dailySales
@@ -315,12 +317,26 @@ const SalesCategory = ({
         : undefined
 
     const getOnSalesFigureClick = (salesFigureType: SalesFigureType) => () => {
-      setSelectedTableCell({
-        category,
-        region,
-        salesFigureType,
-      })
+      if (
+        selectedTableCell?.salesFigureType === salesFigureType &&
+        selectedTableCell?.region === region &&
+        selectedTableCell?.category === category
+      ) {
+        setSelectedTableCell(null)
+      } else {
+        setSelectedTableCell({
+          category,
+          region,
+          salesFigureType,
+        })
+      }
+
+      return false
     }
+
+    const categoryAndRegionSelected =
+      selectedTableCell?.region === region &&
+      selectedTableCell?.category === category
 
     return (
       <tr key={region} className={rowClassName}>
@@ -331,17 +347,34 @@ const SalesCategory = ({
         )}
         <td>{region}</td>
         <td
-          className={styles.dailySalesCol}
-          onClick={getOnSalesFigureClick(SalesFigureType.DailySales)}
+          className={classNames(styles.dailySalesCol, {
+            [styles.selectedCell]:
+              categoryAndRegionSelected &&
+              selectedTableCell?.salesFigureType === SalesFigureType.DailySales,
+          })}
         >
-          <span className={styles.dailySalesText}>${dailySales}</span>
+          <span
+            className={styles.buttonLink}
+            onClick={getOnSalesFigureClick(SalesFigureType.DailySales)}
+          >
+            ${dailySales}
+          </span>
           <span className={arrowClassName}>{arrow}</span>
         </td>
         <td
-          className={styles.targetSalesCol}
-          onClick={getOnSalesFigureClick(SalesFigureType.TotalMonthlySales)}
+          className={classNames(styles.targetSalesCol, {
+            [styles.selectedCell]:
+              categoryAndRegionSelected &&
+              selectedTableCell?.salesFigureType ===
+                SalesFigureType.TotalMonthlySales,
+          })}
         >
-          ${monthEndSalesTarget}
+          <span
+            className={styles.buttonLink}
+            onClick={getOnSalesFigureClick(SalesFigureType.TotalMonthlySales)}
+          >
+            ${monthEndSalesTarget}
+          </span>
         </td>
         <td>
           <SalesProgressBar
@@ -392,7 +425,10 @@ const EventStream = ({
   const [events, setEvents] = useState<SalesEvent[]>([])
 
   useEffect(() => {
-    if (!selectedTableCell || !selectedDate) return
+    if (!selectedTableCell || !selectedDate) {
+      setEvents([])
+      return
+    }
 
     const params: EventQueryParams = {
       ...selectedTableCell,
@@ -436,8 +472,12 @@ const EventCard = ({ event }: { event: SalesEvent }) => {
 
   return (
     <div className={styles.eventCard}>
-      <a className={styles.eventCardHeader} href={eventLink} target="_blank">
-        Event #{eventNumber} in $et-order-placed
+      <a
+        className={classNames(styles.eventCardHeader, styles.buttonLink)}
+        href={eventLink}
+        target="_blank"
+      >
+        Event #{eventNumber} in {EVENT_STREAM}
       </a>
       <span>
         <EventCardPair label="Date" value={new Date(at).toISOString()} />
