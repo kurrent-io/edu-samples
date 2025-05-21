@@ -29,7 +29,6 @@ services:
     environment:
       - KURRENTDB_HOST=kurrentdb
       - SALES_DATA_FILEPATH=/app/data/report-read-model.json
-    profiles: ["app"]
 
   reportprojection:
     image: mcr.microsoft.com/dotnet/sdk:9.0
