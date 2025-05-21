@@ -16,6 +16,11 @@ services:
     build:
       context: .
       dockerfile: DemoWeb/Dockerfile
+      args:
+        - CODESPACES=${CODESPACES}
+        - CODESPACE_NAME=${CODESPACE_NAME}
+        - GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN=${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}
+    profiles: ["app"]
     container_name: demoweb
     ports:
       - 3000:3000
