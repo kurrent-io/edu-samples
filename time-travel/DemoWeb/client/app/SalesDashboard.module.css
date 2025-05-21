@@ -1,0 +1,228 @@
+.pageRoot {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+
+  .header {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    color: var(--text-color-highlight);
+    background-color: var(--color-highlight);
+
+    .headerTitle {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+  }
+
+  .timeSliderSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+    background-color: var(--background-color-highlight-faded);
+    padding: 1rem 0;
+
+    .timeSliderSectionHeader {
+      font-size: 1rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .timeSliderContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .timeSliderLabel {
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin: 0 1rem;
+        color: var(--color-highlight);
+      }
+
+      .timeSliderInput {
+        min-width: 400px;
+      }
+    }
+
+    .reportSelector {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1rem;
+
+      label {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+
+  .dashboardContent {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .salesData {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 70%;
+    margin-left: 1rem;
+
+    .salesTable {
+      border-spacing: 0;
+      border: 1px solid var(--light-grey);
+
+      .arrowSalesIncreased,
+      .arrowSalesDecreased {
+        margin-left: 0.25rem;
+        font-weight: bold;
+      }
+
+      .arrowSalesIncreased {
+        color: #28a745;
+      }
+
+      .arrowSalesDecreased {
+        color: #d34d5c;
+      }
+
+      th {
+        background-color: var(--color-highlight);
+        color: var(--text-color-highlight);
+      }
+
+      td,
+      th {
+        text-align: center;
+        padding: 0.5rem;
+        margin: 0;
+      }
+
+      th {
+        border: 1px solid var(--color-highlight-dark);
+      }
+
+      td {
+        border: 1px solid var(--light-grey);
+      }
+
+      .dailySalesCol,
+      .targetSalesCol {
+        width: 10%;
+      }
+
+      .selectedCell {
+        background-color: #e6f1ff;
+      }
+
+      .salesProgressBarCell {
+        cursor: pointer;
+
+        .salesProgressBar {
+          display: flex;
+          align-items: center;
+          justify-content: start;
+          color: #fff;
+          background-color: #9d9d9d;
+          height: 1.5rem;
+          width: 80%;
+          border-radius: 2px;
+          font-weight: lighter;
+          margin: 0 auto;
+          position: relative;
+
+          .progressBarSuccess,
+          .progressBarFailure {
+            height: 100%;
+            border-radius: 2px;
+          }
+
+          .progressBarLabel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+          }
+
+          .progressBarSuccess {
+            background-color: #28a745;
+          }
+
+          .progressBarFailure {
+            background-color: #d34d5c;
+          }
+        }
+      }
+    }
+  }
+
+  .salesData,
+  .eventStream {
+    padding: 1rem;
+    background-color: #fff;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .sectionTitle {
+    font-size: large;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  .eventStream {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 30%;
+    margin-left: 1rem;
+    margin-right: 1rem;
+
+    .eventCard {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #d7d7d7;
+      border-radius: 4px;
+      padding: 0.5rem;
+      background-color: var(--background-color-grey);
+      font-family: monospace;
+
+      &:not(:nth-child(2)) {
+        margin-top: 1rem;
+      }
+
+      .eventCardHeader {
+        font-weight: bold;
+      }
+
+      .eventCardPair {
+        .eventCardPairLabel {
+          text-transform: uppercase;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+.errorAlert {
+  background-color: #ffebed;
+  color: #bd2d3d;
+  margin: 3rem auto;
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px #bd2d3d solid;
+}
+
+.buttonLink {
+  color: var(--color-highlight-dark);
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:active {
+    color: #0000ff;
+  }
+}
