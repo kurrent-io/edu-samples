@@ -477,7 +477,7 @@ const EventStream = ({
 const EventCard = ({ event }: { event: SalesEvent }) => {
   const { orderId, category, region, eventNumber, at, totalSalesForCategory } = event
 
-  const eventLink = `http://${window.location.hostname}:2113/web/index.html#/streams/$et-order-placed/${eventNumber}`
+  const eventLink = getEventLink(eventNumber)
 
   return (
     <div className={styles.eventCard}>
@@ -501,6 +501,26 @@ const EventCard = ({ event }: { event: SalesEvent }) => {
       />
     </div>
   )
+}
+
+const getEventLink = (eventNumber: string) => {
+  const {
+    VITE_CODESPACES,
+    VITE_CODESPACE_NAME,
+    VITE_GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN,
+  } = import.meta.env
+
+  const path = `/web/index.html#/streams/$et-order-placed/${eventNumber}`
+
+  if (
+    VITE_CODESPACES === "true" &&
+    VITE_CODESPACE_NAME &&
+    VITE_GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN
+  ) {
+    return `https://${VITE_CODESPACE_NAME}-2113.${VITE_GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}${path}`
+  } else {
+    return `http://${window.location.hostname}:2113${path}`
+  }
 }
 
 interface EventCardPairProps {
