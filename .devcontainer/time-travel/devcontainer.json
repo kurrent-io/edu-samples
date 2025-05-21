@@ -35,8 +35,7 @@
         "redhat.telemetry.enabled": false
       },
       "extensions": [
-        "ms-dotnettools.csharp",
-        "ms-azuretools.vscode-docker"
+        "-ms-dotnettools.csharp"
       ]
     },
     "codespaces": {

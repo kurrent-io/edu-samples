@@ -116,7 +116,7 @@ const getLatestReportDate = (
 
 const Header = () => (
   <div className={styles.header}>
-    <span className={styles.headerTitle}>E-Commerce Sales Report</span>
+    <span className={styles.headerTitle}>E-Commerce Month End Sales Report</span>
   </div>
 )
 
@@ -135,7 +135,7 @@ const TimeSliderSection = ({
     <div className={styles.timeSliderSection}>
       {selectedReportDate && (
         <span className={styles.timeSliderSectionHeader}>
-          Viewing sales report from {selectedReportDate}
+          Viewing sales report snapshot as of {selectedReportDate}
         </span>
       )}
       <TimeSlider
@@ -264,7 +264,7 @@ const SalesTable = ({
             Daily Sales
           </th>
           <th className={styles.targetSalesCol} scope="col">
-            Target Sales
+            Month End Sales Target
           </th>
           <th scope="col">Total Monthly Sales</th>
         </tr>
@@ -488,6 +488,7 @@ const EventCard = ({ event }: { event: SalesEvent }) => {
       >
         Event #{eventNumber} in {EVENT_STREAM}
       </a>
+      <EventCardPair label="Order Id" value={orderId} />
       <span>
         <EventCardPair label="Date" value={new Date(at).toISOString()} />
         &nbsp;|&nbsp;

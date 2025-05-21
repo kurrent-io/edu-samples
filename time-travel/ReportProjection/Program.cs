@@ -37,7 +37,7 @@ var kurrentdb = new EventStoreClient(                                    // Crea
 // --------------------------------- //
 var readModelPath =                                                      // Get the path to the report read model from an environment variable
     Environment.GetEnvironmentVariable("OUTPUT_FILEPATH") ?? 
-    "data/report.json"; 
+    "data/report-read-model.json"; 
 
 var hasExistingReadModel = File.Exists(readModelPath);
 
@@ -72,7 +72,6 @@ await foreach (var message in subscription.Messages)                     // Iter
 
     if (EventEncoder.Decode(e.Event.Data, "order-placed")                // Try to deserialize the event to an OrderPlaced event
             is not OrderPlaced orderPlaced) continue;                    // Skip this message if it is not an OrderPlaced event
-
 
     ReportProjection.ReportProjection.ProjectOrderToReadModel(           // Project the event to the read model
         orderPlaced, readModel);

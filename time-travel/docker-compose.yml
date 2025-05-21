@@ -20,7 +20,6 @@ services:
         - CODESPACES=${CODESPACES}
         - CODESPACE_NAME=${CODESPACE_NAME}
         - GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN=${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}
-    profiles: ["app"]
     container_name: demoweb
     ports:
       - 3000:3000
@@ -28,7 +27,8 @@ services:
       - ./data:/app/data
     environment:
       - KURRENTDB_HOST=kurrentdb
-      - SALES_DATA_FILEPATH=/app/data/data.json
+      - SALES_DATA_FILEPATH=/app/data/report-read-model.json
+    profiles: ["app"]
 
   reportprojection:
     image: mcr.microsoft.com/dotnet/sdk:9.0
@@ -39,5 +39,5 @@ services:
     command: ["dotnet", "run", "--project", "./ReportProjection"]
     environment:
       - KURRENTDB_HOST=kurrentdb
-      - OUTPUT_FILEPATH=/app/data/data.json
+      - OUTPUT_FILEPATH=/app/data/report-read-model.json
     profiles: ["app"]

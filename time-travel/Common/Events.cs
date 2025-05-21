@@ -2,61 +2,61 @@
 
 public record OrderPlaced
 {
-    public string? orderId { get; set; }
-    public string? customerId { get; set; }
-    public string? checkoutOfCart { get; set; }
-    public Store? store { get; set; }
-    public List<LineItem>? lineItems { get; set; }
-    public ShippingInfo? shipping { get; set; }
-    public BillingInfo? billing { get; set; }
-    public DateTimeOffset? at { get; set; }
+    public string? OrderId { get; set; }
+    public string? CustomerId { get; set; }
+    public string? CheckoutOfCart { get; set; }
+    public StoreInfo? Store { get; set; }
+    public List<LineItem>? LineItems { get; set; }
+    public ShippingInfo? Shipping { get; set; }
+    public BillingInfo? Billing { get; set; }
+    public DateTimeOffset? At { get; set; }
 
-    public record Store
+    public record StoreInfo
     {
-        public string? url { get; set; }
-        public string? countryCode { get; set; }
-        public string? geographicRegion { get; set; }
+        public string? Url { get; set; }
+        public string? CountryCode { get; set; }
+        public string? GeographicRegion { get; set; }
     }
 
     public record LineItem
     {
-        public string? productId { get; set; }
-        public string? productName { get; set; }
-        public string? category { get; set; }
-        public int? quantity { get; set; }
-        public string? currency { get; set; }
-        public decimal? pricePerUnit { get; set; }
-        public decimal? taxRate { get; set; }
+        public string? ProductId { get; set; }
+        public string? ProductName { get; set; }
+        public string? Category { get; set; }
+        public int? Quantity { get; set; }
+        public string? Currency { get; set; }
+        public decimal? PricePerUnit { get; set; }
+        public decimal? TaxRate { get; set; }
 
-        public decimal total => (pricePerUnit ?? 0) * (quantity ?? 0); // Calculate the total price for the line item
+        public decimal Total => (PricePerUnit ?? 0) * (Quantity ?? 0); // Calculate the total price for the line item
     }
 
     public record ShippingInfo
     {
-        public RecipientInfo? recipient { get; set; }
-        public AddressInfo? address { get; set; }
-        public string? instructions { get; set; } = "";
-        public string? method { get; set; }
+        public RecipientInfo? Recipient { get; set; }
+        public AddressInfo? Address { get; set; }
+        public string? Instructions { get; set; } = "";
+        public string? Method { get; set; }
     }
 
     public record BillingInfo
     {
-        public RecipientInfo? recipient { get; set; }
-        public AddressInfo? address { get; set; }
-        public string? paymentMethod { get; set; }
+        public RecipientInfo? Recipient { get; set; }
+        public AddressInfo? Address { get; set; }
+        public string? PaymentMethod { get; set; }
     }
 
     public record RecipientInfo
     {
-        public string? title { get; set; }
-        public string? fullName { get; set; }
-        public string? emailAddress { get; set; }
-        public string? phoneNumber { get; set; }
+        public string? Title { get; set; }
+        public string? FullName { get; set; }
+        public string? EmailAddress { get; set; }
+        public string? PhoneNumber { get; set; }
     }
 
     public record AddressInfo
     {
-        public string? country { get; set; }
-        public List<string>? lines { get; set; }
+        public string? Country { get; set; }
+        public List<string>? Lines { get; set; }
     }
 }
