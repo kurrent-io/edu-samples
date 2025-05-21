@@ -475,7 +475,7 @@ const EventStream = ({
 }
 
 const EventCard = ({ event }: { event: SalesEvent }) => {
-  const { category, region, eventNumber, at, totalSalesForCategory } = event
+  const { category, region, eventNumber, at, totalSalesForCategory, orderId } = event
 
   const eventLink = getEventLink(eventNumber)
 

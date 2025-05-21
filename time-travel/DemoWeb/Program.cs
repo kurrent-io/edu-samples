@@ -122,10 +122,6 @@ app.MapGet("/api/events", async (long checkpoint, DateTimeOffset date,
 // Start the web server //
 // -------------------- //
 
-app.UseStaticFiles();
-
-app.MapFallbackToFile("index.html"); // Serve wwwroot/index.html which is built by Vite
-
 var port = Environment.GetEnvironmentVariable("PORT") ?? "3000";
 
 app.Run($"http://0.0.0.0:{port}");
