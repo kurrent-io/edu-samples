@@ -29,6 +29,8 @@ edbcommerce="$root_path/tools/Kurrent.Extensions.Commerce/linux-x64/edb-commerce
 
 "$root_path/scripts/start-kurrentdb.sh" # Start kurrentdb container
 
+echo "Seeding data to KurrentDB... this may take a while."
+
 # Seed the data using the edb-commerce tool with the updated initialization JSON
 "$edbcommerce" seed-data-set "$data_path"
 
