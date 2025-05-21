@@ -71,7 +71,6 @@ namespace Common
                 ? 0
                 : Math.Round(salesByCategoryAndRegion.TotalMonthlySales / salesByCategoryAndRegion.MonthEndSalesTarget, 2);
         }
-
     }
 
     public record Category
