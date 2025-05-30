@@ -161,6 +161,11 @@ const TimeSlider = ({
     return { orderedDates }
   }, [reportReadModel])
 
+  // Hide slider if 1 or fewer dates
+  if (orderedDates.length <= 1) {
+    return null
+  }
+
   const firstReportDate = orderedDates[0]
   const lastReportDate = orderedDates[orderedDates.length - 1]
 
