@@ -1,0 +1,12 @@
+.swimlaneNode {
+  display: flex;
+  align-items: center;
+
+  .swimlaneName {
+    text-align: center;
+  }
+
+  .swimlaneCardsContainer {
+
+  }
+}

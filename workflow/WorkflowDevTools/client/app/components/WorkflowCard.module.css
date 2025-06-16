@@ -1,0 +1,13 @@
+.workflowCard {
+  &.actionCard {
+    background-color: #9CE6FF;
+  }
+
+  &.subscriptionCard {
+    background-color: #DEDAFF;
+  }
+
+  &.eventCard {
+    background-color: #FFBF7F;
+  }
+}
