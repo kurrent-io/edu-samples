@@ -1,7 +1,9 @@
 export type Step = {
+  id: string
   stepType: StepType
   stepDescription: string
   swimlaneName: string
+  causationId?: string
 }
 
 export enum StepType {

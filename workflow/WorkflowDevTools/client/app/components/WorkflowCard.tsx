@@ -15,10 +15,12 @@ const WorkflowCard = ({
   stepDescription,
 }: WorkflowCardProps) => {
   return (
-    <Card.Root className={classNames(styles.workflowCard, cardClassNames)}>
+    <Card.Root
+      className={classNames(styles.workflowCard, cardClassNames[stepType])}
+    >
       <span className={styles.stepTypeLabel}>{stepType}</span>
       <Card.Header className={styles.stepDescription}>
-        {stepDescription}
+        <div className={styles.stepDescriptionText}>{stepDescription}</div>
       </Card.Header>
       <span className={styles.stepStatus}>{status}</span>
     </Card.Root>
